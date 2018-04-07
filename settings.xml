@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd'
           xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
-
     <servers>
         <server>
-            <id>bintray-entelectsolutions-entelect-challenge-game-interfaces</id>
+            <id>bintray-entelect-challenge-game-engine-interfaces</id>
             <username>entelectsolutions</username>
             <password>8631be7f522cb30a78a05c308cb5a190fe8ee98c</password>
         </server>
@@ -16,19 +15,19 @@
                     <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
-                    <id>bintray-entelectsolutions-entelect-challenge-game-interfaces</id>
+                    <id>bintray-entelect-challenge-game-engine-interfaces</id>
                     <name>bintray</name>
-                    <url>https://dl.bintray.com/entelectsolutions/entelect-challenge-game-interfaces</url>
+                    <url>https://dl.bintray.com/entelect-challenge/game-engine-interfaces</url>
                 </repository>
             </repositories>
             <pluginRepositories>
                 <pluginRepository>
                     <snapshots>
-                        <enabled>false</enabled>
+                        <enabled>true</enabled>
                     </snapshots>
-                    <id>bintray-entelectsolutions-entelect-challenge-game-interfaces</id>
+                    <id>bintray-entelect-challenge-game-engine-interfaces</id>
                     <name>bintray-plugins</name>
-                    <url>https://dl.bintray.com/entelectsolutions/entelect-challenge-game-interfaces</url>
+                    <url>https://dl.bintray.com/entelect-challenge/game-engine-interfaces</url>
                 </pluginRepository>
             </pluginRepositories>
             <id>bintray</id>
@@ -37,4 +36,5 @@
     <activeProfiles>
         <activeProfile>bintray</activeProfile>
     </activeProfiles>
+
 </settings>

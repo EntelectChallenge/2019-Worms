@@ -51,6 +51,4 @@ fabric.properties
 
 *.iml
 
-main/target/classes/za/co/entelect/challenge/
-
-domain/target/classes/za/co/entelect/challenge/
+target/
