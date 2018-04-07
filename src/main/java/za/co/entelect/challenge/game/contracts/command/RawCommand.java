@@ -20,6 +20,11 @@ public class RawCommand implements Command {
 
     }
 
+    @Override
+    public boolean isValid() {
+        return true;
+    }
+
     public String getCommand() {
         return command;
     }

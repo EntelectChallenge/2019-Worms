@@ -12,4 +12,10 @@ public interface Command {
      * @param player  The issuing player for this command
      */
     void performCommand(GameMap gameMap, GamePlayer player);
+
+    /**
+     * Checks whether a command is in a valid state
+     * @return whether the command is valid
+     */
+    boolean isValid();
 }
