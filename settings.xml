@@ -14,7 +14,7 @@
             <repositories>
                 <repository>
                     <snapshots>
-                        <enabled>false</enabled>
+                        <enabled>true</enabled>
                     </snapshots>
                     <id>bintray-entelectsolutions-entelect-challenge-game-interfaces</id>
                     <name>bintray</name>
