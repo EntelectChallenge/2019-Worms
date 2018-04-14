@@ -4,7 +4,7 @@ import za.co.entelect.challenge.game.contracts.exceptions.InvalidCommandExceptio
 import za.co.entelect.challenge.game.contracts.game.GamePlayer;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 
-public abstract class RawCommand implements Command {
+public class RawCommand implements Command {
 
     protected String command;
 
@@ -17,7 +17,9 @@ public abstract class RawCommand implements Command {
     }
 
     @Override
-    public abstract void performCommand(GameMap gameMap, GamePlayer player) throws InvalidCommandException;
+    public void performCommand(GameMap gameMap, GamePlayer player) throws InvalidCommandException {
+        throw new InvalidCommandException("Unable to process RawCommand");
+    }
 
     public String getCommand() {
         return command;

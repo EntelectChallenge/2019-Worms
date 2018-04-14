@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.contracts.player;
 
 import za.co.entelect.challenge.game.contracts.command.Command;
+import za.co.entelect.challenge.game.contracts.command.RawCommand;
 import za.co.entelect.challenge.game.contracts.game.GamePlayer;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 
@@ -45,7 +46,7 @@ public abstract class Player {
         this.gamePlayer = gamePlayer;
     }
 
-    public void publishCommand(Command command) {
+    public void publishCommand(RawCommand command) {
         publishCommandHandler.accept(this, command);
     }
 
@@ -57,7 +58,7 @@ public abstract class Player {
         return String.format("Player{name='%s'}", name);
     }
 
-    public BiConsumer<Player, Command> publishCommandHandler;
+    public BiConsumer<Player, RawCommand> publishCommandHandler;
 
     public abstract void startGame(GameMap gameMap);
 
