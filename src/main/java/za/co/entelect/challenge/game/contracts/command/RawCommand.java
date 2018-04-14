@@ -1,11 +1,12 @@
 package za.co.entelect.challenge.game.contracts.command;
 
+import za.co.entelect.challenge.game.contracts.exceptions.InvalidCommandException;
 import za.co.entelect.challenge.game.contracts.game.GamePlayer;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 
-public class RawCommand implements Command {
+public abstract class RawCommand implements Command {
 
-    private String command;
+    protected String command;
 
     public RawCommand() {
         this("");
@@ -16,14 +17,7 @@ public class RawCommand implements Command {
     }
 
     @Override
-    public void performCommand(GameMap gameMap, GamePlayer player) {
-
-    }
-
-    @Override
-    public boolean isValid() {
-        return true;
-    }
+    public abstract void performCommand(GameMap gameMap, GamePlayer player) throws InvalidCommandException;
 
     public String getCommand() {
         return command;
