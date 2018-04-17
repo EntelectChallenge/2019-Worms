@@ -5,7 +5,7 @@ import za.co.entelect.challenge.game.contracts.map.GameMap;
 
 public interface GameMapRenderer {
 
-    String render(GameMap gameMap);
+    String render(GameMap gameMap, GamePlayer player);
 
     String commandPrompt(GamePlayer gamePlayer);
 }
