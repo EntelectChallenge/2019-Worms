@@ -6,7 +6,7 @@
 
     <groupId>za.co.entelect.challenge</groupId>
     <artifactId>game-engine-interface</artifactId>
-    <version>1.0-RC15</version>
+    <version>1.0-RC19</version>
 
     <distributionManagement>
         <repository>
