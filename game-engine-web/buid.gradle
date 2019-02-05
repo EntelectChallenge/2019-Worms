@@ -1,0 +1,3 @@
+compileKotlin2Js {
+    kotlinOptions.metaInfo = true
+}
