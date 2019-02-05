@@ -2,9 +2,10 @@ package za.co.entelect.challenge.game.entities;
 
 import za.co.entelect.challenge.game.contracts.game.GamePlayer
 import za.co.entelect.challenge.game.contracts.map.GameMap
+import za.co.entelect.challenge.game.contracts.player.Player
 
 
-public class WormsMap(val players: List<WormsPlayer>) : GameMap {
+public class WormsWrapperMap(val players: List<Player>) : GameMap {
 
 
     override fun getWinningPlayer(): GamePlayer {
@@ -20,6 +21,6 @@ public class WormsMap(val players: List<WormsPlayer>) : GameMap {
     }
 
 
-    val livingPlayers: List<WormsPlayer>
-        get() = players.filter { !it.dead }
+    val livingPlayers: List<Player>
+        get() = players
 }

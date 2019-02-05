@@ -3,13 +3,13 @@ package za.co.entelect.challenge.game.engine
 import za.co.entelect.challenge.game.contracts.game.GameMapGenerator
 import za.co.entelect.challenge.game.contracts.map.GameMap
 import za.co.entelect.challenge.game.contracts.player.Player
-import za.co.entelect.challenge.game.entities.WormsMap
+import za.co.entelect.challenge.game.entities.WormsWrapperMap
 
-class WormsMapGenerator : GameMapGenerator {
+class WrapperWrapperMapGenerator : GameMapGenerator {
 
-    override fun generateGameMap(players: List<Player>): GameMap {
+    override fun generateGameMap(players: List<out Player>): GameMap {
 
-        val gameMap = WormsMap()
+        val gameMap = WormsWrapperMap(players)
 
         //TODO
 
