@@ -5,7 +5,7 @@ import za.co.entelect.challenge.game.contracts.map.GameMap
 import za.co.entelect.challenge.game.contracts.player.Player
 
 
-public class WormsWrapperMap(val players: List<Player>) : GameMap {
+public class DelegateMap(val players: List<Player>) : GameMap {
 
 
     override fun getWinningPlayer(): GamePlayer {
@@ -19,8 +19,4 @@ public class WormsWrapperMap(val players: List<Player>) : GameMap {
     override fun setCurrentRound(p0: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-
-    val livingPlayers: List<Player>
-        get() = players
 }

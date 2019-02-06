@@ -1,14 +1,9 @@
 package za.co.entelect.challenge.game.engine
 
-import za.co.entelect.challenge.game.entities.WormsMap
-import za.co.entelect.challenge.game.entities.WormsPlayer
+import za.co.entelect.challenge.game.entities.GameConfig
 
-class WormsMapGenerator {
 
-    fun generateGameMap(players: List<WormsPlayer>): WormsMap {
+class WormsMapGenerator(private val config: GameConfig) {
 
-        //TODO
 
-        return WormsMap(players)
-    }
 }

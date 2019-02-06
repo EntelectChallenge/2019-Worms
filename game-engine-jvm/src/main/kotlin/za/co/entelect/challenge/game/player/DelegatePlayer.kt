@@ -1,9 +1,9 @@
-package za.co.entelect.challenge.game.entities
+package za.co.entelect.challenge.game.player
 
 import za.co.entelect.challenge.game.contracts.game.GamePlayer
+import za.co.entelect.challenge.game.entities.WormsPlayer
 
-class WormsWrapperPlayer(val id: Int): GamePlayer {
-    val dead: Boolean = false
+class DelegatePlayer: GamePlayer {
 
     override fun getHealth(): Int {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
