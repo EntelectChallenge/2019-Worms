@@ -64,27 +64,6 @@ public class GameBootstrapper {
         return gameEngineRunner.getGameResult();
     }
 
-    private Config loadConfig(String[] args) throws Exception {
-        try (FileReader fileReader = new FileReader("./game-runner-config.json")) {
-            Gson gson = new GsonBuilder().create();
-            Config config = gson.fromJson(fileReader, Config.class);
-
-            if (config == null)
-                throw new Exception("Failed to load config");
-
-            if (config.isTournamentMode) {
-
-                if (args.length != 2)
-                    throw new Exception("No bot locations specified for tournament");
-
-                config.playerAConfig = args[0];
-                config.playerBConfig = args[1];
-            }
-
-            return config;
-        }
-    }
-
     private void prepareEngineRunner(Config config) {
         gameEngineRunner = new GameEngineRunner();
 
