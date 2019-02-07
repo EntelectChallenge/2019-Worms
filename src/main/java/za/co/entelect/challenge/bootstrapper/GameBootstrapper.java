@@ -1,7 +1,5 @@
 package za.co.entelect.challenge.bootstrapper;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,13 +19,8 @@ import za.co.entelect.challenge.player.TournamentPlayer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class GameBootstrapper {
 
@@ -84,7 +77,7 @@ public class GameBootstrapper {
         if (playerConfig.equals("console")) {
             return new ConsolePlayer(String.format("BotPlayer %s", playerNumber));
         } else {
-            BotMetaData botConfig = getBotMetaData(playerConfig);
+            BotMetaData botConfig = BotMetaData.load(playerConfig);
             BotRunner botRunner = BotRunnerFactory.createBotRunner(botConfig, config.maximumBotRuntimeMilliSeconds);
 
             File botFile = new File(botConfig.getBotDirectory());
@@ -96,27 +89,6 @@ public class GameBootstrapper {
                 return new TournamentPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner, botConfig.getBotLanguage(), config.gameName);
             else
                 return new BotPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner, config.gameName);
-        }
-    }
-
-    private BotMetaData getBotMetaData(String botLocation) throws Exception {
-
-        Optional<Path> botMetaPath = Files.walk(Paths.get(botLocation))
-                .filter(path -> path.endsWith("bot.json"))
-                .findFirst();
-
-        if (!botMetaPath.isPresent()) {
-            throw new Exception("Failed to find bot meta data from location: " + botLocation);
-        }
-
-        try (FileReader fileReader = new FileReader(botMetaPath.get().toFile())) {
-
-            Gson gson = new GsonBuilder().create();
-
-            BotMetaData botMeta = gson.fromJson(fileReader, BotMetaData.class);
-            botMeta.setRelativeBotLocation(botLocation);
-
-            return botMeta;
         }
     }
 }
