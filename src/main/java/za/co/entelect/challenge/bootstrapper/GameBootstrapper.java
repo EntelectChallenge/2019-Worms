@@ -140,16 +140,21 @@ public class GameBootstrapper {
     }
 
     private BotMetaData getBotMetaData(String botLocation) throws Exception {
-        try (FileReader fileReader = new FileReader(String.format("%s/bot.json", botLocation))) {
+
+        Optional<Path> botMetaPath = Files.walk(Paths.get(botLocation))
+                .filter(path -> path.endsWith("bot.json"))
+                .findFirst();
+
+        if (!botMetaPath.isPresent()) {
+            throw new Exception("Failed to find bot meta data from location: " + botLocation);
+        }
+
+        try (FileReader fileReader = new FileReader(botMetaPath.get().toFile())) {
 
             Gson gson = new GsonBuilder().create();
 
             BotMetaData botMeta = gson.fromJson(fileReader, BotMetaData.class);
-
             botMeta.setRelativeBotLocation(botLocation);
-
-            if (botMeta == null)
-                throw new Exception("Failed to load bot meta data from location: " + botLocation);
 
             return botMeta;
         }
