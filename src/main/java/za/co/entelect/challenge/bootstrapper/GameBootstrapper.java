@@ -89,7 +89,7 @@ public class GameBootstrapper {
             if (config.isTournamentMode)
                 return new TournamentPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner, botConfig.getBotLanguage(), config.gameName);
             else
-                return new BotPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner, config.gameName);
+                return new BotPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner);
         }
     }
 }

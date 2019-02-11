@@ -13,14 +13,16 @@ import za.co.entelect.challenge.game.contracts.exceptions.TimeoutException;
 import za.co.entelect.challenge.game.contracts.game.*;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.player.Player;
+import za.co.entelect.challenge.player.BasePlayer;
+import za.co.entelect.challenge.player.entity.BotExecutionState;
 import za.co.entelect.challenge.utils.FileUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 public class GameEngineRunner implements LifecycleEngineRunner {
 
@@ -40,6 +42,8 @@ public class GameEngineRunner implements LifecycleEngineRunner {
     private GameMapGenerator gameMapGenerator;
     private GameRoundProcessor gameRoundProcessor;
     private GameResult gameResult;
+
+    private ArrayList<BotExecutionState> botExecutionStates;
 
     public GameEngineRunner() {
         this.unsubscribe = BehaviorSubject.create();
@@ -64,12 +68,11 @@ public class GameEngineRunner implements LifecycleEngineRunner {
     @Override
     public void onGameStarting() throws Exception {
 
-        prepareGameMap();
-        if (gameMap == null) {
-            throw new InvalidRunnerState("Game has not yet been prepared");
+        if (players == null || players.size() == 0) {
+            throw new InvalidRunnerState("No players provided");
         }
 
-        preparePlayers();
+        prepareGameMap();
 
         StringBuilder s = new StringBuilder();
         s.append("=======================================\n");
@@ -81,6 +84,8 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         gameResult = new GameResult();
         gameResult.isComplete = false;
         gameResult.verificationRequired = false;
+
+        botExecutionStates = new ArrayList<>();
     }
 
     @Override
@@ -93,7 +98,8 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         log.info(s);
 
         roundProcessor = new RunnerRoundProcessor(gameMap, gameRoundProcessor);
-        addToConsoleOutput.onNext(s.toString());
+
+        botExecutionStates.clear();
     }
 
     @Override
@@ -109,6 +115,17 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         s.append("=======================================\n");
 
         log.info(s);
+
+        for (BotExecutionState botExecutionState : botExecutionStates) {
+            try {
+                botExecutionState.saveRoundStateData(config.gameName);
+            }
+            catch (Exception e) {
+                log.info("Failed to write round information");
+            }
+        }
+
+        gameMap.setCurrentRound(gameMap.getCurrentRound() + 1);
     }
 
     @Override
@@ -170,8 +187,6 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             return consoleText;
         });
 
-        gameMap.setCurrentRound(gameMap.getCurrentRound() + 1);
-
         try {
             if (gameEngine.isGameComplete(gameMap)) {
                 publishGameComplete(true);
@@ -182,8 +197,16 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             return;
         }
 
+        botExecutionStates = new ArrayList<>();
         for (Player player : players) {
-            Thread thread = new Thread(() -> player.newRoundStarted(gameMap));
+
+            Thread thread = new Thread(() -> {
+                BasePlayer currentPlayer = (BasePlayer) player;
+                BotExecutionState botExecutionState = currentPlayer.executeBot(gameMap);
+
+                botExecutionStates.add(botExecutionState);
+                roundProcessor.addPlayerCommand(player, new RawCommand(botExecutionState.command));
+            });
             thread.start();
             thread.join();
         }
@@ -192,29 +215,17 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         players.forEach(p -> p.roundComplete(gameMap, gameMap.getCurrentRound()));
     }
 
-    private void preparePlayers() throws InvalidRunnerState {
-
-        if (players == null || players.size() == 0)
-            throw new InvalidRunnerState("No players provided");
-
-        for (Player player : players) {
-            player.publishCommandHandler = getPlayerCommandListener();
-        }
-    }
-
     private void prepareGameMap() throws InvalidRunnerState {
 
-        if (gameMapGenerator == null)
+        if (gameMapGenerator == null) {
             throw new InvalidRunnerState("No GameMapGenerator instance found");
+        }
 
-        if (players == null || players.size() == 0)
+        if (players == null || players.size() == 0) {
             throw new InvalidRunnerState("No players found");
+        }
 
         gameMap = gameMapGenerator.generateGameMap(players);
-    }
-
-    private BiConsumer<Player, RawCommand> getPlayerCommandListener() {
-        return (player, command) -> roundProcessor.addPlayerCommand(player, command);
     }
 
     private void publishGameComplete(boolean matchDidNotTimeout) throws Exception {

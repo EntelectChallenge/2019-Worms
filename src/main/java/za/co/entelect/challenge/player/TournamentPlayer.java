@@ -17,6 +17,7 @@ import za.co.entelect.challenge.game.contracts.command.RawCommand;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.player.Player;
 import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer;
+import za.co.entelect.challenge.network.BotServices;
 import za.co.entelect.challenge.utils.FileUtils;
 
 import java.io.File;
@@ -97,14 +98,14 @@ public class TournamentPlayer extends Player {
                 botInput = "Exception";
             }
 
-            BotPlayer.writeRoundStateData(playerSpecificJsonState,
-                    playerSpecificTextState,
-                    playerSpecificConsoleState,
-                    botInput,
-                    gameMap.getCurrentRound(),
-                    consoleOutput,
-                    getName(),
-                    saveStateLocation);
+//            BotPlayer.writeRoundStateData(playerSpecificJsonState,
+//                    playerSpecificTextState,
+//                    playerSpecificConsoleState,
+//                    botInput,
+//                    gameMap.getCurrentRound(),
+//                    consoleOutput,
+//                    getName(),
+//                    saveStateLocation);
 
         } catch (RuntimeException | IOException e) {
             log.warn(e);
@@ -122,20 +123,20 @@ public class TournamentPlayer extends Player {
         String playerSpecificTextState = textRenderer.render(gameMap, getGamePlayer());
         String playerSpecificConsoleState = consoleRenderer.render(gameMap, getGamePlayer());
 
-        try {
-            BotPlayer.writeRoundStateData(
-                    playerSpecificJsonState,
-                    playerSpecificTextState,
-                    playerSpecificConsoleState,
-                    "",
-                    gameMap.getCurrentRound(),
-                    "",
-                    getName(),
-                    saveStateLocation);
-            writeStateFiles(playerSpecificJsonState, playerSpecificTextState);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            BotPlayer.writeRoundStateData(
+//                    playerSpecificJsonState,
+//                    playerSpecificTextState,
+//                    playerSpecificConsoleState,
+//                    "",
+//                    gameMap.getCurrentRound(),
+//                    "",
+//                    getName(),
+//                    saveStateLocation);
+//            writeStateFiles(playerSpecificJsonState, playerSpecificTextState);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void writeStateFiles(String state, String textState) throws IOException {

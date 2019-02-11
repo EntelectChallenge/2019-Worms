@@ -47,7 +47,7 @@ public class RunnerRoundProcessor {
         return processed;
     }
 
-    void addPlayerCommand(Player player, RawCommand command) {
+    synchronized void addPlayerCommand(Player player, RawCommand command) {
         try {
             if (commandsToProcess.containsKey(player.getGamePlayer()))
                 throw new InvalidCommandException("Player already has a command registered for this round, wait for the next round before sending a new command");
@@ -56,9 +56,5 @@ public class RunnerRoundProcessor {
         } catch (InvalidCommandException e) {
             log.error(e.getStackTrace());
         }
-    }
-
-    void resetBackToStart() {
-
     }
 }
