@@ -1,6 +1,6 @@
 package za.co.entelect.challenge.botrunners;
 
-import za.co.entelect.challenge.entities.BotMetaData;
+import za.co.entelect.challenge.config.BotMetaData;
 import za.co.entelect.challenge.game.contracts.exceptions.TimeoutException;
 
 import java.io.IOException;

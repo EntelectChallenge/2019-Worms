@@ -3,7 +3,7 @@ package za.co.entelect.challenge.engine.runner;
 import io.reactivex.subjects.BehaviorSubject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import za.co.entelect.challenge.bootstrapper.Config;
+import za.co.entelect.challenge.config.Config;
 import za.co.entelect.challenge.config.GameConfig;
 import za.co.entelect.challenge.core.renderers.TowerDefenseConsoleMapRenderer;
 import za.co.entelect.challenge.engine.exceptions.InvalidRunnerState;

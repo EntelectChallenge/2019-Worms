@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.entities;
+package za.co.entelect.challenge.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
