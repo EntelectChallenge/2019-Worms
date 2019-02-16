@@ -1,6 +1,6 @@
 
 buildscript {
-    ext.kotlin_version = '1.3.20'
+    ext.kotlin_version = '1.3.21'
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -8,11 +8,8 @@ buildscript {
 }
 
 plugins {
-//    id 'build-scan'
     id 'idea'
     id 'maven'
-//    id 'kotlin2js' version '1.3.20'
-//    id 'org.jetbrains.kotlin.jvm' version '1.3.20'
 }
 
 group = 'za.co.entelect.challenge'
@@ -77,8 +74,8 @@ project(':game-engine-web') {
     }
 
     sourceSets {
-        main.kotlin.srcDirs += '../game-engine-core/src/main/kotlin'
-        test.kotlin.srcDirs += '../game-engine-core/src/test/kotlin'
+        main.kotlin.srcDirs += '../game-engine-core/src/main'
+        test.kotlin.srcDirs += '../game-engine-core/src/test'
     }
 
     compileKotlin2Js {
