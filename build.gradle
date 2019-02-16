@@ -10,18 +10,18 @@ buildscript {
 plugins {
     id 'idea'
     id 'maven'
+    id 'jacoco'
 }
 
 group = 'za.co.entelect.challenge'
 
-
 allprojects {
     repositories {
         mavenLocal()
+        jcenter()
         maven {
             url 'https://dl.bintray.com/entelect-challenge/game-engine'
         }
-        jcenter()
     }
 }
 
@@ -29,14 +29,13 @@ subprojects {
     version = '1.0'
 
     repositories {
-
     }
-
 }
 
 project(':game-engine-jvm') {
     apply plugin: 'kotlin'
     apply plugin: 'java'
+    apply plugin: 'jacoco'
 
     dependencies {
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
@@ -64,6 +63,22 @@ project(':game-engine-jvm') {
             jvmTarget = "1.8"
         }
     }
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                element = 'CLASS'
+                excludes = [
+                        'za.co.entelect.challenge.game.delegate.*',
+                ]
+                limit {
+                    minimum = 0.75
+                }
+            }
+        }
+    }
+
+    check.dependsOn jacocoTestCoverageVerification
 }
 
 project(':game-engine-web') {
@@ -74,7 +89,7 @@ project(':game-engine-web') {
     }
 
     sourceSets {
-        main.kotlin.srcDirs += '../game-engine-core/src/main'
+        main.kotlin.srcDirs += '../game-engine-core/src/main/kotlin'
     }
 
     compileKotlin2Js {

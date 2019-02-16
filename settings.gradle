@@ -9,5 +9,4 @@
 rootProject.name = 'ec-2019-game-engine'
 
 include "game-engine-jvm"
-//include "game-engine-core"
 include "game-engine-web"
