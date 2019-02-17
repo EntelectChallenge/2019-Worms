@@ -2,99 +2,141 @@
 buildscript {
     ext.kotlin_version = '1.3.21'
 
+    repositories {
+        mavenLocal()
+        jcenter()
+        maven {
+            url 'https://dl.bintray.com/entelect-challenge/game-engine-interfaces'
+        }
+    }
+
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
+
 plugins {
-    id 'idea'
-    id 'maven'
-    id 'jacoco'
+//    id 'idea'
+//    id 'maven'
+    id 'org.jetbrains.kotlin.multiplatform' version '1.3.21'
+}
+
+
+
+kotlin {
+    jvm()
+    js()
+
+    sourceSets {
+        commonMain {
+            kotlin.srcDir('game-engine-core/src/main')
+            dependencies {
+                implementation kotlin('stdlib-common')
+            }
+        }
+        commonTest {
+            kotlin.srcDir('game-engine-core/src/test')
+
+            dependencies {
+                implementation kotlin('test-common')
+                implementation kotlin('test-annotations-common')
+            }
+        }
+
+        jvmMain {
+            kotlin.srcDir('game-engine-jvm/src/main/kotlin')
+            dependencies {
+                implementation kotlin('stdlib-jdk8')
+                implementation 'za.co.entelect.challenge:game-engine-interface:3.0.2'
+            }
+        }
+        jvmTest {
+            kotlin.srcDir('game-engine-jvm/src/test/kotlin')
+            dependencies {
+                implementation kotlin('test-junit')
+            }
+        }
+
+        jsMain {
+            kotlin.srcDir('game-engine-web/src/main/kotlin')
+            dependencies {
+
+//                implementation kotlin("kotlin-stdlib-js")
+            }
+
+        }
+        jsTest {
+            kotlin.srcDir('game-engine-web/src/test/kotlin')
+            dependencies {
+//                implementation kotlin("kotlin-test-js")
+            }
+        }
+    }
 }
 
 group = 'za.co.entelect.challenge'
 
-allprojects {
-    repositories {
-        mavenLocal()
-        jcenter()
-        maven {
-            url 'https://dl.bintray.com/entelect-challenge/game-engine'
-        }
-    }
-}
+//
+//allprojects {
+//
+//}
 
 subprojects {
     version = '1.0'
 
     repositories {
+
     }
+
 }
-
-project(':game-engine-jvm') {
-    apply plugin: 'kotlin'
-    apply plugin: 'java'
-    apply plugin: 'jacoco'
-
-    dependencies {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-        implementation 'za.co.entelect.challenge:game-engine-interface:2019.0.0-RC0'
-
-        testImplementation 'junit:junit:4.12'
-        testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
-        testImplementation 'org.mockito:mockito-core:2.+'
-        testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
-
-    }
-
-    sourceSets {
-        main.kotlin.srcDirs += '../game-engine-core/src/main'
-        test.kotlin.srcDirs += '../game-engine-core/src/test'
-    }
-
-    compileKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
-    }
-
-    compileTestKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
-    }
-
-    jacocoTestCoverageVerification {
-        violationRules {
-            rule {
-                element = 'CLASS'
-                excludes = [
-                        'za.co.entelect.challenge.game.delegate.*',
-                ]
-                limit {
-                    minimum = 0.75
-                }
-            }
-        }
-    }
-
-    check.dependsOn jacocoTestCoverageVerification
-}
-
-project(':game-engine-web') {
-    apply plugin: 'kotlin2js'
-
-    dependencies {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib-js"
-    }
-
-    sourceSets {
-        main.kotlin.srcDirs += '../game-engine-core/src/main/kotlin'
-    }
-
-    compileKotlin2Js {
-        kotlinOptions.metaInfo = true
-    }
-}
-
+//
+//project(':game-engine-jvm') {
+//    apply plugin: 'kotlin'
+//    apply plugin: 'java'
+//
+//    dependencies {
+//        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+//        implementation 'za.co.entelect.challenge:game-engine-interface:3.0.2'
+//
+//        testImplementation 'junit:junit:4.12'
+//        testImplementation 'org.mockito:mockito-core:2.+'
+//        testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
+//
+//    }
+//
+//    sourceSets {
+//        main.kotlin.srcDirs += '../game-engine-core/src/main'
+//        test.kotlin.srcDirs += '../game-engine-core/src/test'
+//    }
+//
+//    compileKotlin {
+//        kotlinOptions {
+//            jvmTarget = "1.8"
+//        }
+//    }
+//
+//    compileTestKotlin {
+//        kotlinOptions {
+//            jvmTarget = "1.8"
+//        }
+//    }
+//}
+//
+//project(':game-engine-web') {
+//    apply plugin: 'kotlin2js'
+//
+//    dependencies {
+//        implementation "org.jetbrains.kotlin:kotlin-stdlib-js"
+//    }
+//
+//    sourceSets {
+//        main.kotlin.srcDirs += '../game-engine-core/src/main'
+//        test.kotlin.srcDirs += '../game-engine-core/src/test'
+//    }
+//
+//    compileKotlin2Js {
+//        kotlinOptions.metaInfo = true
+//    }
+//}
+//
