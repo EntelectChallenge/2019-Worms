@@ -8,4 +8,33 @@
             <password>${env.MAVEN_REPO_PASS}</password>
         </server>
     </servers>
+
+    <profiles>
+        <profile>
+            <repositories>
+                <repository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>bintray-entelect-challenge-game-engine</id>
+                    <name>bintray</name>
+                    <url>https://dl.bintray.com/entelect-challenge/game-engine</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>bintray-entelect-challenge-game-engine</id>
+                    <name>bintray-plugins</name>
+                    <url>https://dl.bintray.com/entelect-challenge/game-engine</url>
+                </pluginRepository>
+            </pluginRepositories>
+            <id>bintray</id>
+        </profile>
+    </profiles>
+    <activeProfiles>
+        <activeProfile>bintray</activeProfile>
+    </activeProfiles>
 </settings>
