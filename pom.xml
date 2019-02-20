@@ -12,7 +12,7 @@
         <repository>
             <id>bintray-entelect-challenge-game-engine-interfaces</id>
             <name>entelect-challenge-game-engine-interfaces</name>
-            <url>${env.MAVEN_REPO_URL}></url>
+            <url>${env.MAVEN_REPO_URL}</url>
         </repository>
     </distributionManagement>
 
