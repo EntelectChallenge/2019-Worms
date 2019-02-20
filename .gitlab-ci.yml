@@ -1,8 +1,7 @@
 image: maven:latest
 
 variables:
-  MAVEN_CLI_OPTS: "-s settings.xml --batch-mode"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_CLI_OPTS: "-s settings.xml -Dmaven.repo.local=.m2/repository --batch-mode"
 
 cache:
   paths:
