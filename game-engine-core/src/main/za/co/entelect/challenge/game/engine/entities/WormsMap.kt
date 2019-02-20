@@ -1,9 +1,29 @@
 package za.co.entelect.challenge.game.engine.entities;
 
+import za.co.entelect.challenge.game.engine.map.MapCell
+import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 
-public class WormsMap(val players: List<WormsPlayer>) {
+public class WormsMap(val players: List<WormsPlayer>,
+                      val rows: Int,
+                      val columns: Int,
+                      val cells: MutableList<MapCell>) {
 
+    init {
+
+    }
+
+    operator fun get(target: Point): MapCell {
+        return this[target.x, target.y]
+    }
+
+    operator fun get(x: Int, y: Int): MapCell {
+        return cells[y * columns + x]
+    }
+
+    fun addPlayerWorms(player: WormsPlayer) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     val livingPlayers: List<WormsPlayer>
         get() = players.filter { !it.dead }

@@ -20,6 +20,8 @@ class WormsPlayer(val worms: List<Worm>) {
 
     companion object {
         fun construct(config: GameConfig): WormsPlayer {
+            config.commandoWorms
+
             TODO("Not Implemented")
         }
     }
