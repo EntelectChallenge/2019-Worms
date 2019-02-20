@@ -19,7 +19,7 @@ allprojects {
     repositories {
         mavenLocal()
         maven {
-            url 'https://dl.bintray.com/entelect-challenge/game-engine-interfaces'
+            url 'https://dl.bintray.com/entelect-challenge/game-engine'
         }
         jcenter()
     }
@@ -40,7 +40,7 @@ project(':game-engine-jvm') {
 
     dependencies {
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-        implementation 'za.co.entelect.challenge:game-engine-interface:3.0.2'
+        implementation 'za.co.entelect.challenge:game-engine-interface:2019.0.0-RC0'
 
         testImplementation 'junit:junit:4.12'
         testImplementation 'org.mockito:mockito-core:2.+'
@@ -75,7 +75,6 @@ project(':game-engine-web') {
 
     sourceSets {
         main.kotlin.srcDirs += '../game-engine-core/src/main'
-        test.kotlin.srcDirs += '../game-engine-core/src/test'
     }
 
     compileKotlin2Js {
