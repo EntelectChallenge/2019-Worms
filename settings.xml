@@ -4,37 +4,8 @@
     <servers>
         <server>
             <id>bintray-entelect-challenge-game-engine-interfaces</id>
-            <username>entelectsolutions</username>
-            <password>8631be7f522cb30a78a05c308cb5a190fe8ee98c</password>
+            <username>${env.MAVEN_REPO_USER}</username>
+            <password>${env.MAVEN_REPO_PASS}</password>
         </server>
     </servers>
-    <profiles>
-        <profile>
-            <repositories>
-                <repository>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                    <id>bintray-entelect-challenge-game-engine-interfaces</id>
-                    <name>bintray</name>
-                    <url>https://dl.bintray.com/entelect-challenge/game-engine-interfaces</url>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                    <id>bintray-entelect-challenge-game-engine-interfaces</id>
-                    <name>bintray-plugins</name>
-                    <url>https://dl.bintray.com/entelect-challenge/game-engine-interfaces</url>
-                </pluginRepository>
-            </pluginRepositories>
-            <id>bintray</id>
-        </profile>
-    </profiles>
-    <activeProfiles>
-        <activeProfile>bintray</activeProfile>
-    </activeProfiles>
-
 </settings>

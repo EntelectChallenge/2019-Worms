@@ -6,13 +6,13 @@
 
     <groupId>za.co.entelect.challenge</groupId>
     <artifactId>game-engine-interface</artifactId>
-    <version>1.0-RC20</version>
+    <version>2019.1.0-RC</version>
 
     <distributionManagement>
         <repository>
             <id>bintray-entelect-challenge-game-engine-interfaces</id>
             <name>entelect-challenge-game-engine-interfaces</name>
-            <url>https://api.bintray.com/maven/entelect-challenge/game-engine-interfaces/interfaces/;publish=1</url>
+            <url>${env.MAVEN_REPO_URL}></url>
         </repository>
     </distributionManagement>
 
