@@ -7,7 +7,7 @@ interface WormsCommand {
     /**
      * Checks if the command is valid without changing anything.
      */
-    fun isValid(gameMap: WormsMap, player: Worm): Boolean
+    fun isValid(gameMap: WormsMap, worm: Worm): Boolean
 
     /**
      * Tells this command to perform the required action within the command transaction provided

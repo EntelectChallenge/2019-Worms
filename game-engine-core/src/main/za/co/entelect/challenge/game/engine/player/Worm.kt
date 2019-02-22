@@ -23,4 +23,8 @@ abstract class Worm(var health: Int, var position: Point) {
         gameMap[position].occupier = this
     }
 
+    fun takeDamage(damage: Int) {
+        health -= damage;
+    }
+
 }

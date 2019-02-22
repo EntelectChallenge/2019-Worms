@@ -1,7 +1,6 @@
 package za.co.entelect.challenge.game.engine.command
 
 
-import kotlin.test.Test
 import za.co.entelect.challenge.game.contracts.exceptions.InvalidCommandException
 import za.co.entelect.challenge.game.engine.entities.WormsMap
 import za.co.entelect.challenge.game.engine.map.CellType
@@ -9,6 +8,7 @@ import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -35,12 +35,11 @@ class TeleportCommandTest {
         val testCommand = TeleportCommand(targetPosition)
         val worm = CommandoWorm(10, startingPosition)
         val player = WormsPlayer(listOf(worm))
-        val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4,  CellType.AIR ))
+        val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
 
         assertTrue(testCommand.isValid(testMap, worm))
         testCommand.execute(testMap, worm)
 
-        assertTrue(testCommand.isValid(testMap, worm))
         assertEquals(testCommand.target, worm.position)
         assertEquals(testMap[testCommand.target].occupier, worm)
         assertEquals(0, worm.roundMoved)
@@ -54,10 +53,15 @@ class TeleportCommandTest {
         val player = WormsPlayer(listOf(worm))
         val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
 
+        testMap[1, 1].occupier = CommandoWorm(10, Point(0, 0))
+
         assertFalse(testCommand.isValid(testMap, worm))
         testCommand.execute(testMap, worm)
     }
 
+    /**
+     * When two worms move to the same cell in the same round
+     */
     @Test
     fun test_apply_pushback() {
         val testCommand = TeleportCommand(Point(1, 1))
@@ -66,12 +70,14 @@ class TeleportCommandTest {
         val player = WormsPlayer(listOf(wormA))
         val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
 
+        assertTrue(testCommand.isValid(testMap, wormA), "Command A Valid")
         testCommand.execute(testMap, wormA)
+        assertTrue(testCommand.isValid(testMap, wormB),"Command B Valid")
         testCommand.execute(testMap, wormB)
 
-        assertFalse(testMap[1,1].occupied)
-        assertTrue(testMap[0,0].occupied)
-        assertTrue(testMap[2,1].occupied)
+        assertFalse(testMap[1, 1].isOccupied(), "Target not occupied")
+        assertTrue(testMap[0, 0].isOccupied())
+        assertTrue(testMap[2, 1].isOccupied())
     }
 
     @Test
@@ -103,9 +109,11 @@ class TeleportCommandTest {
         assertTrue(TeleportCommand(1, 1).isValid(testMap, worm))
         assertTrue(TeleportCommand(1, 2).isValid(testMap, worm))
         assertTrue(TeleportCommand(1, 3).isValid(testMap, worm))
-        assertTrue(TeleportCommand(2, 1).isValid(testMap, worm))
 
+        assertTrue(TeleportCommand(2, 1).isValid(testMap, worm))
+        assertTrue(TeleportCommand(2, 2).isValid(testMap, worm))
         assertTrue(TeleportCommand(2, 3).isValid(testMap, worm))
+
         assertTrue(TeleportCommand(3, 1).isValid(testMap, worm))
         assertTrue(TeleportCommand(3, 2).isValid(testMap, worm))
         assertTrue(TeleportCommand(3, 3).isValid(testMap, worm))

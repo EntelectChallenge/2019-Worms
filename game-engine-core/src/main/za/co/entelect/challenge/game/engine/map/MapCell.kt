@@ -11,6 +11,7 @@ class MapCell(var type: CellType) {
     val diggable
         get() = type.diggable
 
-    val occupied
-        get() = occupier != null
+    fun isOccupied(): Boolean {
+        return occupier != null
+    }
 }

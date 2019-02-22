@@ -3,11 +3,13 @@ package za.co.entelect.challenge.game.engine.entities;
 import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import kotlin.random.Random
 
 public class WormsMap(val players: List<WormsPlayer>,
                       val rows: Int,
                       val columns: Int,
-                      val cells: MutableList<MapCell>) {
+                      val cells: MutableList<MapCell>,
+                      val config: GameConfig = GameConfig()) {
 
     val livingPlayers: List<WormsPlayer>
         get() = players.filter { !it.dead }
