@@ -55,7 +55,7 @@ kotlin {
         jsTest {
             kotlin.srcDir('game-engine-web/src/test/kotlin')
             dependencies {
-//                implementation kotlin("kotlin-test-js")
+                implementation kotlin("test-js")
             }
         }
     }
