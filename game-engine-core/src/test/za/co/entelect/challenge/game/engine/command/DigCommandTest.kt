@@ -8,6 +8,9 @@ import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class DigCommandTest {
 
@@ -19,7 +22,7 @@ class DigCommandTest {
 
         val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
 
-        kotlin.test.assertFalse(testCommand.isValid(testMap, worm))
+        assertFalse(testCommand.validate(testMap, worm).isValid)
         testCommand.execute(testMap, worm)
     }
 
@@ -31,7 +34,7 @@ class DigCommandTest {
 
         val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.BEDROCK))
 
-        kotlin.test.assertFalse(testCommand.isValid(testMap, worm))
+        assertFalse(testCommand.validate(testMap, worm).isValid)
         testCommand.execute(testMap, worm)
     }
 
@@ -45,10 +48,10 @@ class DigCommandTest {
         val player = WormsPlayer(listOf(worm))
         val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.DIRT))
 
-        kotlin.test.assertTrue(testCommand.isValid(testMap, worm))
+        assertTrue(testCommand.validate(testMap, worm).isValid)
         testCommand.execute(testMap, worm)
 
-        kotlin.test.assertEquals(testMap[testCommand.target].type, CellType.AIR)
+        assertEquals(testMap[testCommand.target].type, CellType.AIR)
     }
 
     @Test
@@ -58,15 +61,15 @@ class DigCommandTest {
         val testMap = WormsMap(listOf(player), 3, 3, buildMapCells(25, CellType.DIRT))
 
         for (i in 0..4) {
-            kotlin.test.assertFalse(DigCommand(0, i).isValid(testMap, worm), "(0, $i) out of range")
-            kotlin.test.assertFalse(DigCommand(4, i).isValid(testMap, worm), "(4, $i) out of range")
-            kotlin.test.assertFalse(DigCommand(i, 0).isValid(testMap, worm), "($i, 0) out of range")
-            kotlin.test.assertFalse(DigCommand(i, 4).isValid(testMap, worm), "($i, 4) out of range")
+            assertFalse(DigCommand(0, i).validate(testMap, worm).isValid, "(0, $i) out of range")
+            assertFalse(DigCommand(4, i).validate(testMap, worm).isValid, "(4, $i) out of range")
+            assertFalse(DigCommand(i, 0).validate(testMap, worm).isValid, "($i, 0) out of range")
+            assertFalse(DigCommand(i, 4).validate(testMap, worm).isValid, "($i, 4) out of range")
         }
 
         for (x in 1..3) {
             for (y in 1..3) {
-                kotlin.test.assertTrue(DigCommand(x, y).isValid(testMap, worm), "($x, $y) in range")
+                assertTrue(DigCommand(x, y).validate(testMap, worm).isValid, "($x, $y) in range")
             }
         }
     }

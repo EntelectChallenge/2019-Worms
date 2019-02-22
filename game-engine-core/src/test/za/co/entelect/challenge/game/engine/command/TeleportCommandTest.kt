@@ -23,7 +23,7 @@ class TeleportCommandTest {
 
         val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.DIRT))
 
-        assertFalse(testCommand.isValid(testMap, worm))
+        assertFalse(testCommand.validate(testMap, worm).isValid)
         testCommand.execute(testMap, worm)
     }
 
@@ -37,7 +37,7 @@ class TeleportCommandTest {
         val player = WormsPlayer(listOf(worm))
         val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
 
-        assertTrue(testCommand.isValid(testMap, worm))
+        assertTrue(testCommand.validate(testMap, worm).isValid)
         testCommand.execute(testMap, worm)
 
         assertEquals(testCommand.target, worm.position)
@@ -55,7 +55,7 @@ class TeleportCommandTest {
 
         testMap[1, 1].occupier = CommandoWorm(10, Point(0, 0))
 
-        assertFalse(testCommand.isValid(testMap, worm))
+        assertFalse(testCommand.validate(testMap, worm).isValid)
         testCommand.execute(testMap, worm)
     }
 
@@ -70,9 +70,9 @@ class TeleportCommandTest {
         val player = WormsPlayer(listOf(wormA))
         val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
 
-        assertTrue(testCommand.isValid(testMap, wormA), "Command A Valid")
+        assertTrue(testCommand.validate(testMap, wormA).isValid, "Command A Valid")
         testCommand.execute(testMap, wormA)
-        assertTrue(testCommand.isValid(testMap, wormB),"Command B Valid")
+        assertTrue(testCommand.validate(testMap, wormB).isValid,"Command B Valid")
         testCommand.execute(testMap, wormB)
 
         assertFalse(testMap[1, 1].isOccupied(), "Target not occupied")
@@ -87,15 +87,15 @@ class TeleportCommandTest {
         val testMap = WormsMap(listOf(player), 3, 3, buildMapCells(25, CellType.AIR))
 
         for (i in 0..4) {
-            assertFalse(TeleportCommand(0, i).isValid(testMap, worm), "(0, $i) out of range")
-            assertFalse(TeleportCommand(4, i).isValid(testMap, worm), "(4, $i) out of range")
-            assertFalse(TeleportCommand(i, 0).isValid(testMap, worm), "($i, 0) out of range")
-            assertFalse(TeleportCommand(i, 4).isValid(testMap, worm), "($i, 4) out of range")
+            assertFalse(TeleportCommand(0, i).validate(testMap, worm).isValid, "(0, $i) out of range")
+            assertFalse(TeleportCommand(4, i).validate(testMap, worm).isValid, "(4, $i) out of range")
+            assertFalse(TeleportCommand(i, 0).validate(testMap, worm).isValid, "($i, 0) out of range")
+            assertFalse(TeleportCommand(i, 4).validate(testMap, worm).isValid, "($i, 4) out of range")
         }
 
         for (x in 1..3) {
             for (y in 1..3) {
-                assertTrue(TeleportCommand(x, y).isValid(testMap, worm), "($x, $y) in range")
+                assertTrue(TeleportCommand(x, y).validate(testMap, worm).isValid, "($x, $y) in range")
             }
         }
     }

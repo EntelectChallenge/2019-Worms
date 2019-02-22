@@ -1,5 +1,6 @@
 package za.co.entelect.challenge.game.engine.command
 
+import za.co.entelect.challenge.game.engine.entities.MoveValidation
 import za.co.entelect.challenge.game.engine.entities.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
 
@@ -7,7 +8,7 @@ interface WormsCommand {
     /**
      * Checks if the command is valid without changing anything.
      */
-    fun isValid(gameMap: WormsMap, worm: Worm): Boolean
+    fun validate(gameMap: WormsMap, worm: Worm): MoveValidation
 
     /**
      * Tells this command to perform the required action within the command transaction provided

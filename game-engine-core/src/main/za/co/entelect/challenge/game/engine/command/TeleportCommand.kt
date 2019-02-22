@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.command
 
 import za.co.entelect.challenge.game.contracts.exceptions.InvalidCommandException
+import za.co.entelect.challenge.game.engine.entities.MoveValidation
 import za.co.entelect.challenge.game.engine.entities.WormsMap
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.Worm
@@ -8,30 +9,40 @@ import za.co.entelect.challenge.game.engine.player.Worm
 class TeleportCommand(val target: Point) : WormsCommand {
     constructor(x: Int, y: Int) : this(Point(x, y))
 
-    override fun isValid(gameMap: WormsMap, worm: Worm): Boolean {
+    override fun validate(gameMap: WormsMap, worm: Worm): MoveValidation {
         val targetCell = gameMap[target]
 
-        if (!targetCell.type.movable
-                || target.movementDistance(worm.position) > worm.movementRange
-                || targetCell.isOccupied() && !shouldPushback(gameMap, worm, targetCell.occupier)) {
-            return false
+        if (!targetCell.type.movable) {
+            return MoveValidation.invalidMove("Cannot move to ${targetCell.type}")
         }
 
-        return true
+        if (target.movementDistance(worm.position) > worm.movementRange) {
+            return MoveValidation.invalidMove( "Target too far away")
+        }
+
+        if (targetCell.isOccupied() && !wormsCollide(gameMap, worm, targetCell.occupier)) {
+            return MoveValidation.invalidMove( "Target occupied")
+        }
+
+        return MoveValidation.validMove()
     }
 
-    private fun shouldPushback(gameMap: WormsMap, movingWorm: Worm, occupier: Worm?): Boolean {
+    /**
+     * Two movements in this turn is colliding.
+     */
+    private fun wormsCollide(gameMap: WormsMap, movingWorm: Worm, occupier: Worm?): Boolean {
         return occupier != null && occupier != movingWorm && occupier.roundMoved == gameMap.currentRound
     }
 
     override fun execute(gameMap: WormsMap, worm: Worm) {
         val targetCell = gameMap[target]
 
-        if (!isValid(gameMap, worm)) {
-            throw InvalidCommandException("Invalid Move Command")
+        val moveValidation = validate(gameMap, worm)
+        if (!moveValidation.isValid) {
+            throw InvalidCommandException("Invalid Move Command: ${moveValidation.reason}")
         }
 
-        if (shouldPushback(gameMap, worm, targetCell.occupier)) {
+        if (wormsCollide(gameMap, worm, targetCell.occupier)) {
             val config = gameMap.config
             val occupier = targetCell.occupier!!
 
