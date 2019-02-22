@@ -18,9 +18,12 @@ public class GameConfig {
             random = Random(seed)
         }
 
-    @Transient var random: Random = Random
-}
+    @Transient
+    var random: Random = Random
 
-class PlayerWormDefinition(val count: Int, val initialHp: Int, val attackDamage: Int) {
+    class PlayerWormDefinition(val count: Int,
+                               val initialHp: Int,
+                               val attackDamage: Int) {
 
+    }
 }

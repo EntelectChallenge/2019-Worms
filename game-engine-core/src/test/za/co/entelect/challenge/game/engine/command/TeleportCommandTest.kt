@@ -86,37 +86,18 @@ class TeleportCommandTest {
         val player = WormsPlayer(listOf(worm))
         val testMap = WormsMap(listOf(player), 3, 3, buildMapCells(25, CellType.AIR))
 
-        assertFalse(TeleportCommand(0, 0).isValid(testMap, worm))
-        assertFalse(TeleportCommand(0, 1).isValid(testMap, worm))
-        assertFalse(TeleportCommand(0, 2).isValid(testMap, worm))
-        assertFalse(TeleportCommand(0, 3).isValid(testMap, worm))
-        assertFalse(TeleportCommand(0, 4).isValid(testMap, worm))
+        for (i in 0..4) {
+            assertFalse(TeleportCommand(0, i).isValid(testMap, worm), "(0, $i) out of range")
+            assertFalse(TeleportCommand(4, i).isValid(testMap, worm), "(4, $i) out of range")
+            assertFalse(TeleportCommand(i, 0).isValid(testMap, worm), "($i, 0) out of range")
+            assertFalse(TeleportCommand(i, 4).isValid(testMap, worm), "($i, 4) out of range")
+        }
 
-        assertFalse(TeleportCommand(4, 0).isValid(testMap, worm))
-        assertFalse(TeleportCommand(4, 1).isValid(testMap, worm))
-        assertFalse(TeleportCommand(4, 2).isValid(testMap, worm))
-        assertFalse(TeleportCommand(4, 3).isValid(testMap, worm))
-        assertFalse(TeleportCommand(4, 4).isValid(testMap, worm))
-
-        assertFalse(TeleportCommand(1, 0).isValid(testMap, worm))
-        assertFalse(TeleportCommand(2, 0).isValid(testMap, worm))
-        assertFalse(TeleportCommand(3, 0).isValid(testMap, worm))
-
-        assertFalse(TeleportCommand(1, 4).isValid(testMap, worm))
-        assertFalse(TeleportCommand(2, 4).isValid(testMap, worm))
-        assertFalse(TeleportCommand(3, 4).isValid(testMap, worm))
-
-        assertTrue(TeleportCommand(1, 1).isValid(testMap, worm))
-        assertTrue(TeleportCommand(1, 2).isValid(testMap, worm))
-        assertTrue(TeleportCommand(1, 3).isValid(testMap, worm))
-
-        assertTrue(TeleportCommand(2, 1).isValid(testMap, worm))
-        assertTrue(TeleportCommand(2, 2).isValid(testMap, worm))
-        assertTrue(TeleportCommand(2, 3).isValid(testMap, worm))
-
-        assertTrue(TeleportCommand(3, 1).isValid(testMap, worm))
-        assertTrue(TeleportCommand(3, 2).isValid(testMap, worm))
-        assertTrue(TeleportCommand(3, 3).isValid(testMap, worm))
+        for (x in 1..3) {
+            for (y in 1..3) {
+                assertTrue(TeleportCommand(x, y).isValid(testMap, worm), "($x, $y) in range")
+            }
+        }
     }
 
     private fun buildMapCells(count: Int, cellType: CellType) = (0..count).map { MapCell(cellType) }.toMutableList()

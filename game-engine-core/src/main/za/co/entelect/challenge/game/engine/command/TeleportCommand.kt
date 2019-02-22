@@ -4,19 +4,15 @@ import za.co.entelect.challenge.game.contracts.exceptions.InvalidCommandExceptio
 import za.co.entelect.challenge.game.engine.entities.WormsMap
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.Worm
-import kotlin.math.abs
 
 class TeleportCommand(val target: Point) : WormsCommand {
     constructor(x: Int, y: Int) : this(Point(x, y))
 
     override fun isValid(gameMap: WormsMap, worm: Worm): Boolean {
         val targetCell = gameMap[target]
-        val xDistance = abs(worm.position.x - target.x)
-        val yDistance = abs(worm.position.y - target.y)
 
         if (!targetCell.type.movable
-                || xDistance > worm.movementRange
-                || yDistance > worm.movementRange
+                || target.movementDistance(worm.position) > worm.movementRange
                 || targetCell.isOccupied() && !shouldPushback(gameMap, worm, targetCell.occupier)) {
             return false
         }
