@@ -13,8 +13,8 @@ interface WormsCommand {
      * Tells this command to perform the required action within the command transaction provided
      *
      * @param gameMap The game map to make command calculations
-     * @param player  The issuing player for this command
+     * @param worm  The issuing occupier for this command
      * @throws InvalidCommandException when an invalid command is executed.
      */
-    fun execute(gameMap: WormsMap, player: Worm)
+    fun execute(gameMap: WormsMap, worm: Worm)
 }

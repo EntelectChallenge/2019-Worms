@@ -9,9 +9,14 @@ public class WormsMap(val players: List<WormsPlayer>,
                       val columns: Int,
                       val cells: MutableList<MapCell>) {
 
-    init {
+    val livingPlayers: List<WormsPlayer>
+        get() = players.filter { !it.dead }
 
-    }
+    val winningPlayer: WormsPlayer?
+        get() = null
+
+    var currentRound: Int = 0
+
 
     operator fun get(target: Point): MapCell {
         return this[target.x, target.y]
@@ -20,16 +25,4 @@ public class WormsMap(val players: List<WormsPlayer>,
     operator fun get(x: Int, y: Int): MapCell {
         return cells[y * columns + x]
     }
-
-    fun addPlayerWorms(player: WormsPlayer) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    val livingPlayers: List<WormsPlayer>
-        get() = players.filter { !it.dead }
-
-    val winningPlayer: WormsPlayer?
-        get() = null
-
-    var currentRound: Int = 0
 }

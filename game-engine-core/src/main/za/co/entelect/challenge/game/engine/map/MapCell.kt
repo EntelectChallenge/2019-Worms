@@ -1,16 +1,16 @@
 package za.co.entelect.challenge.game.engine.map
 
-import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import za.co.entelect.challenge.game.engine.player.Worm
 
 class MapCell(var type: CellType) {
-    var player: WormsPlayer? = null
+    var occupier: Worm? = null
 
     val open
-        get() = type.open
+        get() = type.movable
 
     val diggable
         get() = type.diggable
 
-    val isEmpty
-        get() = player == null
+    val occupied
+        get() = occupier != null
 }
