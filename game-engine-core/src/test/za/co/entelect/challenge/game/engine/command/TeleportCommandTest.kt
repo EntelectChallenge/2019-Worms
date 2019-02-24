@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.command
 
-
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
 import za.co.entelect.challenge.game.contracts.exceptions.InvalidCommandException
 import za.co.entelect.challenge.game.engine.entities.WormsMap
 import za.co.entelect.challenge.game.engine.map.CellType
@@ -47,6 +48,28 @@ class TeleportCommandTest {
     }
 
     @Test(expected = InvalidCommandException::class)
+    fun test_apply_twice() {
+        val startingPosition = Point(0, 0)
+        val targetPosition = Point(1, 1)
+
+        val testCommand = TeleportCommand(targetPosition)
+        val worm = CommandoWorm(10, startingPosition)
+        val player = WormsPlayer(listOf(worm))
+        val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
+
+        assertTrue(testCommand.validate(testMap, worm).isValid)
+        testCommand.execute(testMap, worm)
+
+        assertEquals(testCommand.target, worm.position)
+        assertEquals(testMap[testCommand.target].occupier, worm)
+        assertEquals(0, worm.roundMoved)
+        assertEquals(startingPosition, worm.previousPosition)
+
+        assertFalse(testCommand.validate(testMap, worm).isValid)
+        testCommand.execute(testMap, worm)
+    }
+
+    @Test(expected = InvalidCommandException::class)
     fun test_apply_nonEmpty() {
         val testCommand = TeleportCommand(1, 1)
         val worm = CommandoWorm(10, Point(0, 0))
@@ -63,21 +86,53 @@ class TeleportCommandTest {
      * When two worms move to the same cell in the same round
      */
     @Test
-    fun test_apply_pushback() {
+    fun test_apply_collide_pushback() {
         val testCommand = TeleportCommand(Point(1, 1))
         val wormA = CommandoWorm(10, Point(0, 0))
         val wormB = CommandoWorm(10, Point(2, 1))
         val player = WormsPlayer(listOf(wormA))
         val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
+        testMap.config.random = mock {
+            on { nextBoolean() } doReturn true
+        }
 
         assertTrue(testCommand.validate(testMap, wormA).isValid, "Command A Valid")
         testCommand.execute(testMap, wormA)
-        assertTrue(testCommand.validate(testMap, wormB).isValid,"Command B Valid")
+        assertTrue(testCommand.validate(testMap, wormB).isValid, "Command B Valid")
         testCommand.execute(testMap, wormB)
 
         assertFalse(testMap[1, 1].isOccupied(), "Target not occupied")
         assertTrue(testMap[0, 0].isOccupied())
         assertTrue(testMap[2, 1].isOccupied())
+        assertEquals(wormA, testMap[0, 0].occupier)
+        assertEquals(wormB, testMap[2, 1].occupier)
+    }
+
+    /**
+     * When two worms move to the same cell in the same round
+     */
+    @Test
+    fun test_apply_collide_swap() {
+        val testCommand = TeleportCommand(Point(1, 1))
+        val wormA = CommandoWorm(10, Point(0, 0))
+        val wormB = CommandoWorm(10, Point(2, 1))
+        val player = WormsPlayer(listOf(wormA))
+        val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
+        testMap.config.random = mock {
+            on { nextBoolean() } doReturn false
+        }
+
+        assertTrue(testCommand.validate(testMap, wormA).isValid, "Command A Valid")
+        testCommand.execute(testMap, wormA)
+        assertTrue(testCommand.validate(testMap, wormB).isValid, "Command B Valid")
+        testCommand.execute(testMap, wormB)
+
+        assertFalse(testMap[1, 1].isOccupied(), "Target not occupied")
+        assertTrue(testMap[0, 0].isOccupied())
+        assertTrue(testMap[2, 1].isOccupied())
+
+        assertEquals(wormB, testMap[0, 0].occupier)
+        assertEquals(wormA, testMap[2, 1].occupier)
     }
 
     @Test
