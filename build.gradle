@@ -36,13 +36,14 @@ kotlin {
             kotlin.srcDir('game-engine-jvm/src/main/kotlin')
             dependencies {
                 implementation kotlin('stdlib-jdk8')
-                implementation 'za.co.entelect.challenge:game-engine-interface:3.0.2'
+                implementation 'za.co.entelect.challenge:game-engine-interface:2019.1.0-RC1'
             }
         }
         jvmTest {
             kotlin.srcDir('game-engine-jvm/src/test/kotlin')
             dependencies {
                 implementation kotlin('test-junit')
+                implementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
             }
         }
 
@@ -64,30 +65,8 @@ kotlin {
 
 group = 'za.co.entelect.challenge'
 
-task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
-    mustRunAfter jvmTest
-    executionData jvmTest
-
-    additionalClassDirs file("${buildDir}/classes/kotlin/jvm/main")
-    additionalSourceDirs file("${rootDir}/game-engine-jvm/src/main/kotlin"), file("${rootDir}/game-engine-core/src/main")
-
-    violationRules {
-        rule {
-            element = 'CLASS'
-            includes = [
-                    'za.co.entelect.challenge.game.*',
-            ]
-            excludes = [
-                    'za.co.entelect.challenge.game.delegate.*',
-            ]
-            limit {
-                minimum = 0.75
-            }
-        }
-    }
-}
-
 task jacocoTestReport(type: JacocoReport) {
+    description 'Generates a test coverage report'
     mustRunAfter jvmTest
     executionData jvmTest
 
@@ -97,7 +76,29 @@ task jacocoTestReport(type: JacocoReport) {
     reports {
         xml.enabled false
         csv.enabled false
-        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+
+task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
+    description 'Enforces test coverage on all classes'
+
+    mustRunAfter jvmTest
+    shouldRunAfter jacocoTestReport
+    executionData jvmTest
+
+    additionalClassDirs file("${buildDir}/classes/kotlin/jvm/main")
+    additionalSourceDirs file("${rootDir}/game-engine-jvm/src/main/kotlin"), file("${rootDir}/game-engine-core/src/main")
+
+    violationRules {
+        rule {
+            element = 'CLASS'
+            excludes = [
+                    'za.co.entelect.challenge.game.delegate.*',
+            ]
+            limit {
+                minimum = 0.75
+            }
+        }
     }
 }
 

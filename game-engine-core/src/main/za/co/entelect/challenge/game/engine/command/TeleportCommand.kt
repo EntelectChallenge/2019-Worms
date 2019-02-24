@@ -1,8 +1,8 @@
 package za.co.entelect.challenge.game.engine.command
 
-import za.co.entelect.challenge.game.contracts.exceptions.InvalidCommandException
 import za.co.entelect.challenge.game.engine.entities.MoveValidation
 import za.co.entelect.challenge.game.engine.entities.WormsMap
+import za.co.entelect.challenge.game.engine.exception.InvalidCommandException
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.Worm
 

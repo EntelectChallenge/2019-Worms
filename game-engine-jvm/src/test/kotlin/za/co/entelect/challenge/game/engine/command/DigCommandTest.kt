@@ -1,9 +1,9 @@
 package za.co.entelect.challenge.game.engine.command
 
 import kotlin.test.Test
-import za.co.entelect.challenge.game.contracts.exceptions.InvalidCommandException
 import za.co.entelect.challenge.game.engine.entities.GameConfig
 import za.co.entelect.challenge.game.engine.entities.WormsMap
+import za.co.entelect.challenge.game.engine.exception.InvalidCommandException
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.Point
