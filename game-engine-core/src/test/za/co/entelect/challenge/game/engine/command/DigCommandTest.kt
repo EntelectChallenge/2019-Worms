@@ -2,6 +2,7 @@ package za.co.entelect.challenge.game.engine.command
 
 import kotlin.test.Test
 import za.co.entelect.challenge.game.contracts.exceptions.InvalidCommandException
+import za.co.entelect.challenge.game.engine.entities.GameConfig
 import za.co.entelect.challenge.game.engine.entities.WormsMap
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.MapCell
@@ -14,10 +15,12 @@ import kotlin.test.assertTrue
 
 class DigCommandTest {
 
+    val config: GameConfig = GameConfig()
+
     @Test(expected = InvalidCommandException::class)
     fun test_apply_invalidType_Air() {
         val testCommand = DigCommand(1, 1)
-        val worm = CommandoWorm(10, Point(0, 0))
+        val worm = CommandoWorm.build(config, Point(0, 0))
         val player = WormsPlayer(listOf(worm))
 
         val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
@@ -29,7 +32,7 @@ class DigCommandTest {
     @Test(expected = InvalidCommandException::class)
     fun test_apply_invalidType_Bedrock() {
         val testCommand = DigCommand(1, 1)
-        val worm = CommandoWorm(10, Point(0, 0))
+        val worm = CommandoWorm.build(config, Point(0, 0))
         val player = WormsPlayer(listOf(worm))
 
         val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.BEDROCK))
@@ -40,11 +43,8 @@ class DigCommandTest {
 
     @Test
     fun test_apply_valid() {
-        val startingPosition = Point(0, 0)
-        val targetPosition = Point(1, 1)
-
-        val testCommand = DigCommand(targetPosition)
-        val worm = CommandoWorm(10, startingPosition)
+        val testCommand = DigCommand(1, 1)
+        val worm = CommandoWorm.build(config, Point(0, 0))
         val player = WormsPlayer(listOf(worm))
         val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.DIRT))
 
@@ -56,7 +56,7 @@ class DigCommandTest {
 
     @Test
     fun test_apply_tooFar() {
-        val worm = CommandoWorm(10, Point(2, 2))
+        val worm = CommandoWorm.build(config, Point(2, 2))
         val player = WormsPlayer(listOf(worm))
         val testMap = WormsMap(listOf(player), 3, 3, buildMapCells(25, CellType.DIRT))
 

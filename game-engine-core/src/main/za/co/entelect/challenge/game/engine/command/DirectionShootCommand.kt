@@ -10,14 +10,28 @@ import za.co.entelect.challenge.game.engine.player.Worm
  * - The shot hits the first occupied cell in the specified direction
  * - Any non-moveable cells block the shot
  */
-class DirectionShootCommand(val direction: Direction) : WormsCommand {
+class DirectionShootCommand(private val direction: Direction) : WormsCommand {
 
     override fun validate(gameMap: WormsMap, worm: Worm): MoveValidation {
         return MoveValidation.validMove()
     }
 
     override fun execute(gameMap: WormsMap, worm: Worm) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var distance = 1
+        var position = worm.position + direction.vector
+        var cell = gameMap[position]
+        while (distance < worm.weapon.range && cell.type.movable) {
+            if (cell.isOccupied()) {
+                //TODO: Take damage
+                //TODO: Stop
+            }
+
+            position += direction.vector
+            distance += 1
+            cell = gameMap[position]
+        }
+        //TODO: Maybe return feedback?
+        //How will player/visualiser know which worm was hit?
     }
 
 }

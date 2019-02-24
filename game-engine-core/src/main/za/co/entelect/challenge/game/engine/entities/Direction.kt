@@ -2,7 +2,7 @@ package za.co.entelect.challenge.game.engine.entities
 
 import za.co.entelect.challenge.game.engine.map.Point
 
-enum class Direction(val point: Point) {
+enum class Direction(val vector: Point) {
     UP(0, -1),
     UP_RIGHT(1, -1),
     RIGHT(1, 0),

@@ -5,6 +5,7 @@ import za.co.entelect.challenge.game.engine.map.Point
 
 abstract class Worm(var health: Int,
                     var position: Point,
+                    var weapon: Weapon,
                     val diggingRange: Int = 1,
                     val movementRange: Int = 1) {
 
@@ -25,7 +26,7 @@ abstract class Worm(var health: Int,
     }
 
     fun takeDamage(damage: Int) {
-        health -= damage;
+        health -= damage
     }
 
 }
