@@ -1,6 +1,7 @@
 
 plugins {
     id 'org.jetbrains.kotlin.multiplatform' version '1.3.21'
+    id 'jacoco'
 }
 
 repositories {
@@ -62,3 +63,43 @@ kotlin {
 }
 
 group = 'za.co.entelect.challenge'
+
+task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
+    mustRunAfter jvmTest
+    executionData jvmTest
+
+    additionalClassDirs file("${buildDir}/classes/kotlin/jvm/main")
+    additionalSourceDirs file("${rootDir}/game-engine-jvm/src/main/kotlin"), file("${rootDir}/game-engine-core/src/main")
+
+    violationRules {
+        rule {
+            element = 'CLASS'
+            includes = [
+                    'za.co.entelect.challenge.game.*',
+            ]
+            excludes = [
+                    'za.co.entelect.challenge.game.delegate.*',
+            ]
+            limit {
+                minimum = 0.75
+            }
+        }
+    }
+}
+
+task jacocoTestReport(type: JacocoReport) {
+    mustRunAfter jvmTest
+    executionData jvmTest
+
+    additionalClassDirs file("${buildDir}/classes/kotlin/jvm/main")
+    additionalSourceDirs file("${rootDir}/game-engine-jvm/src/main/kotlin"), file("${rootDir}/game-engine-core/src/main")
+
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
+check.dependsOn jacocoTestReport
