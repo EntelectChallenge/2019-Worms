@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.entities
 
 import za.co.entelect.challenge.game.engine.player.Weapon
+import kotlin.jvm.Transient
 import kotlin.random.Random
 
 

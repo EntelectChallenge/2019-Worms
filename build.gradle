@@ -8,7 +8,7 @@ repositories {
     mavenLocal()
     jcenter()
     maven {
-        url 'https://dl.bintray.com/entelect-challenge/game-engine-interfaces'
+        url 'https://dl.bintray.com/entelect-challenge/game-engine'
     }
 }
 
@@ -36,7 +36,7 @@ kotlin {
             kotlin.srcDir('game-engine-jvm/src/main/kotlin')
             dependencies {
                 implementation kotlin('stdlib-jdk8')
-                implementation 'za.co.entelect.challenge:game-engine-interface:2019.1.0-RC1'
+                implementation 'za.co.entelect.challenge:game-engine-interface:2019.0.0-RC0'
             }
         }
         jvmTest {
