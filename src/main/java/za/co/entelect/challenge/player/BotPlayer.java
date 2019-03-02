@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 import za.co.entelect.challenge.botrunners.BotRunner;
 import za.co.entelect.challenge.game.contracts.exceptions.TimeoutException;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
-import za.co.entelect.challenge.player.entity.BotExecutionState;
+import za.co.entelect.challenge.player.entity.BotExecutionContext;
 import za.co.entelect.challenge.utils.FileUtils;
 
 import java.io.BufferedReader;
@@ -35,12 +35,7 @@ public class BotPlayer extends BasePlayer {
     }
 
     @Override
-    public void newRoundStarted(GameMap gameMap) {
-
-    }
-
-    @Override
-    public String getCommand(BotExecutionState botExecutionState) throws Exception {
+    public String getCommand(BotExecutionContext botExecutionContext) throws Exception {
 
         File existingCommandFile = new File(String.format("%s/%s", botRunner.getBotDirectory(), BOT_COMMAND));
 
@@ -48,8 +43,8 @@ public class BotPlayer extends BasePlayer {
             existingCommandFile.delete();
         }
 
-        FileUtils.writeToFile(String.format("%s/%s", botRunner.getBotDirectory(), BOT_STATE), botExecutionState.jsonState);
-        FileUtils.writeToFile(String.format("%s/%s", botRunner.getBotDirectory(), TEXT_MAP), botExecutionState.textState);
+        FileUtils.writeToFile(String.format("%s/%s", botRunner.getBotDirectory(), BOT_STATE), botExecutionContext.jsonState);
+        FileUtils.writeToFile(String.format("%s/%s", botRunner.getBotDirectory(), TEXT_MAP), botExecutionContext.textState);
 
         String botCommand = "";
         File botCommandFile = new File(String.format("%s/%s", botRunner.getBotDirectory(), BOT_COMMAND));
@@ -68,7 +63,8 @@ public class BotPlayer extends BasePlayer {
             log.info("Bot execution failed: " + e.getLocalizedMessage());
         }
 
-        catch (TimeoutException e) { // IOException caught first, nothing happens after
+        // IOException caught first, nothing happens after
+        catch (TimeoutException e) {
             log.info("Bot execution failed: " + e.getLocalizedMessage());
             incrementTimeoutCounts();
         }

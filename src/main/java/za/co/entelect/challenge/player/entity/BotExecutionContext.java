@@ -5,7 +5,7 @@ import za.co.entelect.challenge.utils.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class BotExecutionState {
+public class BotExecutionContext {
 
     public String jsonState;
     public String textState;

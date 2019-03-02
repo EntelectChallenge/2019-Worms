@@ -2,29 +2,31 @@ package za.co.entelect.challenge.player;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import za.co.entelect.challenge.core.renderers.TowerDefenseConsoleMapRenderer;
-import za.co.entelect.challenge.core.renderers.TowerDefenseJsonGameMapRenderer;
-import za.co.entelect.challenge.core.renderers.TowerDefenseTextMapRenderer;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.player.Player;
 import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer;
-import za.co.entelect.challenge.player.entity.BotExecutionState;
+import za.co.entelect.challenge.game.contracts.renderer.RendererFactory;
+import za.co.entelect.challenge.game.contracts.renderer.RendererType;
+import za.co.entelect.challenge.player.entity.BotExecutionContext;
 
 public abstract class BasePlayer extends Player {
 
     private static final String NO_COMMAND = "No Command";
     private static final Logger log = LogManager.getLogger(BotPlayer.class);
 
-    private GameMapRenderer jsonRenderer;
-    private GameMapRenderer textRenderer;
-    private GameMapRenderer consoleRenderer;
+    protected GameMapRenderer jsonRenderer;
+    protected GameMapRenderer textRenderer;
+    protected GameMapRenderer consoleRenderer;
 
     public BasePlayer(String name) {
         super(name);
+    }
 
-        jsonRenderer = new TowerDefenseJsonGameMapRenderer();
-        textRenderer = new TowerDefenseTextMapRenderer();
-        consoleRenderer = new TowerDefenseConsoleMapRenderer();
+    @Override
+    public void instantiateRenderer(RendererFactory rendererFactory) {
+        jsonRenderer = rendererFactory.getRenderer(RendererType.JSON);
+        textRenderer = rendererFactory.getRenderer(RendererType.TEXT);
+        consoleRenderer = rendererFactory.getRenderer(RendererType.CONSOLE);
     }
 
     @Override
@@ -37,38 +39,36 @@ public abstract class BasePlayer extends Player {
 //        @TODO Change the lifecycle in the interfaces
     }
 
-    public BotExecutionState executeBot(GameMap gameMap) {
+    public BotExecutionContext executeBot(GameMap gameMap) {
 
-        BotExecutionState botExecutionState = new BotExecutionState();
+        BotExecutionContext botExecutionContext = new BotExecutionContext();
 
-        botExecutionState.name = getName();
-        botExecutionState.jsonState = jsonRenderer.render(gameMap, getGamePlayer());
-        botExecutionState.textState = textRenderer.render(gameMap, getGamePlayer());
-        botExecutionState.consoleState = consoleRenderer.render(gameMap, getGamePlayer());
-        botExecutionState.round = gameMap.getCurrentRound();
+        botExecutionContext.name = getName();
+        botExecutionContext.jsonState = jsonRenderer.render(gameMap, getGamePlayer());
+        botExecutionContext.textState = textRenderer.render(gameMap, getGamePlayer());
+        botExecutionContext.consoleState = consoleRenderer.render(gameMap, getGamePlayer());
+        botExecutionContext.round = gameMap.getCurrentRound();
 
         String command;
         try {
             // Get a command from the bot
             // The manner in which we get the command will depend
             // on the subclasses i.e Console, File, etc.
-            command = getCommand(botExecutionState);
+            command = getCommand(botExecutionContext);
             if (command == null || command.isEmpty()) {
                 throw new Exception();
             }
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("No command provided. Falling back to no command.");
             command = NO_COMMAND;
         }
 
-        botExecutionState.command = command;
+        botExecutionContext.command = command;
 
-        return botExecutionState;
+        return botExecutionContext;
     }
 
-    public abstract String getCommand(BotExecutionState botExecutionState) throws Exception;
+    public abstract String getCommand(BotExecutionContext botExecutionContext) throws Exception;
 
     @Override
     public void gameEnded(GameMap gameMap) {

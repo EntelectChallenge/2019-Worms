@@ -3,9 +3,7 @@ package za.co.entelect.challenge.engine.runner;
 import io.reactivex.subjects.BehaviorSubject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import za.co.entelect.challenge.config.Config;
-import za.co.entelect.challenge.config.GameConfig;
-import za.co.entelect.challenge.core.renderers.TowerDefenseConsoleMapRenderer;
+import za.co.entelect.challenge.config.GameRunnerConfig;
 import za.co.entelect.challenge.engine.exceptions.InvalidRunnerState;
 import za.co.entelect.challenge.game.contracts.command.RawCommand;
 import za.co.entelect.challenge.game.contracts.exceptions.MatchFailedException;
@@ -13,8 +11,11 @@ import za.co.entelect.challenge.game.contracts.exceptions.TimeoutException;
 import za.co.entelect.challenge.game.contracts.game.*;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.player.Player;
+import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer;
+import za.co.entelect.challenge.game.contracts.renderer.RendererFactory;
+import za.co.entelect.challenge.game.contracts.renderer.RendererType;
 import za.co.entelect.challenge.player.BasePlayer;
-import za.co.entelect.challenge.player.entity.BotExecutionState;
+import za.co.entelect.challenge.player.entity.BotExecutionContext;
 import za.co.entelect.challenge.utils.FileUtils;
 
 import java.io.BufferedWriter;
@@ -28,7 +29,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     private static final Logger log = LogManager.getLogger(GameEngineRunner.class);
 
-    private Config config;
+    private GameRunnerConfig gameRunnerConfig;
 
     private String consoleOutput = "";
     private BehaviorSubject<String> addToConsoleOutput;
@@ -43,7 +44,8 @@ public class GameEngineRunner implements LifecycleEngineRunner {
     private GameRoundProcessor gameRoundProcessor;
     private GameResult gameResult;
 
-    private ArrayList<BotExecutionState> botExecutionStates;
+    private ArrayList<BotExecutionContext> botExecutionContexts;
+    private RendererFactory rendererFactory;
 
     public GameEngineRunner() {
         this.unsubscribe = BehaviorSubject.create();
@@ -73,6 +75,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         }
 
         prepareGameMap();
+        preparePlayers();
 
         StringBuilder s = new StringBuilder();
         s.append("=======================================\n");
@@ -85,7 +88,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         gameResult.isComplete = false;
         gameResult.verificationRequired = false;
 
-        botExecutionStates = new ArrayList<>();
+        botExecutionContexts = new ArrayList<>();
     }
 
     @Override
@@ -99,7 +102,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
         roundProcessor = new RunnerRoundProcessor(gameMap, gameRoundProcessor);
 
-        botExecutionStates.clear();
+        botExecutionContexts.clear();
     }
 
     @Override
@@ -116,11 +119,10 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
         log.info(s);
 
-        for (BotExecutionState botExecutionState : botExecutionStates) {
+        for (BotExecutionContext botExecutionContext : botExecutionContexts) {
             try {
-                botExecutionState.saveRoundStateData(config.gameName);
-            }
-            catch (Exception e) {
+                botExecutionContext.saveRoundStateData(gameRunnerConfig.gameName);
+            } catch (Exception e) {
                 log.info("Failed to write round information");
             }
         }
@@ -154,7 +156,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         log.info("=======================================");
 
         try {
-            String roundLocation = String.format("%s/%s/endGameState.txt", config.gameName, FileUtils.getRoundDirectory(gameMap.getCurrentRound()));
+            String roundLocation = String.format("%s/%s/endGameState.txt", gameRunnerConfig.gameName, FileUtils.getRoundDirectory(gameMap.getCurrentRound()));
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(roundLocation)));
 
             if (winner == null) {
@@ -177,7 +179,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
     }
 
     private void processRound() throws Exception {
-        TowerDefenseConsoleMapRenderer renderer = new TowerDefenseConsoleMapRenderer();
+        GameMapRenderer renderer = rendererFactory.getRenderer(RendererType.CONSOLE);
 
         // Only execute the render if the log mode is in INFO.
         log.info(() -> {
@@ -197,15 +199,14 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             return;
         }
 
-        botExecutionStates = new ArrayList<>();
         for (Player player : players) {
 
             Thread thread = new Thread(() -> {
                 BasePlayer currentPlayer = (BasePlayer) player;
-                BotExecutionState botExecutionState = currentPlayer.executeBot(gameMap);
+                BotExecutionContext botExecutionContext = currentPlayer.executeBot(gameMap);
 
-                botExecutionStates.add(botExecutionState);
-                roundProcessor.addPlayerCommand(player, new RawCommand(botExecutionState.command));
+                botExecutionContexts.add(botExecutionContext);
+                roundProcessor.addPlayerCommand(player, new RawCommand(botExecutionContext.command));
             });
             thread.start();
             thread.join();
@@ -226,6 +227,12 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         }
 
         gameMap = gameMapGenerator.generateGameMap(players);
+    }
+
+    private void preparePlayers() {
+        for (Player player : players) {
+            player.instantiateRenderer(rendererFactory);
+        }
     }
 
     private void publishGameComplete(boolean matchDidNotTimeout) throws Exception {
@@ -262,36 +269,36 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             throw new MatchFailedException("Match timed out");
         }
 
-        int minExpectRounds = 36;
-        if (gameResult.roundsPlayed < minExpectRounds) {
-            gameResult.verificationRequired = true;
-            throw new MatchFailedException("Match duration was " + gameResult.roundsPlayed +
-                    " rounds, still less than the expected " + minExpectRounds + " rounds");
-        }
-
-        int minExpectScore = gameResult.roundsPlayed * GameConfig.getRoundIncomeEnergy() * GameConfig.getEnergyScoreMultiplier();
-        if (gameResult.playerOnePoints <= minExpectScore) {
-            gameResult.verificationRequired = true;
-            throw new MatchFailedException("BotPlayer One scored only" + gameResult.playerOnePoints +
-                    " points, not even the expected " + minExpectScore + " points");
-        }
-        if (gameResult.playerTwoPoints <= minExpectScore) {
-            gameResult.verificationRequired = true;
-            throw new MatchFailedException("BotPlayer Two scored only" + gameResult.playerTwoPoints +
-                    " points, not even the expected " + minExpectScore + " points");
-        }
-
-        int minExpectTimeouts = 0;
-        int playerOneTimeOuts = players.get(0).getTimeoutCounts();
-        if (playerOneTimeOuts > minExpectTimeouts) {
-            gameResult.verificationRequired = true;
-            throw new MatchFailedException("BotPlayer One timed out " + playerOneTimeOuts + " times");
-        }
-        int playerTwoTimeOuts = players.get(1).getTimeoutCounts();
-        if (playerTwoTimeOuts > minExpectTimeouts) {
-            gameResult.verificationRequired = true;
-            throw new MatchFailedException("BotPlayer Two timed out " + playerTwoTimeOuts + " times");
-        }
+//        int minExpectRounds = 36;
+//        if (gameResult.roundsPlayed < minExpectRounds) {
+//            gameResult.verificationRequired = true;
+//            throw new MatchFailedException("Match duration was " + gameResult.roundsPlayed +
+//                    " rounds, still less than the expected " + minExpectRounds + " rounds");
+//        }
+//
+//        int minExpectScore = gameResult.roundsPlayed * GameConfig.getRoundIncomeEnergy() * GameConfig.getEnergyScoreMultiplier();
+//        if (gameResult.playerOnePoints <= minExpectScore) {
+//            gameResult.verificationRequired = true;
+//            throw new MatchFailedException("BotPlayer One scored only" + gameResult.playerOnePoints +
+//                    " points, not even the expected " + minExpectScore + " points");
+//        }
+//        if (gameResult.playerTwoPoints <= minExpectScore) {
+//            gameResult.verificationRequired = true;
+//            throw new MatchFailedException("BotPlayer Two scored only" + gameResult.playerTwoPoints +
+//                    " points, not even the expected " + minExpectScore + " points");
+//        }
+//
+//        int minExpectTimeouts = 0;
+//        int playerOneTimeOuts = players.get(0).getTimeoutCounts();
+//        if (playerOneTimeOuts > minExpectTimeouts) {
+//            gameResult.verificationRequired = true;
+//            throw new MatchFailedException("BotPlayer One timed out " + playerOneTimeOuts + " times");
+//        }
+//        int playerTwoTimeOuts = players.get(1).getTimeoutCounts();
+//        if (playerTwoTimeOuts > minExpectTimeouts) {
+//            gameResult.verificationRequired = true;
+//            throw new MatchFailedException("BotPlayer Two timed out " + playerTwoTimeOuts + " times");
+//        }
 
     }
 
@@ -313,14 +320,15 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     public static class Builder {
 
-        Config config;
+        GameRunnerConfig gameRunnerConfig;
         GameEngine gameEngine;
         GameMapGenerator gameMapGenerator;
         GameRoundProcessor roundProcessor;
         List<Player> players;
+        RendererFactory rendererFactory;
 
-        public Builder setConfig(Config config) {
-            this.config = config;
+        public Builder setGameRunnerConfig(GameRunnerConfig gameRunnerConfig) {
+            this.gameRunnerConfig = gameRunnerConfig;
             return this;
         }
 
@@ -344,14 +352,20 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             return this;
         }
 
+        public Builder setRendererFactory(RendererFactory rendererFactory) {
+            this.rendererFactory = rendererFactory;
+            return this;
+        }
+
         public GameEngineRunner build() {
             GameEngineRunner gameEngineRunner = new GameEngineRunner();
 
-            gameEngineRunner.config = config;
+            gameEngineRunner.gameRunnerConfig = gameRunnerConfig;
             gameEngineRunner.gameEngine = gameEngine;
             gameEngineRunner.gameMapGenerator = gameMapGenerator;
             gameEngineRunner.gameRoundProcessor = roundProcessor;
             gameEngineRunner.players = players;
+            gameEngineRunner.rendererFactory = rendererFactory;
 
             return gameEngineRunner;
         }
