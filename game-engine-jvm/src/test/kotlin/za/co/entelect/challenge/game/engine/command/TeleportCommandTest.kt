@@ -2,11 +2,11 @@ package za.co.entelect.challenge.game.engine.command
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import za.co.entelect.challenge.game.engine.command.TestMapFactory.buildMapCells
 import za.co.entelect.challenge.game.engine.entities.GameConfig
 import za.co.entelect.challenge.game.engine.entities.WormsMap
 import za.co.entelect.challenge.game.engine.exception.InvalidCommandException
 import za.co.entelect.challenge.game.engine.map.CellType
-import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
@@ -158,5 +158,5 @@ class TeleportCommandTest {
         }
     }
 
-    private fun buildMapCells(count: Int, cellType: CellType) = (0..count).map { MapCell(cellType) }.toMutableList()
+
 }

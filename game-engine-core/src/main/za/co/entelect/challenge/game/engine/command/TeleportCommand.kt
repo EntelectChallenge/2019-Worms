@@ -47,8 +47,8 @@ class TeleportCommand(val target: Point) : WormsCommand {
         if (occupier != null && wormsCollide(gameMap, worm, occupier)) {
             val config = gameMap.config
 
-            worm.takeDamage(config.pushbackDamage)
-            occupier.takeDamage(config.pushbackDamage)
+            worm.takeDamage(config.pushbackDamage, gameMap.currentRound)
+            occupier.takeDamage(config.pushbackDamage, gameMap.currentRound)
 
             // 50% chance to pushback or swap positions
             if (config.random.nextBoolean()) {

@@ -11,6 +11,7 @@ abstract class Worm(var health: Int,
 
     var previousPosition = position
     var roundMoved = Int.MIN_VALUE
+    var hitRound: Int = -1;
 
     val dead: Boolean
         get() = health == 0
@@ -25,8 +26,10 @@ abstract class Worm(var health: Int,
         gameMap[position].occupier = this
     }
 
-    fun takeDamage(damage: Int) {
+
+    fun takeDamage(damage: Int, round: Int) {
         health -= damage
+        hitRound = round
     }
 
 }

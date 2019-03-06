@@ -11,7 +11,7 @@ public class GameConfig {
 
     val maxRounds = 0
     val maxDoNothings = 10
-    val commandoWorms = PlayerWormDefinition(2, 100, 10, Weapon(1, 3))
+    val commandoWorms = PlayerWormDefinition(2, 100, Weapon(1, 3))
     val pushbackDamage = 5
     var seed: Long = 0
         set(value) {
@@ -24,8 +24,7 @@ public class GameConfig {
 
     class PlayerWormDefinition(val count: Int,
                                val initialHp: Int,
-                               val attackDamage: Int,
-    val weapon: Weapon) {
+                               val weapon: Weapon) {
 
     }
 }

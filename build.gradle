@@ -94,6 +94,7 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
             element = 'CLASS'
             excludes = [
                     'za.co.entelect.challenge.game.delegate.*',
+                    'za.co.entelect.challenge.game.engine.map.Point'
             ]
             limit {
                 minimum = 0.75
