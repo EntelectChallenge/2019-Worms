@@ -8,7 +8,7 @@ import za.co.entelect.challenge.game.engine.player.WormsPlayer
 class WormsMap(val players: List<WormsPlayer>,
                val rows: Int,
                val columns: Int,
-               val cells: MutableList<MapCell>,
+               val cells: List<MapCell>,
                val config: GameConfig = GameConfig()) {
 
     private val xRange = 0 until columns

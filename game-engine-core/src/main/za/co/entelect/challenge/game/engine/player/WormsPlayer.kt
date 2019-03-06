@@ -6,11 +6,8 @@ class WormsPlayer(val worms: List<Worm>) {
 
     var currentWorm: Worm = worms[0]
 
-    val livingWorms
-        get() = worms.filter { !it.dead }
-
     val health: Int
-        get() = worms.sumBy { it.health }
+        get() = worms.filter { !it.dead }.sumBy { it.health }
 
     val dead
         get() = worms.all { it.dead }

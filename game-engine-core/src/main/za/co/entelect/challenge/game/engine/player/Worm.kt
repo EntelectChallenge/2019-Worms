@@ -11,7 +11,7 @@ abstract class Worm(var health: Int,
 
     var previousPosition = position
     var roundMoved = Int.MIN_VALUE
-    var hitRound: Int = -1;
+    var hitRound: Int = -1
 
     val dead: Boolean
         get() = health == 0
