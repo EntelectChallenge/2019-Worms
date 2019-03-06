@@ -10,6 +10,10 @@ class TeleportCommand(val target: Point) : WormsCommand {
     constructor(x: Int, y: Int) : this(Point(x, y))
 
     override fun validate(gameMap: WormsMap, worm: Worm): MoveValidation {
+        if (target !in gameMap) {
+            return MoveValidation.invalidMove("$target out of map bounds")
+        }
+
         val targetCell = gameMap[target]
 
         if (!targetCell.type.movable) {
@@ -17,12 +21,12 @@ class TeleportCommand(val target: Point) : WormsCommand {
         }
 
         if (target.movementDistance(worm.position) > worm.movementRange) {
-            return MoveValidation.invalidMove( "Target too far away")
+            return MoveValidation.invalidMove("Target too far away")
         }
 
         val occupier = targetCell.occupier
         if (occupier != null && !wormsCollide(gameMap, worm, occupier)) {
-            return MoveValidation.invalidMove( "Target occupied")
+            return MoveValidation.invalidMove("Target occupied")
         }
 
         return MoveValidation.validMove()
@@ -36,13 +40,12 @@ class TeleportCommand(val target: Point) : WormsCommand {
     }
 
     override fun execute(gameMap: WormsMap, worm: Worm) {
-        val targetCell = gameMap[target]
-
         val moveValidation = validate(gameMap, worm)
         if (!moveValidation.isValid) {
             throw InvalidCommandException("Invalid Move Command: ${moveValidation.reason}")
         }
 
+        val targetCell = gameMap[target]
         val occupier = targetCell.occupier
         if (occupier != null && wormsCollide(gameMap, worm, occupier)) {
             val config = gameMap.config

@@ -11,6 +11,10 @@ class DigCommand(val target: Point) : WormsCommand {
     constructor(x: Int, y: Int) : this(Point(x, y))
 
     override fun validate(gameMap: WormsMap, worm: Worm): MoveValidation {
+        if (target !in gameMap) {
+            return MoveValidation.invalidMove("$target out of map bounds")
+        }
+
         val targetCell = gameMap[target]
 
         if (!targetCell.type.diggable) {
@@ -25,13 +29,13 @@ class DigCommand(val target: Point) : WormsCommand {
     }
 
     override fun execute(gameMap: WormsMap, worm: Worm) {
-        val targetCell = gameMap[target]
 
         val moveValidation = validate(gameMap, worm)
         if (!moveValidation.isValid) {
             throw InvalidCommandException("Invalid Dig Command: ${moveValidation.reason}")
         }
 
+        val targetCell = gameMap[target]
         targetCell.type = CellType.AIR
     }
 

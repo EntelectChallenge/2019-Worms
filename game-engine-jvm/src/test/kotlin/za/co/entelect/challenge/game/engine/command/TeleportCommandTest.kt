@@ -2,9 +2,8 @@ package za.co.entelect.challenge.game.engine.command
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import za.co.entelect.challenge.game.engine.command.TestMapFactory.buildMapCells
+import za.co.entelect.challenge.game.engine.command.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.entities.GameConfig
-import za.co.entelect.challenge.game.engine.entities.WormsMap
 import za.co.entelect.challenge.game.engine.exception.InvalidCommandException
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
@@ -20,12 +19,24 @@ class TeleportCommandTest {
     val config: GameConfig = GameConfig()
 
     @Test(expected = InvalidCommandException::class)
+    fun test_apply_outOfRange() {
+        val testCommand = TeleportCommand(4, 4)
+        val worm = CommandoWorm.build(config, Point(0, 0))
+        val player = WormsPlayer(listOf(worm))
+
+        val testMap = buildMapWithCellType(listOf(player), 4, 4, CellType.AIR)
+
+        assertFalse(testCommand.validate(testMap, worm).isValid)
+        testCommand.execute(testMap, worm)
+    }
+
+    @Test(expected = InvalidCommandException::class)
     fun test_apply_invalidType() {
         val testCommand = TeleportCommand(1, 1)
         val worm = CommandoWorm.build(config, Point(0, 0))
         val player = WormsPlayer(listOf(worm))
 
-        val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.DIRT))
+        val testMap = buildMapWithCellType(listOf(player), 2, 2, CellType.DIRT)
 
         assertFalse(testCommand.validate(testMap, worm).isValid)
         testCommand.execute(testMap, worm)
@@ -39,7 +50,7 @@ class TeleportCommandTest {
         val testCommand = TeleportCommand(targetPosition)
         val worm = CommandoWorm.build(config, Point(0, 0))
         val player = WormsPlayer(listOf(worm))
-        val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
+        val testMap = buildMapWithCellType(listOf(player), 2, 2, CellType.AIR)
 
         assertTrue(testCommand.validate(testMap, worm).isValid)
         testCommand.execute(testMap, worm)
@@ -58,7 +69,7 @@ class TeleportCommandTest {
         val testCommand = TeleportCommand(targetPosition)
         val worm = CommandoWorm.build(config, startingPosition)
         val player = WormsPlayer(listOf(worm))
-        val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
+        val testMap = buildMapWithCellType(listOf(player), 2, 2, CellType.AIR)
 
         assertTrue(testCommand.validate(testMap, worm).isValid)
         testCommand.execute(testMap, worm)
@@ -77,7 +88,7 @@ class TeleportCommandTest {
         val testCommand = TeleportCommand(1, 1)
         val worm = CommandoWorm.build(config, Point(0, 0))
         val player = WormsPlayer(listOf(worm))
-        val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
+        val testMap = buildMapWithCellType(listOf(player), 2, 2, CellType.AIR)
 
         testMap[1, 1].occupier = CommandoWorm.build(config, Point(0, 0))
 
@@ -94,7 +105,8 @@ class TeleportCommandTest {
         val wormA = CommandoWorm.build(config, Point(0, 0))
         val wormB = CommandoWorm.build(config, Point(2, 1))
         val player = WormsPlayer(listOf(wormA))
-        val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
+        val testMap = buildMapWithCellType(listOf(player), 4, 4, CellType.AIR)
+
         testMap.config.random = mock {
             on { nextBoolean() } doReturn true
         }
@@ -120,7 +132,7 @@ class TeleportCommandTest {
         val wormA = CommandoWorm.build(config, Point(0, 0))
         val wormB = CommandoWorm.build(config, Point(2, 1))
         val player = WormsPlayer(listOf(wormA))
-        val testMap = WormsMap(listOf(player), 2, 2, buildMapCells(4, CellType.AIR))
+        val testMap = buildMapWithCellType(listOf(player), 3, 3, CellType.AIR)
         testMap.config.random = mock {
             on { nextBoolean() } doReturn false
         }
@@ -142,7 +154,7 @@ class TeleportCommandTest {
     fun test_apply_tooFar() {
         val worm = CommandoWorm.build(config, Point(2, 2))
         val player = WormsPlayer(listOf(worm))
-        val testMap = WormsMap(listOf(player), 3, 3, buildMapCells(25, CellType.AIR))
+        val testMap = buildMapWithCellType(listOf(player), 5, 5, CellType.AIR)
 
         for (i in 0..4) {
             assertFalse(TeleportCommand(0, i).validate(testMap, worm).isValid, "(0, $i) out of range")
@@ -153,7 +165,11 @@ class TeleportCommandTest {
 
         for (x in 1..3) {
             for (y in 1..3) {
-                assertTrue(TeleportCommand(x, y).validate(testMap, worm).isValid, "($x, $y) in range")
+                if (x == 2 && y == 2) {
+                    assertFalse(TeleportCommand(x, y).validate(testMap, worm).isValid, "($x, $y) occupied")
+                } else {
+                    assertTrue(TeleportCommand(x, y).validate(testMap, worm).isValid, "($x, $y) in range")
+                }
             }
         }
     }

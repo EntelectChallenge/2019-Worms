@@ -4,7 +4,6 @@ import za.co.entelect.challenge.game.engine.entities.GameConfig
 
 class WormsPlayer(val worms: List<Worm>) {
 
-    var consecutiveDoNothings = 0
     var currentWorm: Worm = worms[0]
 
     val livingWorms
@@ -20,7 +19,6 @@ class WormsPlayer(val worms: List<Worm>) {
 
     companion object {
         fun construct(config: GameConfig): WormsPlayer {
-            config.commandoWorms
 
             TODO("Not Implemented")
         }

@@ -6,10 +6,10 @@ import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 
 class WormsMap(val players: List<WormsPlayer>,
-                      val rows: Int,
-                      val columns: Int,
-                      val cells: MutableList<MapCell>,
-                      val config: GameConfig = GameConfig()) {
+               val rows: Int,
+               val columns: Int,
+               val cells: MutableList<MapCell>,
+               val config: GameConfig = GameConfig()) {
 
     private val xRange = 0 until columns
     private val yRange = 0 until rows
@@ -18,7 +18,17 @@ class WormsMap(val players: List<WormsPlayer>,
         get() = players.filter { !it.dead }
 
     val winningPlayer: WormsPlayer?
-        get() = null
+        get() {
+            if (livingPlayers.size > 1) {
+                throw IllegalStateException("More than one living player")
+            }
+
+            return if (livingPlayers.isEmpty()) {
+                null
+            } else {
+                livingPlayers[0]
+            }
+        }
 
     var currentRound: Int = 0
 

@@ -23,8 +23,8 @@ class DirectionShootCommand(private val direction: Direction) : WormsCommand {
         while (distance < worm.weapon.range && cell.type.movable) {
             if (cell.isOccupied()) {
                 cell.occupier!!.takeDamage(worm.weapon.damage, gameMap.currentRound)
-                //TODO: Return feedback
-                break;
+                //TODO: Return feedback?
+                break
             }
 
             position += direction.vector
@@ -36,7 +36,7 @@ class DirectionShootCommand(private val direction: Direction) : WormsCommand {
             }
             cell = gameMap[position]
         }
-        //TODO: Maybe return feedback?
+        //TODO: Return feedback?
         //How will player/visualiser know which worm was hit?
     }
 
