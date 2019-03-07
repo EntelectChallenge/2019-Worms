@@ -1,84 +1,115 @@
 
-buildscript {
-    ext.kotlin_version = '1.3.21'
+plugins {
+    id 'org.jetbrains.kotlin.multiplatform' version '1.3.21'
+    id 'jacoco'
+}
 
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+repositories {
+    mavenLocal()
+    jcenter()
+    maven {
+        url 'https://dl.bintray.com/entelect-challenge/game-engine'
     }
 }
 
-plugins {
-    id 'idea'
-    id 'maven'
+kotlin {
+    jvm()
+    js()
+
+    sourceSets {
+        commonMain {
+            kotlin.srcDir('game-engine-core/src/main')
+            dependencies {
+                implementation kotlin('stdlib-common')
+            }
+        }
+        commonTest {
+            kotlin.srcDir('game-engine-core/src/test')
+
+            dependencies {
+                implementation kotlin('test-common')
+                implementation kotlin('test-annotations-common')
+            }
+        }
+
+        jvmMain {
+            kotlin.srcDir('game-engine-jvm/src/main/kotlin')
+            dependencies {
+                implementation kotlin('stdlib-jdk8')
+                implementation 'za.co.entelect.challenge:game-engine-interface:2019.0.0-RC0'
+            }
+        }
+        jvmTest {
+            kotlin.srcDir('game-engine-jvm/src/test/kotlin')
+            dependencies {
+                implementation kotlin('test-junit')
+                implementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
+            }
+        }
+
+        jsMain {
+            kotlin.srcDir('game-engine-web/src/main/kotlin')
+            dependencies {
+                implementation kotlin('stdlib-js')
+            }
+
+        }
+        jsTest {
+            kotlin.srcDir('game-engine-web/src/test/kotlin')
+            dependencies {
+                implementation kotlin("test-js")
+            }
+        }
+    }
 }
 
 group = 'za.co.entelect.challenge'
 
+task jacocoTestReport(type: JacocoReport) {
+    description 'Generates a test coverage report'
+    mustRunAfter jvmTest
+    executionData jvmTest
 
-allprojects {
-    repositories {
-        mavenLocal()
-        maven {
-            url 'https://dl.bintray.com/entelect-challenge/game-engine'
-        }
-        jcenter()
+    additionalClassDirs file("${buildDir}/classes/kotlin/jvm/main")
+    additionalSourceDirs file("${rootDir}/game-engine-jvm/src/main/kotlin"), file("${rootDir}/game-engine-core/src/main")
+
+    reports {
+        xml.enabled false
+        csv.enabled false
     }
 }
 
-subprojects {
-    version = '1.0'
+task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
+    description 'Enforces test coverage on all classes'
 
-    repositories {
+    mustRunAfter jvmTest
+    shouldRunAfter jacocoTestReport
+    executionData jvmTest
 
-    }
+    additionalClassDirs file("${buildDir}/classes/kotlin/jvm/main")
+    additionalSourceDirs file("${rootDir}/game-engine-jvm/src/main/kotlin"), file("${rootDir}/game-engine-core/src/main")
 
-}
+    violationRules {
+        rule {
+            element = 'CLASS'
+            excludes = [
+                    'za.co.entelect.challenge.game.delegate.*',
+                    'za.co.entelect.challenge.game.engine.map.Point',
+                    'za.co.entelect.challenge.game.engine.entities.GameConfig',
 
-project(':game-engine-jvm') {
-    apply plugin: 'kotlin'
-    apply plugin: 'java'
-
-    dependencies {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-        implementation 'za.co.entelect.challenge:game-engine-interface:2019.0.0-RC0'
-
-        testImplementation 'junit:junit:4.12'
-        testImplementation 'org.mockito:mockito-core:2.+'
-        testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
-
-    }
-
-    sourceSets {
-        main.kotlin.srcDirs += '../game-engine-core/src/main'
-        test.kotlin.srcDirs += '../game-engine-core/src/test'
-    }
-
-    compileKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
-    }
-
-    compileTestKotlin {
-        kotlinOptions {
-            jvmTarget = "1.8"
+                    // Temporary exclusions until properly implemented:
+                    'za.co.entelect.challenge.game.engine.player.WormsPlayer.Companion',
+                    'za.co.entelect.challenge.game.engine.processor.WormsGameProcessor',
+                    'za.co.entelect.challenge.game.engine.map.WormsMapGenerator',
+                    'za.co.entelect.challenge.game.engine.WormsEngine',
+                    'za.co.entelect.challenge.game.engine.player.WormsPlayer'
+            ]
+            limit {
+                minimum = 0.75
+            }
         }
     }
 }
 
-project(':game-engine-web') {
-    apply plugin: 'kotlin2js'
-
-    dependencies {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib-js"
-    }
-
-    sourceSets {
-        main.kotlin.srcDirs += '../game-engine-core/src/main'
-    }
-
-    compileKotlin2Js {
-        kotlinOptions.metaInfo = true
-    }
-}
-
+check.dependsOn jacocoTestCoverageVerification
+check.dependsOn jacocoTestReport

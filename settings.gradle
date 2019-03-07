@@ -6,8 +6,5 @@
  * Detailed information about configuring a multi-project build in Gradle can be found
  * in the user guide at https://docs.gradle.org/5.1.1/userguide/multi_project_builds.html
 */
-rootProject.name = 'ec-2019-game-engine'
 
-include "game-engine-jvm"
-//include "game-engine-core"
-include "game-engine-web"
+rootProject.name = 'ec-2019-game-engine'

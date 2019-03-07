@@ -14,6 +14,7 @@ variables:
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
+# The following are all the jobs that will be executed
 build:
   stage: build
   script: gradle --build-cache assemble
