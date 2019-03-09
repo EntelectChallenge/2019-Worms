@@ -4,8 +4,8 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
-import za.co.entelect.challenge.entities.BotMetaData;
-import za.co.entelect.challenge.entities.BotArguments;
+import za.co.entelect.challenge.config.BotMetaData;
+import za.co.entelect.challenge.config.BotArguments;
 import za.co.entelect.challenge.game.contracts.exceptions.TimeoutException;
 
 import java.io.ByteArrayOutputStream;

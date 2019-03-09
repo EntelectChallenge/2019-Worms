@@ -1,6 +1,7 @@
 {
   "round-state-output-location": "./tower-defence-matches",
   "game-config-file-location": "./game-config.properties",
+  "game-engine-jar": "./core-3.1.0.jar",
   "verbose-mode": true,
   "max-runtime-ms": 2000,
   "player-a": "../starter-bots/java",

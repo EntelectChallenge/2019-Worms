@@ -1,7 +1,7 @@
 package za.co.entelect.challenge.botrunners;
 
 import za.co.entelect.challenge.engine.exceptions.InvalidRunnerState;
-import za.co.entelect.challenge.entities.BotMetaData;
+import za.co.entelect.challenge.config.BotMetaData;
 
 public class BotRunnerFactory {
     public static BotRunner createBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) throws InvalidRunnerState {

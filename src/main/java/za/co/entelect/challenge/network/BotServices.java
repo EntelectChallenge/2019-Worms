@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.player;
+package za.co.entelect.challenge.network;
 
 import com.google.gson.JsonObject;
 import okhttp3.Response;
