@@ -6,4 +6,6 @@ import za.co.entelect.challenge.game.contracts.map.GameMap;
 public interface GameEngine {
 
     boolean isGameComplete(GameMap gameMap) throws TimeoutException;
+
+    void setSeed(long seed);
 }
