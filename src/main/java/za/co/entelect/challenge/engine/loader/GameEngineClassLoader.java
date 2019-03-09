@@ -1,21 +1,12 @@
 package za.co.entelect.challenge.engine.loader;
 
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import za.co.entelect.challenge.game.contracts.bootstrapper.EngineBootstrapper;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.stream.Collectors;
+import java.util.Iterator;
+import java.util.Set;
 
 public class GameEngineClassLoader {
 

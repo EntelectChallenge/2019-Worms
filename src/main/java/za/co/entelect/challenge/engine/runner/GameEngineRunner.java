@@ -12,10 +12,10 @@ import za.co.entelect.challenge.game.contracts.game.*;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.player.Player;
 import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer;
-import za.co.entelect.challenge.game.contracts.renderer.RendererFactory;
 import za.co.entelect.challenge.game.contracts.renderer.RendererType;
 import za.co.entelect.challenge.player.BasePlayer;
 import za.co.entelect.challenge.player.entity.BotExecutionContext;
+import za.co.entelect.challenge.renderer.RendererResolver;
 import za.co.entelect.challenge.utils.FileUtils;
 
 import java.io.BufferedWriter;
@@ -45,7 +45,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
     private GameResult gameResult;
 
     private ArrayList<BotExecutionContext> botExecutionContexts;
-    private RendererFactory rendererFactory;
+    private RendererResolver rendererResolver;
 
     public GameEngineRunner() {
         this.unsubscribe = BehaviorSubject.create();
@@ -179,7 +179,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
     }
 
     private void processRound() throws Exception {
-        GameMapRenderer renderer = rendererFactory.getRenderer(RendererType.CONSOLE);
+        GameMapRenderer renderer = rendererResolver.resolve(RendererType.CONSOLE);
 
         // Only execute the render if the log mode is in INFO.
         log.info(() -> {
@@ -231,7 +231,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     private void preparePlayers() {
         for (Player player : players) {
-            player.instantiateRenderer(rendererFactory);
+            ((BasePlayer) player).instantiateRenderers(rendererResolver);
         }
     }
 
@@ -325,7 +325,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         GameMapGenerator gameMapGenerator;
         GameRoundProcessor roundProcessor;
         List<Player> players;
-        RendererFactory rendererFactory;
+        RendererResolver rendererResolver;
 
         public Builder setGameRunnerConfig(GameRunnerConfig gameRunnerConfig) {
             this.gameRunnerConfig = gameRunnerConfig;
@@ -352,8 +352,8 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             return this;
         }
 
-        public Builder setRendererFactory(RendererFactory rendererFactory) {
-            this.rendererFactory = rendererFactory;
+        public Builder setRendererResolver(RendererResolver rendererFactory) {
+            this.rendererResolver = rendererFactory;
             return this;
         }
 
@@ -365,7 +365,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             gameEngineRunner.gameMapGenerator = gameMapGenerator;
             gameEngineRunner.gameRoundProcessor = roundProcessor;
             gameEngineRunner.players = players;
-            gameEngineRunner.rendererFactory = rendererFactory;
+            gameEngineRunner.rendererResolver = rendererResolver;
 
             return gameEngineRunner;
         }

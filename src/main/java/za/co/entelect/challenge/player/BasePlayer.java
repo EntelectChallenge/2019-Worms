@@ -5,9 +5,9 @@ import org.apache.logging.log4j.Logger;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.player.Player;
 import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer;
-import za.co.entelect.challenge.game.contracts.renderer.RendererFactory;
 import za.co.entelect.challenge.game.contracts.renderer.RendererType;
 import za.co.entelect.challenge.player.entity.BotExecutionContext;
+import za.co.entelect.challenge.renderer.RendererResolver;
 
 public abstract class BasePlayer extends Player {
 
@@ -22,11 +22,10 @@ public abstract class BasePlayer extends Player {
         super(name);
     }
 
-    @Override
-    public void instantiateRenderer(RendererFactory rendererFactory) {
-        jsonRenderer = rendererFactory.getRenderer(RendererType.JSON);
-        textRenderer = rendererFactory.getRenderer(RendererType.TEXT);
-        consoleRenderer = rendererFactory.getRenderer(RendererType.CONSOLE);
+    public void instantiateRenderers(RendererResolver rendererResolver) {
+        jsonRenderer = rendererResolver.resolve(RendererType.JSON);
+        textRenderer = rendererResolver.resolve(RendererType.TEXT);
+        consoleRenderer = rendererResolver.resolve(RendererType.CONSOLE);
     }
 
     @Override
