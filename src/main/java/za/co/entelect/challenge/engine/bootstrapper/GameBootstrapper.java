@@ -26,7 +26,7 @@ public class GameBootstrapper {
     private GameResult run() {
 
         try {
-            GameRunnerConfig gameRunnerConfig = GameRunnerConfig.load("./game-runner-config.json", null);
+            GameRunnerConfig gameRunnerConfig = GameRunnerConfig.load("./game-runner-config.json");
 
             initLogging(gameRunnerConfig);
 

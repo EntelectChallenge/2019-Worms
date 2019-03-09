@@ -7,11 +7,13 @@ import za.co.entelect.challenge.botrunners.BotRunnerFactory;
 import za.co.entelect.challenge.config.BotMetaData;
 import za.co.entelect.challenge.config.GameRunnerConfig;
 import za.co.entelect.challenge.game.contracts.player.Player;
+import za.co.entelect.challenge.storage.AzureBlobStorageService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PlayerBootstrapper {
 
@@ -19,6 +21,15 @@ public class PlayerBootstrapper {
 
     public List<Player> loadPlayers(GameRunnerConfig gameRunnerConfig) throws Exception {
         List<Player> players = new ArrayList<>();
+
+        if (gameRunnerConfig.isTournamentMode) {
+            String playerAEnv = System.getenv("playerA");
+            String playerBEnv = System.getenv("playerB");
+
+            AzureBlobStorageService storageService = new AzureBlobStorageService("connectionString", "container");
+            File playerAZip = storageService.getFile(playerAEnv, String.format("./tournament-tmp/%s.zip", UUID.randomUUID()));
+            File playerBZip = storageService.getFile(playerBEnv, String.format("./tournament-tmp/%s.zip", UUID.randomUUID()));
+        }
 
         players.add(parsePlayer(gameRunnerConfig.playerAConfig, "A", gameRunnerConfig));
         players.add(parsePlayer(gameRunnerConfig.playerBConfig, "B", gameRunnerConfig));

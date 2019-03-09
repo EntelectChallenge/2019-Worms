@@ -3,11 +3,13 @@ package za.co.entelect.challenge.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import za.co.entelect.challenge.utils.EnvironmentVariable;
 import za.co.entelect.challenge.utils.FileUtils;
 
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 public class GameRunnerConfig {
 
@@ -38,7 +40,10 @@ public class GameRunnerConfig {
     @SerializedName("is-tournament-mode")
     public boolean isTournamentMode;
 
-    public static GameRunnerConfig load(String configFile, String[] args) throws Exception {
+    @SerializedName("match-id")
+    public String matchId;
+
+    public static GameRunnerConfig load(String configFile) throws Exception {
         try (FileReader fileReader = new FileReader(configFile)) {
             Gson gson = new GsonBuilder().create();
             GameRunnerConfig gameRunnerConfig = gson.fromJson(fileReader, GameRunnerConfig.class);
@@ -46,13 +51,12 @@ public class GameRunnerConfig {
             if (gameRunnerConfig == null)
                 throw new Exception("Failed to load gameRunnerConfig");
 
+            gameRunnerConfig.matchId = UUID.randomUUID().toString();
+
+            // Load tournament specific config here
+            // Bot locations are dynamic, therefore, it's set in the PlayerBootstrapper
             if (gameRunnerConfig.isTournamentMode) {
-
-                if (args.length != 2)
-                    throw new Exception("No bot locations specified for tournament");
-
-                gameRunnerConfig.playerAConfig = args[0];
-                gameRunnerConfig.playerBConfig = args[1];
+                gameRunnerConfig.matchId = System.getenv(EnvironmentVariable.MATCH_ID.name());
             }
 
             if (gameRunnerConfig.gameName == null || gameRunnerConfig.gameName.isEmpty()) {
