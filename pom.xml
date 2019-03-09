@@ -67,6 +67,11 @@
             <artifactId>rxjava</artifactId>
             <version>${rxjava.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>azure-storage</artifactId>
+            <version>${azure.storage.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
