@@ -7,11 +7,13 @@ import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer;
 import za.co.entelect.challenge.game.contracts.renderer.RendererType;
 
 /**
- * Acts as a builder for game engine related classes.
+ * Acts as a builder for game engine related classes. <br><br>
  *
  * Each time the getters are called:
- *  * They should return new instances of the relevant classes
- *  * These instances should use the last seed and config path that was set.
+ * <ul>
+ *  <li> They should return new instances of the relevant classes </li>
+ *  <li> These instances should use the last seed and config path that was set. </li>
+ * </ul>
  *
  * This interface should serve as the main connection point between the game runner and the game engine
  * and should be the only class dynamically class-loaded

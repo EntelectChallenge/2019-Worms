@@ -6,7 +6,7 @@
 
     <groupId>za.co.entelect.challenge</groupId>
     <artifactId>game-engine-interface</artifactId>
-    <version>2019.0.0-RC1</version>
+    <version>2019.0.0-RC2</version>
 
     <distributionManagement>
         <repository>
@@ -36,6 +36,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
