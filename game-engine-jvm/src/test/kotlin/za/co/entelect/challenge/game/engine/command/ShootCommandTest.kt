@@ -1,6 +1,6 @@
 package za.co.entelect.challenge.game.engine.command
 
-import org.junit.Test
+import kotlin.test.Test
 import za.co.entelect.challenge.game.engine.command.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.entities.Direction.*
 import za.co.entelect.challenge.game.engine.entities.GameConfig
@@ -32,10 +32,10 @@ class ShootCommandTest {
                 CommandoWorm.build(config, Point(3, 3))
         )
 
-        val targetPlayer = WormsPlayer(targetWorms)
+        val targetPlayer = WormsPlayer(0, targetWorms)
         val startingPosition = Point(2, 2)
         val attacker = CommandoWorm.build(config, startingPosition)
-        val attackingPlayer = WormsPlayer(listOf(attacker))
+        val attackingPlayer = WormsPlayer(1, listOf(attacker))
 
         val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 5, 5, CellType.AIR)
 
@@ -49,7 +49,7 @@ class ShootCommandTest {
             assertTrue(testCommand.validate(testMap, attacker).isValid)
             testCommand.execute(testMap, attacker)
 
-            assertEquals(testMap.currentRound, targetWorms[index].hitRound, "Hit round for worm in direction $direction")
+            assertEquals(testMap.currentRound, targetWorms[index].roundHit, "Hit round for worm in direction $direction")
             assertEquals(expectedHp, targetWorms[index].health, "Health for worm in direction $direction")
         }
 
@@ -70,10 +70,10 @@ class ShootCommandTest {
                 CommandoWorm.build(config, Point(4, 4))
         )
 
-        val targetPlayer = WormsPlayer(targetWorms)
+        val targetPlayer = WormsPlayer(0, targetWorms)
         val startingPosition = Point(2, 2)
         val attacker = CommandoWorm.build(config, startingPosition)
-        val attackingPlayer = WormsPlayer(listOf(attacker))
+        val attackingPlayer = WormsPlayer(1, listOf(attacker))
 
         val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 5, 5, CellType.AIR)
 
@@ -87,7 +87,7 @@ class ShootCommandTest {
             assertTrue(testCommand.validate(testMap, attacker).isValid)
             testCommand.execute(testMap, attacker)
 
-            assertEquals(testMap.currentRound, targetWorms[index].hitRound, "Hit round for worm in direction $direction")
+            assertEquals(testMap.currentRound, targetWorms[index].roundHit, "Hit round for worm in direction $direction")
             assertEquals(expectedHp, targetWorms[index].health, "Health for worm in direction $direction")
         }
 
@@ -110,7 +110,7 @@ class ShootCommandTest {
 
         val startingPosition = Point(2, 2)
         val attacker = CommandoWorm.build(config, startingPosition)
-        val attackingPlayer = WormsPlayer(targetWorms + attacker)
+        val attackingPlayer = WormsPlayer(0, targetWorms + attacker)
 
         val testMap = buildMapWithCellType(listOf(attackingPlayer), 5, 5, CellType.AIR)
 
@@ -123,7 +123,7 @@ class ShootCommandTest {
 
             testCommand.execute(testMap, attacker)
 
-            assertEquals(testMap.currentRound, targetWorms[index].hitRound, "Hit round for worm in direction $direction")
+            assertEquals(testMap.currentRound, targetWorms[index].roundHit, "Hit round for worm in direction $direction")
             assertEquals(expectedHp, targetWorms[index].health, "Health for worm in direction $direction")
         }
 
@@ -135,7 +135,7 @@ class ShootCommandTest {
 
         val startingPosition = Point(2, 2)
         val attacker = CommandoWorm.build(config, startingPosition)
-        val attackingPlayer = WormsPlayer(listOf(attacker))
+        val attackingPlayer = WormsPlayer(0, listOf(attacker))
 
         val testMap = buildMapWithCellType(listOf(attackingPlayer), 5, 5, CellType.AIR)
 
@@ -167,10 +167,10 @@ class ShootCommandTest {
                 CommandoWorm.build(config, Point(4, 4))
         )
 
-        val targetPlayer = WormsPlayer(targetWorms)
+        val targetPlayer = WormsPlayer(0, targetWorms)
         val startingPosition = Point(2, 2)
         val attacker = CommandoWorm.build(config, startingPosition)
-        val attackingPlayer = WormsPlayer(listOf(attacker))
+        val attackingPlayer = WormsPlayer(1, listOf(attacker))
 
         val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 5, 5, CellType.AIR)
         val directions = listOf(UP_LEFT, UP, UP_RIGHT,
@@ -201,10 +201,10 @@ class ShootCommandTest {
                 CommandoWorm.build(config, Point(0, 0))
         )
 
-        val targetPlayer = WormsPlayer(targetWorms)
+        val targetPlayer = WormsPlayer(0, targetWorms)
         val startingPosition = Point(3, 3)
         val attacker = CommandoWorm.build(config, startingPosition)
-        val attackingPlayer = WormsPlayer(listOf(attacker))
+        val attackingPlayer = WormsPlayer(1, listOf(attacker))
 
         val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 5, 5, CellType.AIR)
 
@@ -224,10 +224,10 @@ class ShootCommandTest {
                 CommandoWorm.build(config, Point(0, 0))
         )
 
-        val targetPlayer = WormsPlayer(targetWorms)
+        val targetPlayer = WormsPlayer(0, targetWorms)
         val startingPosition = Point(4, 4)
         val attacker = CommandoWorm.build(config, startingPosition)
-        val attackingPlayer = WormsPlayer(listOf(attacker))
+        val attackingPlayer = WormsPlayer(1, listOf(attacker))
 
         val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 5, 5, CellType.AIR)
 

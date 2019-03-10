@@ -7,7 +7,7 @@ object GameConfigFactory {
     /**
      * TODO: Read from json file
      */
-    fun getConfig(): GameConfig {
+    fun getConfig(path: String): GameConfig {
         return GameConfig()
     }
 

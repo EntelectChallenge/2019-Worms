@@ -6,7 +6,7 @@ class MoveValidation private constructor(
 ) {
 
     companion object {
-        const val VALID_MOVE = "Valid Move"
+        private const val VALID_MOVE = "Valid Move"
 
         fun invalidMove(reason: String): MoveValidation {
             return MoveValidation(false, reason)

@@ -1,13 +1,16 @@
 package za.co.entelect.challenge.game.engine.command
 
 import za.co.entelect.challenge.game.engine.entities.MoveValidation
-import za.co.entelect.challenge.game.engine.entities.WormsMap
-import za.co.entelect.challenge.game.engine.exception.InvalidCommandException
 import za.co.entelect.challenge.game.engine.map.Point
+import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
+import kotlin.random.Random
 
-class TeleportCommand(val target: Point) : WormsCommand {
-    constructor(x: Int, y: Int) : this(Point(x, y))
+class TeleportCommand(val target: Point, val random: Random) : WormsCommand {
+
+    override val order: Int = 2
+
+    constructor(x: Int, y: Int, random: Random) : this(Point(x, y), random)
 
     override fun validate(gameMap: WormsMap, worm: Worm): MoveValidation {
         if (target !in gameMap) {
@@ -16,7 +19,7 @@ class TeleportCommand(val target: Point) : WormsCommand {
 
         val targetCell = gameMap[target]
 
-        if (!targetCell.type.movable) {
+        if (!targetCell.type.open) {
             return MoveValidation.invalidMove("Cannot move to ${targetCell.type}")
         }
 
@@ -33,18 +36,13 @@ class TeleportCommand(val target: Point) : WormsCommand {
     }
 
     /**
-     * Two movements in this turn is colliding.
+     * Two movements in this turn are colliding.
      */
     private fun wormsCollide(gameMap: WormsMap, movingWorm: Worm, occupier: Worm): Boolean {
         return occupier != movingWorm && occupier.roundMoved == gameMap.currentRound
     }
 
     override fun execute(gameMap: WormsMap, worm: Worm) {
-        val moveValidation = validate(gameMap, worm)
-        if (!moveValidation.isValid) {
-            throw InvalidCommandException("Invalid Move Command: ${moveValidation.reason}")
-        }
-
         val targetCell = gameMap[target]
         val occupier = targetCell.occupier
         if (occupier != null && wormsCollide(gameMap, worm, occupier)) {
@@ -54,7 +52,7 @@ class TeleportCommand(val target: Point) : WormsCommand {
             occupier.takeDamage(config.pushbackDamage, gameMap.currentRound)
 
             // 50% chance to pushback or swap positions
-            if (config.random.nextBoolean()) {
+            if (random.nextBoolean()) {
                 pushbackWorms(worm, occupier, gameMap)
             } else {
                 swapWorms(worm, occupier, gameMap)

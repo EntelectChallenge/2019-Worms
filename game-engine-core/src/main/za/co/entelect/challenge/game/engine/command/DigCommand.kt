@@ -1,15 +1,25 @@
 package za.co.entelect.challenge.game.engine.command
 
 import za.co.entelect.challenge.game.engine.entities.MoveValidation
-import za.co.entelect.challenge.game.engine.entities.WormsMap
-import za.co.entelect.challenge.game.engine.exception.InvalidCommandException
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
+import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
 
+/**
+ * Command to dig through a cell
+ */
 class DigCommand(val target: Point) : WormsCommand {
+
+    override val order: Int = 1
+
     constructor(x: Int, y: Int) : this(Point(x, y))
 
+    /**
+     * For a dig command to be valid:
+     * * The target cell must be within range
+     * * The target cell must be diggable (see CellType})
+     */
     override fun validate(gameMap: WormsMap, worm: Worm): MoveValidation {
         if (target !in gameMap) {
             return MoveValidation.invalidMove("$target out of map bounds")
@@ -29,12 +39,6 @@ class DigCommand(val target: Point) : WormsCommand {
     }
 
     override fun execute(gameMap: WormsMap, worm: Worm) {
-
-        val moveValidation = validate(gameMap, worm)
-        if (!moveValidation.isValid) {
-            throw InvalidCommandException("Invalid Dig Command: ${moveValidation.reason}")
-        }
-
         val targetCell = gameMap[target]
         targetCell.type = CellType.AIR
     }

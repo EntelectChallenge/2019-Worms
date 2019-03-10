@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.map
 
 import za.co.entelect.challenge.game.engine.player.Worm
+import za.co.entelect.challenge.game.engine.powerups.Powerup
 import kotlin.jvm.Transient
 
 class MapCell(var x: Int = -1,
@@ -10,6 +11,7 @@ class MapCell(var x: Int = -1,
     constructor(cellType: CellType = CellType.AIR) : this(type = cellType)
 
     var occupier: Worm? = null
+    var powerup: Powerup? = null
 
     @Transient
     val nearCells = NearCells()

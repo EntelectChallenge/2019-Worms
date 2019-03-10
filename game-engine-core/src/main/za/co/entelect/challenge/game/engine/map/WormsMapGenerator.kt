@@ -1,16 +1,13 @@
 package za.co.entelect.challenge.game.engine.map
 
 import za.co.entelect.challenge.game.engine.entities.GameConfig
-import za.co.entelect.challenge.game.engine.entities.WormsMap
-import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
 import kotlin.math.*
 
+class WormsMapGenerator(private val config: GameConfig, private val seed: Long) {
 
-class WormsMapGenerator(private val config: GameConfig) {
-
-    private val noise = SimplexNoise(config.seed.toInt())
+    private val noise = SimplexNoise(seed.toInt())
     private val mapZoom = 0.3
     private val amountOfSoil = 0.50
     private var mapCenter: Pair<Double, Double> = Pair(0.0, 0.0)
@@ -116,15 +113,18 @@ class WormsMapGenerator(private val config: GameConfig) {
 
     private fun setWormsIntoSpawnLocations(drumcircleSeatPositions: List<MapCell>,
                                            wormsPlayers: List<WormsPlayer>) {
-        val nullPoint = Point(-1, -1)
+        val unplacedWorms = wormsPlayers.flatMap { it.worms }
+                .groupBy { it.player.id }
+                .mapValues { (_, value) -> value.toMutableList()}
+
         // Put worms in seats, a different player for the next seat
         drumcircleSeatPositions.forEachIndexed { index, seat ->
-            val playerNumber = ((index + 1) % wormsPlayers.size) + 1
+            val playerIndex = ((index + 1) % wormsPlayers.size)
+            val player = wormsPlayers[playerIndex]
 
-            val wormToPlace = wormsPlayers.first { p -> p.id == playerNumber }
-                    .worms.first { it.position == nullPoint }
+            val wormToPlace =  unplacedWorms.getValue(player.id).removeAt(0)
 
-            wormToPlace.position = seat.getPosition()
+            wormToPlace.initPositions(seat.getPosition())
             seat.occupier = wormToPlace
         }
     }

@@ -1,7 +1,6 @@
 package za.co.entelect.challenge.game.engine.entities
 
-import org.junit.Assert
-import org.junit.Test
+import kotlin.test.Test
 import za.co.entelect.challenge.game.engine.command.TestMapFactory
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
@@ -9,6 +8,7 @@ import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.fail
 
 class WormsMapTest {
 
@@ -42,10 +42,10 @@ class WormsMapTest {
     fun test_getLivingPlayers_one() {
         val worm = CommandoWorm.build(config, Point(0, 0))
         worm.health = 0
-        val player = WormsPlayer(listOf(worm))
+        val player = WormsPlayer(0, listOf(worm))
 
         val worm2 = CommandoWorm.build(config, Point(1, 1))
-        val player2 = WormsPlayer(listOf(worm2))
+        val player2 = WormsPlayer(0, listOf(worm2))
 
         val map = TestMapFactory.buildMapWithCellType(listOf(player, player2), 2, 2, CellType.AIR)
         assertEquals(1, map.livingPlayers.size)
@@ -56,16 +56,16 @@ class WormsMapTest {
     @Test
     fun test_getLivingPlayers_multiple() {
         val worm = CommandoWorm.build(config, Point(0, 0))
-        val player = WormsPlayer(listOf(worm))
+        val player = WormsPlayer(0, listOf(worm))
 
         val worm2 = CommandoWorm.build(config, Point(1, 1))
-        val player2 = WormsPlayer(listOf(worm2))
+        val player2 = WormsPlayer(1, listOf(worm2))
 
         val map = TestMapFactory.buildMapWithCellType(listOf(player, player2), 2, 2, CellType.AIR)
         assertEquals(2, map.livingPlayers.size)
         try {
-            val winningPlayer = map.winningPlayer
-            Assert.fail("No exception thrown")
+            map.winningPlayer
+            fail("No exception thrown")
         } catch (e: IllegalStateException) {
         }
     }
