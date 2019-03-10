@@ -1,9 +1,9 @@
-package za.co.entelect.challenge.game.engine.entities;
+package za.co.entelect.challenge.game.engine.map;
 
-import za.co.entelect.challenge.game.engine.map.MapCell
-import za.co.entelect.challenge.game.engine.map.Point
+import za.co.entelect.challenge.game.engine.entities.GameConfig
 import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import za.co.entelect.challenge.game.engine.processor.GameError
 import kotlin.jvm.Transient
 
 class WormsMap(val players: List<WormsPlayer>,
@@ -14,6 +14,8 @@ class WormsMap(val players: List<WormsPlayer>,
                val config: GameConfig = GameConfig()) {
 
     val cells: List<MapCell>
+    val errorList = mutableListOf<GameError>()
+
     private val xRange = 0 until columns
     private val yRange = 0 until rows
 

@@ -2,7 +2,6 @@ package za.co.entelect.challenge.game.engine.command
 
 import za.co.entelect.challenge.game.engine.command.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.entities.GameConfig
-import za.co.entelect.challenge.game.engine.exception.InvalidCommandException
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
@@ -16,19 +15,18 @@ class DigCommandTest {
 
     val config: GameConfig = GameConfig()
 
-    @Test(expected = InvalidCommandException::class)
+    @Test
     fun test_apply_outOfRange() {
         val testCommand = DigCommand(4, 4)
         val worm = CommandoWorm.build(config, Point(0, 0))
-        val player = WormsPlayer(listOf(worm))
+        val player = WormsPlayer(0, listOf(worm))
 
         val testMap = buildMapWithCellType(listOf(player), 4, 4, CellType.DIRT)
 
         assertFalse(testCommand.validate(testMap, worm).isValid)
-        testCommand.execute(testMap, worm)
     }
 
-    @Test(expected = InvalidCommandException::class)
+    @Test
     fun test_apply_invalidType_Air() {
         val testCommand = DigCommand(1, 1)
         val worm = CommandoWorm.build(config, Point(0, 0))
@@ -37,10 +35,9 @@ class DigCommandTest {
         val testMap = buildMapWithCellType(listOf(player), 2, 2, CellType.AIR)
 
         assertFalse(testCommand.validate(testMap, worm).isValid)
-        testCommand.execute(testMap, worm)
     }
 
-    @Test(expected = InvalidCommandException::class)
+    @Test
     fun test_apply_invalidType_Bedrock() {
         val testCommand = DigCommand(1, 1)
         val worm = CommandoWorm.build(config, Point(0, 0))
@@ -49,14 +46,13 @@ class DigCommandTest {
         val testMap = buildMapWithCellType(listOf(player), 2, 2, CellType.DEEP_SPACE)
 
         assertFalse(testCommand.validate(testMap, worm).isValid)
-        testCommand.execute(testMap, worm)
     }
 
     @Test
     fun test_apply_valid() {
         val testCommand = DigCommand(1, 1)
         val worm = CommandoWorm.build(config, Point(0, 0))
-        val player = WormsPlayer(listOf(worm))
+        val player = WormsPlayer(0, listOf(worm))
         val testMap = buildMapWithCellType(listOf(player), 2, 2,  CellType.DIRT)
 
         assertTrue(testCommand.validate(testMap, worm).isValid)
@@ -68,7 +64,7 @@ class DigCommandTest {
     @Test
     fun test_apply_tooFar() {
         val worm = CommandoWorm.build(config, Point(2, 2))
-        val player = WormsPlayer(listOf(worm))
+        val player = WormsPlayer(0, listOf(worm))
         val testMap = buildMapWithCellType(listOf(player), 5, 5, CellType.DIRT)
 
         for (i in 0..4) {

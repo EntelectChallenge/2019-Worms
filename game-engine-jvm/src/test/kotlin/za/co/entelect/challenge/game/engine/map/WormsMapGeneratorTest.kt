@@ -6,24 +6,31 @@ import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
 import java.lang.Math.pow
 import kotlin.math.sqrt
+import kotlin.random.Random
 import kotlin.test.*
 
 class WormsMapGeneratorTest {
 
     private val config: GameConfig = GameConfig()
-    private val nullPosition = Point(-1, -1)
-    fun getPlayers2Worms3() = (1..2).map { i ->
-        val playerSquad = (1..3).map { j ->
-            val worm = CommandoWorm.build(config, nullPosition)
-            worm.id = j
+
+    /**
+     * Get 2 players with 3 worms each and randomized player and worm ids
+     * Ids are randomized to ensure sure the map generator is not in any way dependent on
+     * sequential player ids
+     */
+    private fun getPlayers2Worms3() = (1..2).map {
+        val playerSquad = (1..3).map { wormIndex ->
+            val worm = CommandoWorm.build(config)
+            worm.id = wormIndex
             worm
         }
-        WormsPlayer(i, playerSquad)
+
+        WormsPlayer(Random.nextInt(10), playerSquad)
     }
 
     @Test
     fun test_generated_map_cells_have_worms() {
-        val wormsMapGenerator = WormsMapGenerator(config)
+        val wormsMapGenerator = WormsMapGenerator(config, 0)
         val wormsMap = wormsMapGenerator.getMap(getPlayers2Worms3())
 
         assertEquals(wormsMap.cells.size, config.mapColumns * config.mapRows,
@@ -56,9 +63,9 @@ class WormsMapGeneratorTest {
 
     @Test
     fun test_worms_have_open_spawn_area() {
-        val players = listOf(WormsPlayer(1, listOf(CommandoWorm.build(config, nullPosition))))
+        val players = listOf(WormsPlayer(1, listOf(CommandoWorm.build(config))))
 
-        val wormsMapGenerator = WormsMapGenerator(config)
+        val wormsMapGenerator = WormsMapGenerator(config, 0)
         val wormsMap = wormsMapGenerator.getMap(players)
 
         wormsMap.players
@@ -77,7 +84,7 @@ class WormsMapGeneratorTest {
 
     @Test
     fun test_worms_squad_spawns_scattered() {
-        val wormsMapGenerator = WormsMapGenerator(config)
+        val wormsMapGenerator = WormsMapGenerator(config, 0)
         val wormsMap = wormsMapGenerator.getMap(getPlayers2Worms3())
 
         val playerWormInterDistances = wormsMap.players
@@ -98,7 +105,7 @@ class WormsMapGeneratorTest {
 
     @Test
     fun test_renderer() {
-        val wormsMapGenerator = WormsMapGenerator(config)
+        val wormsMapGenerator = WormsMapGenerator(config, 0)
         val stringMap = wormsMapGenerator.printMapInPierreCharacters(listOf(listOf(
                 MapCell(CellType.AIR),
                 MapCell(CellType.DIRT),
