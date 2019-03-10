@@ -14,9 +14,9 @@ data class Point(val x: Int, val y: Int) {
     fun movementDistance(other: Point): Int = maximumDimension(other)
     fun shootingDistance(other: Point): Int = maximumDimension(other)
 
-    private fun manhattanDistance(other: Point) = abs(x - other.x) + abs(y - other.y)
-    private fun euclidianDistance(other: Point) = sqrt((x - other.x).pow(2) + (y - other.y).pow(2))
-    private fun maximumDimension(other: Point) = max(abs(x - other.x), abs(y - other.y))
+    fun manhattanDistance(other: Point) = abs(x - other.x) + abs(y - other.y)
+    fun euclidianDistance(other: Point) = sqrt((x - other.x).pow(2) + (y - other.y).pow(2))
+    fun maximumDimension(other: Point) = max(abs(x - other.x), abs(y - other.y))
 
     fun abs(): Point = Point(abs(x), abs(y))
     operator fun minus(other: Point): Point = Point(x - other.x, y - other.y)

@@ -4,6 +4,6 @@ enum class CellType(val diggable: Boolean, val movable: Boolean) {
 
     AIR(false, true),
     DIRT(true, false),
-    BEDROCK(false, false)
+    DEEP_SPACE(false, false)
 
 }

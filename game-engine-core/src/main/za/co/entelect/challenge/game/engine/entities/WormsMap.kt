@@ -4,13 +4,16 @@ import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import kotlin.jvm.Transient
 
 class WormsMap(val players: List<WormsPlayer>,
                val rows: Int,
                val columns: Int,
-               val cells: List<MapCell>,
+               cells: List<MapCell>,
+               @Transient
                val config: GameConfig = GameConfig()) {
 
+    val cells: List<MapCell>
     private val xRange = 0 until columns
     private val yRange = 0 until rows
 
@@ -33,6 +36,12 @@ class WormsMap(val players: List<WormsPlayer>,
     var currentRound: Int = 0
 
     init {
+        if (cells.size < rows * columns) {
+            throw IllegalStateException("Not enough cells to fill the map")
+        } else {
+            this.cells = cells.sortedWith(MapCell.comparator)
+        }
+
         players.forEach { player -> player.worms.forEach { placeWorm(it) } }
     }
 
@@ -46,17 +55,17 @@ class WormsMap(val players: List<WormsPlayer>,
 
     operator fun get(x: Int, y: Int): MapCell {
         if (x !in xRange) {
-            throw IndexOutOfBoundsException("x $x out of range $xRange")
+            throw IndexOutOfBoundsException("x=$x out of range $xRange")
         }
 
         if (y !in yRange) {
-            throw IndexOutOfBoundsException("y $y out of range $yRange")
+            throw IndexOutOfBoundsException("y=$y out of range $yRange")
         }
 
         return cells[y * columns + x]
     }
 
-    fun placeWorm(worm: Worm) {
+    private fun placeWorm(worm: Worm) {
         this[worm.position].occupier = worm
     }
 }

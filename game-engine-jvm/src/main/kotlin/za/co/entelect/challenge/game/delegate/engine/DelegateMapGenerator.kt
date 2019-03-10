@@ -22,7 +22,7 @@ class DelegateMapGenerator : GameMapGenerator {
             wormsPlayers.add(wormsPlayer)
         }
 
-        val wormsMap = wormsMapGenerator.generateMap(wormsPlayers)
+        val wormsMap = wormsMapGenerator.getMap(wormsPlayers)
         return DelegateMap(wormsMap)
     }
 }

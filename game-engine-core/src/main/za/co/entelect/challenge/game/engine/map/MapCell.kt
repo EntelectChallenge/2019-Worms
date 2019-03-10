@@ -1,11 +1,34 @@
 package za.co.entelect.challenge.game.engine.map
 
 import za.co.entelect.challenge.game.engine.player.Worm
+import kotlin.jvm.Transient
 
-class MapCell(var type: CellType) {
+class MapCell(var x: Int = -1,
+              var y: Int = -1,
+              var type: CellType = CellType.AIR) {
+
+    constructor(cellType: CellType = CellType.AIR) : this(type = cellType)
+
     var occupier: Worm? = null
+
+    @Transient
+    val nearCells = NearCells()
+
+    @Transient
+    val ipInfo = ImageProcessingInfo()
+
+    fun getPosition() = Point(x, y)
 
     fun isOccupied(): Boolean {
         return occupier != null
     }
+
+    override fun toString(): String {
+        return "MapCell(x=$x, y=$y, type=$type)"
+    }
+
+    companion object {
+        val comparator: Comparator<MapCell> = compareBy<MapCell> { it.y }.thenBy { it.x }
+    }
+
 }

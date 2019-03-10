@@ -32,7 +32,7 @@ class DigCommandTest {
     fun test_apply_invalidType_Air() {
         val testCommand = DigCommand(1, 1)
         val worm = CommandoWorm.build(config, Point(0, 0))
-        val player = WormsPlayer(listOf(worm))
+        val player = WormsPlayer(0, listOf(worm))
 
         val testMap = buildMapWithCellType(listOf(player), 2, 2, CellType.AIR)
 
@@ -44,9 +44,9 @@ class DigCommandTest {
     fun test_apply_invalidType_Bedrock() {
         val testCommand = DigCommand(1, 1)
         val worm = CommandoWorm.build(config, Point(0, 0))
-        val player = WormsPlayer(listOf(worm))
+        val player = WormsPlayer(0, listOf(worm))
 
-        val testMap = buildMapWithCellType(listOf(player), 2, 2, CellType.BEDROCK)
+        val testMap = buildMapWithCellType(listOf(player), 2, 2, CellType.DEEP_SPACE)
 
         assertFalse(testCommand.validate(testMap, worm).isValid)
         testCommand.execute(testMap, worm)
