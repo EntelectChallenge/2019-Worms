@@ -6,7 +6,7 @@ import kotlin.random.Random
 
 
 //TODO: Read from file for JVM module.
-//Plus inject it everywhere as far as possible. We don't neccesarily need a DI framework, but do something like it for testability.
+//Plus inject it everywhere as far as possible. We don't necessarily need a DI framework, but do something like it for testability.
 class GameConfig {
 
     val maxRounds = 0
@@ -18,6 +18,9 @@ class GameConfig {
             field = value
             random = Random(seed)
         }
+
+    val mapColumns = 32
+    val mapRows = 32
 
     @Transient
     var random: Random = Random

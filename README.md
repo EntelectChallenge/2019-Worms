@@ -20,9 +20,5 @@ This module contains the core game logic and is included in the source roots of 
 * Any platform specific code should only have an interface defined in this module and  be implemented in both the JVM and the JS modules.
 * No platform specific libraries can be included 
 
-To verify that there are no platform specific code in this module you can ignore one of the other module in your IDE.
-* Ignore the game-engine-jvm module to eliminate jvm-specific code
-* Ignore the game-engine-web module to eliminate js-specific code
-
 ### Tests
 Test for the core game engine is included only in the jvm module (See `build.gradle`). This means tests can be written using Junit and Mockito and does not need to be compatible with the web module. 
