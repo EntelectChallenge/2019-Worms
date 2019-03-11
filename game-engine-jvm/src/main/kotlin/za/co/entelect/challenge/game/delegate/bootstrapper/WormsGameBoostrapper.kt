@@ -10,6 +10,7 @@ import za.co.entelect.challenge.game.delegate.engine.DelegateGameEngine
 import za.co.entelect.challenge.game.delegate.engine.DelegateMapGenerator
 import za.co.entelect.challenge.game.delegate.engine.DelegateRoundProcessor
 import za.co.entelect.challenge.game.delegate.factory.GameConfigFactory
+import kotlin.random.Random
 
 class WormsGameBoostrapper : GameEngineBootstrapper {
 
@@ -38,6 +39,6 @@ class WormsGameBoostrapper : GameEngineBootstrapper {
     }
 
     override fun getRoundProcessor(): GameRoundProcessor {
-        return DelegateRoundProcessor()
+        return DelegateRoundProcessor(Random(seed))
     }
 }
