@@ -6,12 +6,12 @@ import za.co.entelect.challenge.game.contracts.game.GameRoundProcessor
 import za.co.entelect.challenge.game.contracts.map.GameMap
 import za.co.entelect.challenge.game.delegate.player.DelegatePlayer
 import za.co.entelect.challenge.game.engine.factory.CommandParser
-import za.co.entelect.challenge.game.engine.processor.WormsGameProcessor
+import za.co.entelect.challenge.game.engine.processor.WormsRoundProcessor
 import kotlin.random.Random
 
 class DelegateRoundProcessor(random: Random) : GameRoundProcessor {
 
-    private val wormsGameProcessor = WormsGameProcessor()
+    private val wormsRoundProcessor = WormsRoundProcessor()
     private val commandParser = CommandParser(random)
 
     override fun processRound(map: GameMap, commands: Map<GamePlayer, RawCommand>): Boolean {
@@ -25,10 +25,26 @@ class DelegateRoundProcessor(random: Random) : GameRoundProcessor {
             commandParser.parseCommand(value.command)
         }
 
-        return wormsGameProcessor.processRound(map.wormsMap, wormsCommands)
+        return wormsRoundProcessor.processRound(map.wormsMap, wormsCommands)
     }
 
-    override fun getErrorList(): List<String> {
-        return wormsGameProcessor.errorList
+    override fun getErrorList(map: GameMap): List<String> {
+        if (map !is DelegateMap) {
+            throw IllegalArgumentException("Unknown Map Class")
+        }
+
+        return wormsRoundProcessor.getErrorList(map.wormsMap).map { it.toString() }
+    }
+
+    override fun getErrorList(map: GameMap, player: GamePlayer): List<String> {
+        if (map !is DelegateMap) {
+            throw IllegalArgumentException("Unknown Map Class")
+        }
+
+        if (player !is DelegatePlayer) {
+            throw IllegalArgumentException("Unknown Player Class")
+        }
+
+        return wormsRoundProcessor.getErrorList(map.wormsMap, player.wormsPlayer).map { it.toString() }
     }
 }

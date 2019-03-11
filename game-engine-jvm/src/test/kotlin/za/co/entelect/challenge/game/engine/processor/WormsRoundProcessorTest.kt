@@ -1,10 +1,6 @@
 package za.co.entelect.challenge.game.engine.processor
 
-import org.junit.Test
-import za.co.entelect.challenge.game.engine.command.DigCommand
-import za.co.entelect.challenge.game.engine.command.ShootCommand
-import za.co.entelect.challenge.game.engine.command.TeleportCommand
-import za.co.entelect.challenge.game.engine.command.TestMapFactory
+import za.co.entelect.challenge.game.engine.command.*
 import za.co.entelect.challenge.game.engine.entities.Direction
 import za.co.entelect.challenge.game.engine.entities.GameConfig
 import za.co.entelect.challenge.game.engine.map.CellType
@@ -12,15 +8,12 @@ import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import kotlin.random.Random
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
+import kotlin.test.*
 
-class WormsGameProcessorTest {
+class WormsRoundProcessorTest {
 
     val config = GameConfig()
-    val roundProcessor = WormsGameProcessor()
+    val roundProcessor = WormsRoundProcessor()
     val random = Random(0)
 
     @Test
@@ -119,5 +112,24 @@ class WormsGameProcessorTest {
 
         assertEquals(config.commandoWorms.initialHp, player2.worms[0].health)
         assertEquals(config.commandoWorms.initialHp, player1.worms[0].health)
+    }
+
+    @Test
+    fun getPlayerErrors() {
+        val player1 = WormsPlayer(1, listOf(CommandoWorm.build(config, Point(0, 0))))
+        val player2 = WormsPlayer(1, listOf(CommandoWorm.build(config, Point(0, 2))))
+        val map = TestMapFactory.buildMapWithCellType(listOf(player1, player2), 3, 3, CellType.AIR)
+
+        assertEquals(0, roundProcessor.getErrorList(map).size)
+
+        val invalidCommand = InvalidCommand("Test")
+        val commandMap = mapOf(Pair(player1, invalidCommand))
+
+        roundProcessor.processRound(map, commandMap)
+
+        assertEquals(1, roundProcessor.getErrorList(map).size)
+
+        assertEquals(1, roundProcessor.getErrorList(map, player1).size)
+        assertEquals(0, roundProcessor.getErrorList(map, player2).size)
     }
 }

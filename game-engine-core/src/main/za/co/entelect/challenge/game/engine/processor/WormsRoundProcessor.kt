@@ -5,7 +5,7 @@ import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 
-class WormsGameProcessor {
+class WormsRoundProcessor {
 
     fun processRound(wormsMap: WormsMap, wormsCommands: Map<WormsPlayer, WormsCommand>): Boolean {
         wormsMap.errorList.clear()
@@ -25,6 +25,8 @@ class WormsGameProcessor {
         return true
     }
 
-    val errorList: List<String>
-        get() = TODO("Not Implemented")
+    fun getErrorList(wormsMap: WormsMap, wormsPlayer: WormsPlayer): List<GameError> =
+            wormsMap.errorList.filter { it.player == wormsPlayer }
+
+    fun getErrorList(wormsMap: WormsMap): List<GameError> = wormsMap.errorList
 }
