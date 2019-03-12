@@ -21,9 +21,10 @@ class CommandParser(private val commandRandom: Random) {
      * @return The parsed command or an [InvalidCommand] if the command could not be parsed properly
      */
     fun parseCommand(rawCommand: String): WormsCommand {
-        val splitCommand = rawCommand.toLowerCase().split(" ")
+        val splitCommand = rawCommand.split(" ")
+        val identifier = splitCommand[0].toLowerCase()
 
-        return when (splitCommand[0]) {
+        return when (identifier) {
             "move" -> teleportCommand(splitCommand)
             "dig" -> digCommand(splitCommand)
             "shoot" -> shootCommand(splitCommand)

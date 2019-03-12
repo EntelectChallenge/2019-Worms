@@ -10,7 +10,7 @@ import za.co.entelect.challenge.game.engine.player.Worm
  * - The shot hits the first occupied cell in the specified direction
  * - Any non-open cells block the shot
  */
-class ShootCommand(private val direction: Direction) : WormsCommand {
+class ShootCommand(val direction: Direction) : WormsCommand {
 
     override val order: Int = 3
 

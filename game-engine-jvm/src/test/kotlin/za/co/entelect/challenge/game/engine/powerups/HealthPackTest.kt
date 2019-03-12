@@ -1,9 +1,8 @@
 package za.co.entelect.challenge.game.engine.powerups
 
-import org.junit.Test
-
 import za.co.entelect.challenge.game.engine.entities.GameConfig
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class HealthPackTest {

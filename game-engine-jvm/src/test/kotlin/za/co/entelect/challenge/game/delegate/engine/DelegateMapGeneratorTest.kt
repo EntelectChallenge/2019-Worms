@@ -2,9 +2,9 @@ package za.co.entelect.challenge.game.delegate.engine
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import org.junit.Test
 import za.co.entelect.challenge.game.contracts.player.Player
 import za.co.entelect.challenge.game.engine.entities.GameConfig
+import kotlin.test.Test
 
 class DelegateMapGeneratorTest {
 

@@ -1,10 +1,10 @@
 package za.co.entelect.challenge.game.engine.command
 
-import org.junit.Assert.assertFalse
-import org.junit.Test
 import za.co.entelect.challenge.game.engine.entities.GameConfig
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
+import kotlin.test.Test
+import kotlin.test.assertFalse
 
 class InvalidCommandTest {
 

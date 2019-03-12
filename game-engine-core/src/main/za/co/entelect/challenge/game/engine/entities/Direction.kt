@@ -16,8 +16,8 @@ enum class Direction(val shortened: String, x: Int, y: Int) {
     val vector = Point(x, y)
 
     companion object {
-        fun fromShortened(shortened: String): Direction = Direction.values().first { it.shortened == shortened }
+        fun fromShortened(shortened: String): Direction = Direction.values().first { it.shortened == shortened.toUpperCase() }
 
-        fun containsShortened(shortened: String): Boolean = Direction.values().any { it.shortened == shortened }
+        fun containsShortened(shortened: String): Boolean = Direction.values().any { it.shortened == shortened.toUpperCase() }
     }
 }

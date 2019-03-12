@@ -1,13 +1,13 @@
 package za.co.entelect.challenge.game.engine.command
 
 import com.nhaarman.mockitokotlin2.*
-import org.junit.Test
 import za.co.entelect.challenge.game.engine.entities.GameConfig
 import za.co.entelect.challenge.game.engine.entities.MoveValidation
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class CommandExecutorTest {
