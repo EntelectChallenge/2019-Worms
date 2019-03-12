@@ -12,11 +12,13 @@ import za.co.entelect.challenge.game.contracts.renderer.RendererType;
  * Each time the getters are called:
  * <ul>
  *  <li> They should return new instances of the relevant classes </li>
- *  <li> These instances should use the last seed and config path that was set. </li>
+ *  <li> These instances should use the last seed and config path that was set </li>
  * </ul>
  *
- * This interface should serve as the main connection point between the game runner and the game engine
- * and should be the only class dynamically class-loaded
+ * This interface serves as the first integration point between the game runner and the game engine
+ * and should be the only class dynamically class-loaded.
+ *
+ * If the config or seed has not been set, the implementing class should provide defaults values
  */
 public interface GameEngineBootstrapper {
 
