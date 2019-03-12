@@ -12,6 +12,7 @@ import za.co.entelect.challenge.game.delegate.engine.DelegateMapGenerator
 import za.co.entelect.challenge.game.delegate.engine.DelegateRoundProcessor
 import za.co.entelect.challenge.game.delegate.factory.GameConfigFactory
 import za.co.entelect.challenge.game.delegate.referee.DelegateReferee
+import za.co.entelect.challenge.game.renderer.DelegateRenderer
 import kotlin.random.Random
 
 class WormsGameBoostrapper : GameEngineBootstrapper {
@@ -38,11 +39,13 @@ class WormsGameBoostrapper : GameEngineBootstrapper {
     }
 
     override fun getRenderer(rendererType: RendererType): GameMapRenderer {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val config = GameConfigFactory.getConfig(configPath)
+        return DelegateRenderer(config, rendererType)
     }
 
     override fun getRoundProcessor(): GameRoundProcessor {
-        return DelegateRoundProcessor(Random(seed), GameConfigFactory.getConfig(configPath))
+        val config = GameConfigFactory.getConfig(configPath)
+        return DelegateRoundProcessor(Random(seed), config)
     }
 
     override fun getReferee(): GameReferee {

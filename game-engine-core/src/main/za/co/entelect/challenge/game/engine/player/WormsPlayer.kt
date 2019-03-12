@@ -1,13 +1,13 @@
 package za.co.entelect.challenge.game.engine.player
 
 import za.co.entelect.challenge.game.engine.config.GameConfig
+import kotlin.jvm.Transient
 
 class WormsPlayer private constructor(val id: Int,
                                       val worms: List<Worm>,
-                                      config: GameConfig) {
+                                      @Transient private val config: GameConfig) {
 
-    val maxDoNothings = config.maxDoNothings
-
+    @Transient
     var currentWorm: Worm = worms[0]
         private set
 
@@ -15,11 +15,14 @@ class WormsPlayer private constructor(val id: Int,
         this.worms.forEach { it.player = this }
     }
 
+
     val health: Int
         get() = livingWorms.sumBy { it.health }
 
+
     val dead
         get() = worms.all { it.dead }
+
 
     private val livingWorms
         get() = worms.filter { !it.dead }
@@ -29,10 +32,12 @@ class WormsPlayer private constructor(val id: Int,
     /**
      * Amount of consecutive rounds the player has done nothing
      */
+    @Transient
     var consecutiveDoNothingsCount = 0
 
     val disqualified
-        get() = consecutiveDoNothingsCount > maxDoNothings
+        get() = consecutiveDoNothingsCount > config.maxDoNothings
+
 
     fun selectNextWorm() {
         //Assign living worms to a local variable since it is a computed property
@@ -42,6 +47,7 @@ class WormsPlayer private constructor(val id: Int,
             currentWorm = livingWorms[nextIndex]
         }
     }
+
 
     companion object {
 

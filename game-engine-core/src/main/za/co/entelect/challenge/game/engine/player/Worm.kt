@@ -2,10 +2,11 @@ package za.co.entelect.challenge.game.engine.player
 
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
+import kotlin.jvm.Transient
 
 open class Worm(val id: Int,
                 var health: Int,
-                var weapon: Weapon,
+                @Transient var weapon: Weapon,
                 val diggingRange: Int,
                 val movementRange: Int) {
 
@@ -15,14 +16,20 @@ open class Worm(val id: Int,
         this.previousPosition = position
     }
 
+    @Transient
     var roundMoved: Int = -1
+
+    @Transient
     var roundHit: Int = -1
 
     lateinit var position: Point
         private set
+
+    @Transient
     lateinit var previousPosition: Point
         private set
 
+    @Transient
     lateinit var player: WormsPlayer
 
     val dead: Boolean
