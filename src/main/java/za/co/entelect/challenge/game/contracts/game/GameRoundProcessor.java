@@ -10,5 +10,7 @@ public interface GameRoundProcessor {
 
     boolean processRound(GameMap gameMap, Map<GamePlayer, RawCommand> commandsToProcess);
 
-    List<String> getErrorList();
+    List<String> getErrorList(GameMap gameMap);
+
+    List<String> getErrorList(GameMap gameMap, GamePlayer player);
 }
