@@ -152,3 +152,9 @@ private KotlinCompilation<KotlinCommonOptions> kotlinCompilation(String target, 
     NamedDomainObjectCollection<KotlinTarget> targets = kotlin.targets
     targets.getByName(target).compilations.getByName(compilation)
 }
+
+jvmTest {
+    testLogging {
+        exceptionFormat = 'full'
+    }
+}

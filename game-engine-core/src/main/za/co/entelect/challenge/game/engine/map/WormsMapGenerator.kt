@@ -2,6 +2,7 @@ package za.co.entelect.challenge.game.engine.map
 
 import za.co.entelect.challenge.game.engine.entities.GameConfig
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import za.co.entelect.challenge.game.engine.powerups.HealthPack
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
 import kotlin.math.*
 
@@ -36,12 +37,37 @@ class WormsMapGenerator(private val config: GameConfig, private val seed: Long) 
         setWormsIntoSpawnLocations(drumcircleSeatPositions, wormsPlayers)
         createWormWalledSpawnLocations(wormsPlayers, blankMap)
         setBattleRoyaleMapEdges(flatBlankMap)
+        placePowerups(wormsPlayers, blankMap)
 
         return WormsMap(wormsPlayers,
                 config.mapColumns,
                 config.mapRows,
                 flatBlankMap,
                 config)
+    }
+
+    private fun placePowerups(wormsPlayers: List<WormsPlayer>, blankMap: List<List<MapCell>>) {
+        val wormsCount = wormsPlayers.flatMap { it.worms }.size
+        val maxSpotsPerCircle = 10
+        val spiralStretchFactor = 15
+        val powerupSpawnThreshold = 0.56
+
+        (0..wormsCount).map { Pair(it, log((it * 0.1) + 1.1, 10.0) * spiralStretchFactor) }
+                .map { (i, radius) ->
+                    // Parameterized circle. Create positions on a spiral (centered on map center)
+                    // with added randomizer value
+                    val t = 2 * PI * i / (maxSpotsPerCircle * noise.n1d(i))
+                    val x = (radius * cos(t) + mapCenter.first).roundToInt()
+                    val y = (radius * sin(t) + mapCenter.second).roundToInt()
+                    val procRandom = noise.n2d(i, maxSpotsPerCircle)
+                    Triple(x, y, procRandom)
+                }
+                .filter { (_, _, procRandom) -> procRandom > powerupSpawnThreshold }
+                .map { (x, y, _) -> blankMap[x][y] }
+                .forEach { cell ->
+                    cell.powerup = HealthPack(50)
+                    cell.type = CellType.AIR
+                }
     }
 
     private fun setBattleRoyaleMapEdges(flatBlankMap: List<MapCell>) {
@@ -115,14 +141,14 @@ class WormsMapGenerator(private val config: GameConfig, private val seed: Long) 
                                            wormsPlayers: List<WormsPlayer>) {
         val unplacedWorms = wormsPlayers.flatMap { it.worms }
                 .groupBy { it.player.id }
-                .mapValues { (_, value) -> value.toMutableList()}
+                .mapValues { (_, value) -> value.toMutableList() }
 
         // Put worms in seats, a different player for the next seat
         drumcircleSeatPositions.forEachIndexed { index, seat ->
             val playerIndex = ((index + 1) % wormsPlayers.size)
             val player = wormsPlayers[playerIndex]
 
-            val wormToPlace =  unplacedWorms.getValue(player.id).removeAt(0)
+            val wormToPlace = unplacedWorms.getValue(player.id).removeAt(0)
 
             wormToPlace.initPositions(seat.getPosition())
             seat.occupier = wormToPlace
@@ -157,7 +183,8 @@ class WormsMapGenerator(private val config: GameConfig, private val seed: Long) 
         //░▒▓
         return blankMap.map { i ->
             i.fold("") { sum, cell ->
-                sum + if (cell.occupier != null) cell.occupier?.player?.id.toString() + cell.occupier?.id.toString()
+                sum + if (cell.powerup != null) "╠╣"
+                else if (cell.occupier != null) cell.occupier?.player?.id.toString() + cell.occupier?.id.toString()
                 else if (cell.type == CellType.AIR) "░░"
                 else if (cell.type == CellType.DIRT) "▓▓"
                 else if (cell.type == CellType.DEEP_SPACE) "██"

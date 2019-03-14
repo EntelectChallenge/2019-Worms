@@ -5,6 +5,7 @@ import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
 import java.lang.Math.pow
+import kotlin.math.abs
 import kotlin.math.sqrt
 import kotlin.random.Random
 import kotlin.test.*
@@ -27,6 +28,9 @@ class WormsMapGeneratorTest {
 
         WormsPlayer(Random.nextInt(10), playerSquad)
     }
+
+    private fun getMapCenter(config: GameConfig): Pair<Double, Double> =
+            Pair((((config.mapColumns + 1) / 2) - 0.5), ((config.mapRows + 1) / 2) - 0.5)
 
     @Test
     fun test_generated_map_cells_have_worms() {
@@ -101,6 +105,27 @@ class WormsMapGeneratorTest {
             val squadSD = standardDeviation(sqaud)
             assertTrue(squadSD < (averageMapDistance * 0.1), "Worms in one squad are not equidistant from each other")
         }
+    }
+
+    @Test
+    fun test_powerups_spawned() {
+        val wormsMapGenerator = WormsMapGenerator(config, 0)
+        val wormsMap = wormsMapGenerator.getMap(getPlayers2Worms3())
+        val (xMid, yMid) = getMapCenter(config)
+
+        // percentage distance of map that powerups are not allowed to spawn in
+        // distance measured radially, where outside should be without powerups
+        val percentage = 0.25
+
+        wormsMap.cells
+                .filter { it.powerup != null }
+                .map { it.getPosition() }
+                .forEach { (x, y) ->
+                    assertTrue(
+                            abs(x - xMid) < (config.mapColumns) * percentage
+                                    && abs(y - yMid) < (config.mapRows) * percentage,
+                            "Powerup spawned too far from center, at x:$x y:$y. Check map generator or config")
+                }
     }
 
     @Test

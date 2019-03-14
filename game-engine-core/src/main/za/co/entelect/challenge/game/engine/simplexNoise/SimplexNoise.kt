@@ -172,6 +172,11 @@ public class SimplexNoise(val seed: Int = 0) {  // Simplex noise in 2D, 3D and 4
     }
 */
 
+    fun n1d(xin: Int): Double = n1d(xin.toDouble())
+
+    fun n1d(xin: Double): Double = n2d(xin, 0.0)
+
+    fun n2d(xin: Int, yin: Int): Double = n2d(xin.toDouble(), yin.toDouble())
 
     // 2D simplex noise
     fun n2d(xin: Double, yin: Double): Double {
