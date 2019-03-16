@@ -29,6 +29,12 @@ public class GameRunnerConfig {
     @SerializedName("player-b")
     public String playerBConfig;
 
+    @SerializedName("player-a-id")
+    public String playerAId;
+
+    @SerializedName("player-b-id")
+    public String playerBId;
+
     @SerializedName("max-runtime-ms")
     public int maximumBotRuntimeMilliSeconds;
 

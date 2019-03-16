@@ -6,7 +6,8 @@
   "max-runtime-ms": 2000,
   "player-a": "../starter-bots/java",
   "player-b": "../reference-bot/java",
-  "is-tournament-mode": false
+  "player-a-id": "3c808a7b-36c5-48ff-a42e-cae141664f2c",
+  "player-b-id": "5dd201a1-b8d4-41b1-ab3c-0e0172fad343",
   "is-tournament-mode": true,
   "tournament": {
     "connection-string": "",
