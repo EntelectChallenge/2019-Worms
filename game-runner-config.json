@@ -7,4 +7,11 @@
   "player-a": "../starter-bots/java",
   "player-b": "../reference-bot/java",
   "is-tournament-mode": false
+  "is-tournament-mode": true,
+  "tournament": {
+    "connection-string": "",
+    "bots-container": "bot-source-code-container-qa",
+    "match-logs-container": "match-logs-qa",
+    "match-result-queue": "match-results-qa"
+  }
 }
