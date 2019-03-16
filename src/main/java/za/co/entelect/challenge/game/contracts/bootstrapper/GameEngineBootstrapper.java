@@ -2,6 +2,7 @@ package za.co.entelect.challenge.game.contracts.bootstrapper;
 
 import za.co.entelect.challenge.game.contracts.game.GameEngine;
 import za.co.entelect.challenge.game.contracts.game.GameMapGenerator;
+import za.co.entelect.challenge.game.contracts.game.GameReferee;
 import za.co.entelect.challenge.game.contracts.game.GameRoundProcessor;
 import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer;
 import za.co.entelect.challenge.game.contracts.renderer.RendererType;
@@ -33,4 +34,6 @@ public interface GameEngineBootstrapper {
     GameMapRenderer getRenderer(RendererType rendererType);
 
     GameRoundProcessor getRoundProcessor();
+
+    GameReferee getReferee();
 }
