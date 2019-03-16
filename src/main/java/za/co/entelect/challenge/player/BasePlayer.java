@@ -14,6 +14,8 @@ public abstract class BasePlayer extends Player {
     private static final String NO_COMMAND = "No Command";
     private static final Logger log = LogManager.getLogger(BotPlayer.class);
 
+    private String playerId;
+
     protected GameMapRenderer jsonRenderer;
     protected GameMapRenderer textRenderer;
     protected GameMapRenderer consoleRenderer;
@@ -72,5 +74,13 @@ public abstract class BasePlayer extends Player {
     @Override
     public void gameEnded(GameMap gameMap) {
 
+    }
+
+    public String getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(String playerId) {
+        this.playerId = playerId;
     }
 }
