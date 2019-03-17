@@ -1,6 +1,6 @@
 package za.co.entelect.challenge.game.engine.player
 
-import za.co.entelect.challenge.game.engine.entities.GameConfig
+import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -8,7 +8,7 @@ import kotlin.test.assertTrue
 
 class WormsPlayerTest {
 
-    val config = GameConfig()
+    val config = TEST_CONFIG
 
     @Test
     fun test_playerBuild() {

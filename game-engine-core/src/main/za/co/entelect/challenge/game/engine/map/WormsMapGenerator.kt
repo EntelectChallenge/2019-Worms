@@ -1,6 +1,6 @@
 package za.co.entelect.challenge.game.engine.map
 
-import za.co.entelect.challenge.game.engine.entities.GameConfig
+import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
@@ -20,15 +20,17 @@ class WormsMapGenerator(private val config: GameConfig, private val seed: Long) 
         mapRadiusFit = getMapRadiusFit(mapCenter)
     }
 
-    private fun getMapCenter(config: GameConfig): Pair<Double, Double> =
-            Pair((((config.mapColumns + 1) / 2) - 0.5), ((config.mapRows + 1) / 2) - 0.5)
+    private fun getMapCenter(config: GameConfig): Pair<Double, Double> {
+        val center = ((config.mapSize + 1) / 2) - 0.5
+        return Pair(center, center)
+    }
 
     private fun getMapRadiusFit(mapCenter: Pair<Double, Double>): Double = min(mapCenter.first, mapCenter.second) + 1
 
     fun getMap(wormsPlayers: List<WormsPlayer>): WormsMap {
 
-        val blankMap = (0 until config.mapColumns).map { i ->
-            (0 until config.mapRows).map { j -> MapCell(i, j) }
+        val blankMap = (0 until config.mapSize).map { i ->
+            (0 until config.mapSize).map { j -> MapCell(i, j) }
         }
         val flatBlankMap = blankMap.flatten()
 
@@ -40,10 +42,8 @@ class WormsMapGenerator(private val config: GameConfig, private val seed: Long) 
         placePowerups(wormsPlayers, blankMap)
 
         return WormsMap(wormsPlayers,
-                config.mapColumns,
-                config.mapRows,
-                flatBlankMap,
-                config)
+                config.mapSize,
+                flatBlankMap)
     }
 
     private fun placePowerups(wormsPlayers: List<WormsPlayer>, blankMap: List<List<MapCell>>) {
@@ -71,7 +71,7 @@ class WormsMapGenerator(private val config: GameConfig, private val seed: Long) 
     }
 
     private fun setBattleRoyaleMapEdges(flatBlankMap: List<MapCell>) {
-        flatBlankMap.filter { euclideanDistance(mapCenter, it.getPosition()) >= mapRadiusFit }
+        flatBlankMap.filter { euclideanDistance(mapCenter, it.position) >= mapRadiusFit }
                 .forEach { it.type = CellType.DEEP_SPACE }
     }
 
@@ -150,7 +150,7 @@ class WormsMapGenerator(private val config: GameConfig, private val seed: Long) 
 
             val wormToPlace = unplacedWorms.getValue(player.id).removeAt(0)
 
-            wormToPlace.initPositions(seat.getPosition())
+            wormToPlace.initPositions(seat.position)
             seat.occupier = wormToPlace
         }
     }

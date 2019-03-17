@@ -1,7 +1,11 @@
 package za.co.entelect.challenge.game.engine
 
-class WormsEngine {
-    fun isGameComplete(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+import za.co.entelect.challenge.game.engine.config.GameConfig
+import za.co.entelect.challenge.game.engine.map.GameMap
+
+class WormsEngine(val config: GameConfig) {
+    fun isGameComplete(wormsMap: GameMap): Boolean {
+        return wormsMap.currentRound >= config.maxRounds ||
+                wormsMap.livingPlayers.size <= 1
     }
 }

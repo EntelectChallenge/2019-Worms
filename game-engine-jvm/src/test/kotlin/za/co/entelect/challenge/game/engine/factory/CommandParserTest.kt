@@ -1,7 +1,7 @@
 package za.co.entelect.challenge.game.engine.factory
 
-import za.co.entelect.challenge.game.engine.command.*
-import za.co.entelect.challenge.game.engine.entities.Direction
+import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
+import za.co.entelect.challenge.game.engine.command.implementation.*
 import za.co.entelect.challenge.game.engine.map.Point
 import kotlin.random.Random
 import kotlin.test.Test
@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 
 class CommandParserTest {
 
-    private val parser = CommandParser(Random.Default)
+    private val parser = CommandParser(Random.Default, TEST_CONFIG)
 
     @Test
     fun move_valid() {

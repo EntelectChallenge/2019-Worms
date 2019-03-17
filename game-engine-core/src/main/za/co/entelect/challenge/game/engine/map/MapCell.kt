@@ -19,7 +19,7 @@ class MapCell(var x: Int = -1,
     @Transient
     val ipInfo = ImageProcessingInfo()
 
-    fun getPosition() = Point(x, y)
+    val position get() = Point(x, y)
 
     fun isOccupied(): Boolean {
         return occupier != null

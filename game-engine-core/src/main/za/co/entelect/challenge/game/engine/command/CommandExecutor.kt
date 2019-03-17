@@ -13,12 +13,16 @@ class CommandExecutor(val player: WormsPlayer,
     private val moveValidation = command.validate(map, worm)
 
     fun execute() {
+        if (moveValidation.isNothing) {
+            player.consecutiveDoNothingsCount++
+        } else {
+            player.consecutiveDoNothingsCount = 0
+        }
+
         if (moveValidation.isValid) {
             command.execute(map, worm)
-            player.doNothingsCount = 0
         } else {
-            player.doNothingsCount++
-            map.errorList.add(GameError(moveValidation.reason, player, worm, map.currentRound))
+            map.addError(GameError(moveValidation.reason, player, worm, map.currentRound))
         }
     }
 

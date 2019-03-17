@@ -1,6 +1,7 @@
-package za.co.entelect.challenge.game.engine.command
+package za.co.entelect.challenge.game.engine.command.implementation
 
-import za.co.entelect.challenge.game.engine.entities.GameConfig
+import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
+import za.co.entelect.challenge.game.engine.command.TestMapFactory
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import kotlin.test.Test
@@ -8,8 +9,10 @@ import kotlin.test.assertFalse
 
 class InvalidCommandTest {
 
-    val worm = CommandoWorm.build(GameConfig())
-    val map = TestMapFactory.buildMapWithCellType(emptyList(),4,4, CellType.AIR)
+    private val config = TEST_CONFIG
+
+    val worm = CommandoWorm.build(0, config)
+    val map = TestMapFactory.buildMapWithCellType(emptyList(), 4, CellType.AIR)
 
     @Test
     fun test_validation() {

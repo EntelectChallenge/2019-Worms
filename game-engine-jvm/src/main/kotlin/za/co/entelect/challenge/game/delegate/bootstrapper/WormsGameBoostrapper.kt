@@ -3,6 +3,7 @@ package za.co.entelect.challenge.game.delegate.bootstrapper
 import za.co.entelect.challenge.game.contracts.bootstrapper.GameEngineBootstrapper
 import za.co.entelect.challenge.game.contracts.game.GameEngine
 import za.co.entelect.challenge.game.contracts.game.GameMapGenerator
+import za.co.entelect.challenge.game.contracts.game.GameReferee
 import za.co.entelect.challenge.game.contracts.game.GameRoundProcessor
 import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer
 import za.co.entelect.challenge.game.contracts.renderer.RendererType
@@ -10,6 +11,7 @@ import za.co.entelect.challenge.game.delegate.engine.DelegateGameEngine
 import za.co.entelect.challenge.game.delegate.engine.DelegateMapGenerator
 import za.co.entelect.challenge.game.delegate.engine.DelegateRoundProcessor
 import za.co.entelect.challenge.game.delegate.factory.GameConfigFactory
+import za.co.entelect.challenge.game.delegate.referee.DelegateReferee
 import kotlin.random.Random
 
 class WormsGameBoostrapper : GameEngineBootstrapper {
@@ -26,7 +28,8 @@ class WormsGameBoostrapper : GameEngineBootstrapper {
     }
 
     override fun getGameEngine(): GameEngine {
-        return DelegateGameEngine()
+        val config = GameConfigFactory.getConfig(configPath)
+        return DelegateGameEngine(config)
     }
 
     override fun getMapGenerator(): GameMapGenerator {
@@ -39,6 +42,10 @@ class WormsGameBoostrapper : GameEngineBootstrapper {
     }
 
     override fun getRoundProcessor(): GameRoundProcessor {
-        return DelegateRoundProcessor(Random(seed))
+        return DelegateRoundProcessor(Random(seed), GameConfigFactory.getConfig(configPath))
+    }
+
+    override fun getReferee(): GameReferee {
+        return DelegateReferee()
     }
 }

@@ -6,9 +6,9 @@ import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 
 object TestMapFactory {
-    fun buildMapCells(count: Int, cellType: CellType) = (0..count).map { MapCell(cellType) }.toMutableList()
+    fun buildMapCells(count: Int, cellType: CellType) = (0 until count).map { MapCell(cellType) }.toMutableList()
 
-    fun buildMapWithCellType(players: List<WormsPlayer>, rows: Int, columns: Int, cellType: CellType): WormsMap {
-        return WormsMap(players, rows, columns, buildMapCells(rows * columns, cellType))
+    fun buildMapWithCellType(players: List<WormsPlayer>, size: Int, cellType: CellType): WormsMap {
+        return WormsMap(players, size, buildMapCells(size * size, cellType))
     }
 }

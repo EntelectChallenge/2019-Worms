@@ -8,9 +8,10 @@ import za.co.entelect.challenge.game.engine.player.WormsPlayer
 class WormsRoundProcessor {
 
     fun processRound(wormsMap: WormsMap, wormsCommands: Map<WormsPlayer, WormsCommand>): Boolean {
-        wormsMap.errorList.clear()
+        wormsMap.currentRound++
+
         val commands = wormsCommands.entries.sortedBy { it.value.order }
-                .map { (player, command) ->  CommandExecutor(player, wormsMap, command)}
+                .map { (player, command) -> CommandExecutor(player, wormsMap, command) }
 
         for (command in commands) {
             command.execute()
@@ -20,13 +21,17 @@ class WormsRoundProcessor {
             player.selectNextWorm()
         }
 
-        wormsMap.currentRound++
-
         return true
     }
 
+    /**
+     * Returns all errors in the current round for the specific player
+     */
     fun getErrorList(wormsMap: WormsMap, wormsPlayer: WormsPlayer): List<GameError> =
-            wormsMap.errorList.filter { it.player == wormsPlayer }
+            wormsMap.currentRoundErrors.filter { it.player == wormsPlayer }
 
-    fun getErrorList(wormsMap: WormsMap): List<GameError> = wormsMap.errorList
+    /**
+     * Returns all errors in the current round
+     */
+    fun getErrorList(wormsMap: WormsMap): List<GameError> = wormsMap.currentRoundErrors
 }

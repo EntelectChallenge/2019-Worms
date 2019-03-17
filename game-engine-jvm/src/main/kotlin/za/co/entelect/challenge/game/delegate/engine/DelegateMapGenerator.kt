@@ -4,7 +4,7 @@ import za.co.entelect.challenge.game.contracts.game.GameMapGenerator
 import za.co.entelect.challenge.game.contracts.map.GameMap
 import za.co.entelect.challenge.game.contracts.player.Player
 import za.co.entelect.challenge.game.delegate.player.DelegatePlayer
-import za.co.entelect.challenge.game.engine.entities.GameConfig
+import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.WormsMapGenerator
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 
@@ -15,7 +15,7 @@ class DelegateMapGenerator(private val config: GameConfig, private val seed: Lon
     override fun generateGameMap(players: List<Player>): GameMap {
         val wormsPlayers = mutableListOf<WormsPlayer>()
 
-        players.forEachIndexed { index, player ->
+        players.forEach { player ->
             val wormsPlayer = WormsPlayer.build(player.number, config)
             player.gamePlayer = DelegatePlayer(wormsPlayer)
             wormsPlayers.add(wormsPlayer)

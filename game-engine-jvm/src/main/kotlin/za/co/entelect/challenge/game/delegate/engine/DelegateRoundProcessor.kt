@@ -5,14 +5,15 @@ import za.co.entelect.challenge.game.contracts.game.GamePlayer
 import za.co.entelect.challenge.game.contracts.game.GameRoundProcessor
 import za.co.entelect.challenge.game.contracts.map.GameMap
 import za.co.entelect.challenge.game.delegate.player.DelegatePlayer
+import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.factory.CommandParser
 import za.co.entelect.challenge.game.engine.processor.WormsRoundProcessor
 import kotlin.random.Random
 
-class DelegateRoundProcessor(random: Random) : GameRoundProcessor {
+class DelegateRoundProcessor(random: Random, config: GameConfig) : GameRoundProcessor {
 
     private val wormsRoundProcessor = WormsRoundProcessor()
-    private val commandParser = CommandParser(random)
+    private val commandParser = CommandParser(random, config)
 
     override fun processRound(map: GameMap, commands: Map<GamePlayer, RawCommand>): Boolean {
         if (map !is DelegateMap) {

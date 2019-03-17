@@ -19,7 +19,7 @@ import kotlin.math.sqrt
  *
  */
 
-public class SimplexNoise(val seed: Int = 0) {  // Simplex noise in 2D, 3D and 4D
+class SimplexNoise(val seed: Int = 0) {  // Simplex noise in 2D, 3D and 4D
 
     private val grad3 = arrayOf(
             Grad(1.0, 1.0, 0.0),

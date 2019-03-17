@@ -3,17 +3,18 @@ package za.co.entelect.challenge.game.engine.player
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
 
-open class Worm(var health: Int,
+open class Worm(val id: Int,
+                var health: Int,
                 var weapon: Weapon,
                 val diggingRange: Int,
                 val movementRange: Int) {
 
-    constructor(health: Int, position: Point, weapon: Weapon, diggingRange: Int = 1, movementRange: Int = 1) : this(health, weapon, diggingRange, movementRange) {
+    constructor(id: Int, health: Int, position: Point, weapon: Weapon, diggingRange: Int = 1, movementRange: Int = 1)
+            : this(id, health, weapon, diggingRange, movementRange) {
         this.position = position
         this.previousPosition = position
     }
 
-    var id = ++wormsCount
     var roundMoved: Int = -1
     var roundHit: Int = -1
 
@@ -68,10 +69,6 @@ open class Worm(var health: Int,
     fun takeDamage(damage: Int, round: Int) {
         health -= damage
         roundHit = round
-    }
-
-    companion object {
-        private var wormsCount = 0
     }
 
 }

@@ -1,6 +1,6 @@
 package za.co.entelect.challenge.game.engine.powerups
 
-import za.co.entelect.challenge.game.engine.entities.GameConfig
+import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.player.Worm
 
 /**

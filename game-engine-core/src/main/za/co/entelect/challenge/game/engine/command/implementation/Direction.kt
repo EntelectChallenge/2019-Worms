@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.game.engine.entities
+package za.co.entelect.challenge.game.engine.command.implementation
 
 import za.co.entelect.challenge.game.engine.map.Point
 

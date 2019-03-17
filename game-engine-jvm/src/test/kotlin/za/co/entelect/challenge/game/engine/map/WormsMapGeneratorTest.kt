@@ -1,45 +1,41 @@
 package za.co.entelect.challenge.game.engine.map
 
-import za.co.entelect.challenge.game.engine.entities.GameConfig
+import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
+import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
 import java.lang.Math.pow
 import kotlin.math.abs
 import kotlin.math.sqrt
-import kotlin.random.Random
 import kotlin.test.*
 
 class WormsMapGeneratorTest {
 
-    private val config: GameConfig = GameConfig()
+    private val config: GameConfig = TEST_CONFIG
 
     /**
-     * Get 2 players with 3 worms each and randomized player and worm ids
-     * Ids are randomized to ensure sure the map generator is not in any way dependent on
-     * sequential player ids
+     * Get 2 players with 3 worms each
      */
     private fun getPlayers2Worms3() = (1..2).map {
         val playerSquad = (1..3).map { wormIndex ->
-            val worm = CommandoWorm.build(config)
-            worm.id = wormIndex
-            worm
+            CommandoWorm.build(wormIndex, config)
         }
 
-        WormsPlayer(Random.nextInt(10), playerSquad)
+        WormsPlayer.build(it, playerSquad, config)
     }
 
     private fun getMapCenter(config: GameConfig): Pair<Double, Double> =
-            Pair((((config.mapColumns + 1) / 2) - 0.5), ((config.mapRows + 1) / 2) - 0.5)
+            Pair((((config.mapSize + 1) / 2) - 0.5), ((config.mapSize + 1) / 2) - 0.5)
 
     @Test
     fun test_generated_map_cells_have_worms() {
         val wormsMapGenerator = WormsMapGenerator(config, 0)
         val wormsMap = wormsMapGenerator.getMap(getPlayers2Worms3())
 
-        assertEquals(wormsMap.cells.size, config.mapColumns * config.mapRows,
+        assertEquals(wormsMap.cells.size, config.mapSize * config.mapSize,
                 "Map generated does not contain expected amount of cells,\n" +
-                        "has ${wormsMap.cells.size} cells \n expected ${config.mapColumns * config.mapRows} cells")
+                        "has ${wormsMap.cells.size} cells \n expected ${config.mapSize * config.mapSize} cells")
 
         val wormPositions = listOf(
                 Point(23, 29),
@@ -58,16 +54,16 @@ class WormsMapGeneratorTest {
                 }
 
         wormsMap.cells
-                .filter { cell -> !wormPositions.any { wormPosition -> cell.getPosition() == wormPosition } }
+                .filter { cell -> !wormPositions.any { wormPosition -> cell.position == wormPosition } }
                 .forEach { cell ->
-                    assertNull(cell.occupier, "Expected No Worm at (${cell.getPosition()})" +
+                    assertNull(cell.occupier, "Expected No Worm at (${cell.position})" +
                             mapSpawnError)
                 }
     }
 
     @Test
     fun test_worms_have_open_spawn_area() {
-        val players = listOf(WormsPlayer(1, listOf(CommandoWorm.build(config))))
+        val players = listOf(WormsPlayer.build(1, listOf(CommandoWorm.build(0, config)), config))
 
         val wormsMapGenerator = WormsMapGenerator(config, 0)
         val wormsMap = wormsMapGenerator.getMap(players)
@@ -81,7 +77,7 @@ class WormsMapGeneratorTest {
                             .union(listOf(centerCell))
                             .forEach {
                                 assertTrue(listOf(CellType.AIR, CellType.DEEP_SPACE).contains(it.type),
-                                        "Expected CellType.AIR || DEEP_SPACE at ${it.getPosition()}")
+                                        "Expected CellType.AIR || DEEP_SPACE at ${it.position}")
                             }
                 }
     }
@@ -100,10 +96,10 @@ class WormsMapGeneratorTest {
                     }
                 }
 
-        playerWormInterDistances.forEach { sqaud ->
-            val averageMapDistance = listOf(config.mapColumns, config.mapRows).average()
+        playerWormInterDistances.forEachIndexed { index, sqaud ->
+            val averageMapDistance = listOf(config.mapSize, config.mapSize).average()
             val squadSD = standardDeviation(sqaud)
-            assertTrue(squadSD < (averageMapDistance * 0.1), "Worms in one squad are not equidistant from each other")
+            assertTrue(squadSD < (averageMapDistance * 0.1), "Worms in squad $index are not equidistant from each other")
         }
     }
 
@@ -119,11 +115,11 @@ class WormsMapGeneratorTest {
 
         wormsMap.cells
                 .filter { it.powerup != null }
-                .map { it.getPosition() }
+                .map { it.position }
                 .forEach { (x, y) ->
                     assertTrue(
-                            abs(x - xMid) < (config.mapColumns) * percentage
-                                    && abs(y - yMid) < (config.mapRows) * percentage,
+                            abs(x - xMid) < (config.mapSize) * percentage
+                                    && abs(y - yMid) < (config.mapSize) * percentage,
                             "Powerup spawned too far from center, at x:$x y:$y. Check map generator or config")
                 }
     }

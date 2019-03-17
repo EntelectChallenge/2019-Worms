@@ -1,6 +1,7 @@
-package za.co.entelect.challenge.game.engine.command
+package za.co.entelect.challenge.game.engine.command.implementation
 
-import za.co.entelect.challenge.game.engine.entities.MoveValidation
+import za.co.entelect.challenge.game.engine.command.CommandValidation
+import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
 
@@ -11,8 +12,8 @@ import za.co.entelect.challenge.game.engine.player.Worm
 class InvalidCommand(val reason: String) : WormsCommand {
     override val order: Int = 0
 
-    override fun validate(gameMap: WormsMap, worm: Worm): MoveValidation {
-        return MoveValidation.invalidMove(reason)
+    override fun validate(gameMap: WormsMap, worm: Worm): CommandValidation {
+        return CommandValidation.invalidMove(reason)
     }
 
     override fun execute(gameMap: WormsMap, worm: Worm) {

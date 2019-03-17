@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.game.delegate.engine;
+package za.co.entelect.challenge.game.delegate.engine
 
 import za.co.entelect.challenge.game.contracts.game.GamePlayer
 import za.co.entelect.challenge.game.contracts.map.GameMap

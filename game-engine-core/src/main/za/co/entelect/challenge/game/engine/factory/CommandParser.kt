@@ -1,14 +1,15 @@
 package za.co.entelect.challenge.game.engine.factory
 
-import za.co.entelect.challenge.game.engine.command.*
-import za.co.entelect.challenge.game.engine.entities.Direction
+import za.co.entelect.challenge.game.engine.command.WormsCommand
+import za.co.entelect.challenge.game.engine.command.implementation.*
+import za.co.entelect.challenge.game.engine.config.GameConfig
 import kotlin.random.Random
 
 /**
  * Parses string commands into executable command classes
  * @param commandRandom The [Random] instance to injected into commands that require it
  */
-class CommandParser(private val commandRandom: Random) {
+class CommandParser(private val commandRandom: Random, private val config: GameConfig) {
 
     /**
      * Parses a command from a string
@@ -74,6 +75,6 @@ class CommandParser(private val commandRandom: Random) {
             return InvalidCommand("Cannot parse dig coordinates as numbers: ${splitCommand.subList(1, 2)}")
         }
 
-        return TeleportCommand(x, y, commandRandom)
+        return TeleportCommand(x, y, commandRandom, config)
     }
 }

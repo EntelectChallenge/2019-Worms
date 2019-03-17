@@ -1,6 +1,7 @@
-package za.co.entelect.challenge.game.engine.command
+package za.co.entelect.challenge.game.engine.command.implementation
 
-import za.co.entelect.challenge.game.engine.entities.MoveValidation
+import za.co.entelect.challenge.game.engine.command.CommandValidation
+import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
@@ -20,22 +21,22 @@ class DigCommand(val target: Point) : WormsCommand {
      * * The target cell must be within range
      * * The target cell must be diggable (see CellType})
      */
-    override fun validate(gameMap: WormsMap, worm: Worm): MoveValidation {
+    override fun validate(gameMap: WormsMap, worm: Worm): CommandValidation {
         if (target !in gameMap) {
-            return MoveValidation.invalidMove("$target out of map bounds")
+            return CommandValidation.invalidMove("$target out of map bounds")
         }
 
         val targetCell = gameMap[target]
 
         if (!targetCell.type.diggable) {
-            return MoveValidation.invalidMove("Cell type ${targetCell.type} not diggable")
+            return CommandValidation.invalidMove("Cell type ${targetCell.type} not diggable")
         }
 
         if (target.movementDistance(worm.position) > worm.diggingRange) {
-            return MoveValidation.invalidMove("Cell $target too far away")
+            return CommandValidation.invalidMove("Cell $target too far away")
         }
 
-        return MoveValidation.validMove()
+        return CommandValidation.validMove()
     }
 
     override fun execute(gameMap: WormsMap, worm: Worm) {

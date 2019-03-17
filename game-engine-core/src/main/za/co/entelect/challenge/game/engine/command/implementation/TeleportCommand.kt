@@ -1,38 +1,40 @@
-package za.co.entelect.challenge.game.engine.command
+package za.co.entelect.challenge.game.engine.command.implementation
 
-import za.co.entelect.challenge.game.engine.entities.MoveValidation
+import za.co.entelect.challenge.game.engine.command.CommandValidation
+import za.co.entelect.challenge.game.engine.command.WormsCommand
+import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
 import kotlin.random.Random
 
-class TeleportCommand(val target: Point, val random: Random) : WormsCommand {
+class TeleportCommand(val target: Point, val random: Random, val config: GameConfig) : WormsCommand {
 
     override val order: Int = 2
 
-    constructor(x: Int, y: Int, random: Random) : this(Point(x, y), random)
+    constructor(x: Int, y: Int, random: Random, config: GameConfig) : this(Point(x, y), random, config)
 
-    override fun validate(gameMap: WormsMap, worm: Worm): MoveValidation {
+    override fun validate(gameMap: WormsMap, worm: Worm): CommandValidation {
         if (target !in gameMap) {
-            return MoveValidation.invalidMove("$target out of map bounds")
+            return CommandValidation.invalidMove("$target out of map bounds")
         }
 
         val targetCell = gameMap[target]
 
         if (!targetCell.type.open) {
-            return MoveValidation.invalidMove("Cannot move to ${targetCell.type}")
+            return CommandValidation.invalidMove("Cannot move to ${targetCell.type}")
         }
 
         if (target.movementDistance(worm.position) > worm.movementRange) {
-            return MoveValidation.invalidMove("Target too far away")
+            return CommandValidation.invalidMove("Target too far away")
         }
 
         val occupier = targetCell.occupier
         if (occupier != null && !wormsCollide(gameMap, worm, occupier)) {
-            return MoveValidation.invalidMove("Target occupied")
+            return CommandValidation.invalidMove("Target occupied")
         }
 
-        return MoveValidation.validMove()
+        return CommandValidation.validMove()
     }
 
     /**
@@ -46,8 +48,6 @@ class TeleportCommand(val target: Point, val random: Random) : WormsCommand {
         val targetCell = gameMap[target]
         val occupier = targetCell.occupier
         if (occupier != null && wormsCollide(gameMap, worm, occupier)) {
-            val config = gameMap.config
-
             worm.takeDamage(config.pushbackDamage, gameMap.currentRound)
             occupier.takeDamage(config.pushbackDamage, gameMap.currentRound)
 

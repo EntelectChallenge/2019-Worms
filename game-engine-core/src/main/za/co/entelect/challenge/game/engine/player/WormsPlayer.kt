@@ -1,8 +1,12 @@
 package za.co.entelect.challenge.game.engine.player
 
-import za.co.entelect.challenge.game.engine.entities.GameConfig
+import za.co.entelect.challenge.game.engine.config.GameConfig
 
-class WormsPlayer(val id: Int, val worms: List<Worm>) {
+class WormsPlayer private constructor(val id: Int,
+                                      val worms: List<Worm>,
+                                      config: GameConfig) {
+
+    val maxDoNothings = config.maxDoNothings
 
     var currentWorm: Worm = worms[0]
         private set
@@ -21,7 +25,14 @@ class WormsPlayer(val id: Int, val worms: List<Worm>) {
         get() = worms.filter { !it.dead }
 
     var score: Int = 0
-    var doNothingsCount = 0
+
+    /**
+     * Amount of consecutive rounds the player has done nothing
+     */
+    var consecutiveDoNothingsCount = 0
+
+    val disqualified
+        get() = consecutiveDoNothingsCount > maxDoNothings
 
     fun selectNextWorm() {
         //Assign living worms to a local variable since it is a computed property
@@ -41,9 +52,13 @@ class WormsPlayer(val id: Int, val worms: List<Worm>) {
          */
         fun build(id: Int, config: GameConfig): WormsPlayer {
             val commandoWorms = (0 until config.commandoWorms.count)
-                    .map { CommandoWorm.build(config) }
+                    .map { i -> CommandoWorm.build(i, config) }
 
-            return WormsPlayer(id, commandoWorms)
+            return WormsPlayer(id, commandoWorms, config)
+        }
+
+        fun build(id: Int, worms: List<Worm>, config: GameConfig): WormsPlayer {
+            return WormsPlayer(id, worms, config)
         }
 
     }

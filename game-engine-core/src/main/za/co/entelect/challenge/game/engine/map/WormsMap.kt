@@ -1,45 +1,73 @@
-package za.co.entelect.challenge.game.engine.map;
+package za.co.entelect.challenge.game.engine.map
 
-import za.co.entelect.challenge.game.engine.entities.GameConfig
 import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.processor.GameError
-import kotlin.jvm.Transient
 
-class WormsMap(val players: List<WormsPlayer>,
-               val rows: Int,
-               val columns: Int,
-               cells: List<MapCell>,
-               @Transient
-               val config: GameConfig = GameConfig()) {
+interface GameMap {
+    val players: List<WormsPlayer>
+    val livingPlayers: List<WormsPlayer>
+    /**
+     * The winning player or null if the game ended in a tie
+     */
+    val winningPlayer: WormsPlayer?
 
     val cells: List<MapCell>
-    val errorList = mutableListOf<GameError>()
+    var currentRound: Int
+    val currentRoundErrors: List<GameError>
 
-    private val xRange = 0 until columns
-    private val yRange = 0 until rows
+    operator fun contains(target: Point): Boolean
 
-    val livingPlayers: List<WormsPlayer>
-        get() = players.filter { !it.dead }
+    operator fun get(target: Point): MapCell
 
-    val winningPlayer: WormsPlayer?
+    operator fun get(x: Int, y: Int): MapCell
+    fun addError(gameError: GameError)
+}
+
+class WormsMap(override val players: List<WormsPlayer>,
+               private val size: Int,
+               cells: List<MapCell>) : GameMap {
+
+    override val cells: List<MapCell>
+
+    private val errorList = mutableListOf<GameError>()
+    override val currentRoundErrors
+        get() = errorList.filter { it.round == currentRound }
+
+    private val xRange = 0 until size
+    private val yRange = 0 until size
+
+    override val livingPlayers: List<WormsPlayer>
+        get() = players.filter { !it.dead && !it.disqualified }
+
+    /**
+     * The winning player or null if the game ended in a tie
+     */
+    override val winningPlayer: WormsPlayer?
         get() {
-            if (livingPlayers.size > 1) {
-                throw IllegalStateException("More than one living player")
-            }
-
-            return if (livingPlayers.isEmpty()) {
-                null
-            } else {
-                livingPlayers[0]
+            return when {
+                livingPlayers.size > 1 -> maxByScore(livingPlayers)
+                livingPlayers.isEmpty() -> maxByScore(players)
+                else -> livingPlayers[0]
             }
         }
 
-    var currentRound: Int = 0
+    private fun maxByScore(players: List<WormsPlayer>): WormsPlayer? {
+        val highestScoringPlayers = players.groupBy { it.score }.maxBy { it.key }?.value
+
+        if (highestScoringPlayers == null || highestScoringPlayers.size != 1) {
+            return null
+        }
+
+        return highestScoringPlayers[0]
+    }
+
+    override var currentRound: Int = 0
 
     init {
-        if (cells.size < rows * columns) {
-            throw IllegalStateException("Not enough cells to fill the map")
+        val requiredSize = size * size
+        if (cells.size != requiredSize) {
+            throw IllegalArgumentException("Need $requiredSize cells to fill the map, received ${cells.size}")
         } else {
             this.cells = cells.sortedWith(MapCell.comparator)
         }
@@ -47,15 +75,15 @@ class WormsMap(val players: List<WormsPlayer>,
         players.forEach { player -> player.worms.forEach { placeWorm(it) } }
     }
 
-    operator fun contains(target: Point): Boolean {
+    override operator fun contains(target: Point): Boolean {
         return target.x in xRange && target.y in yRange
     }
 
-    operator fun get(target: Point): MapCell {
+    override operator fun get(target: Point): MapCell {
         return this[target.x, target.y]
     }
 
-    operator fun get(x: Int, y: Int): MapCell {
+    override operator fun get(x: Int, y: Int): MapCell {
         if (x !in xRange) {
             throw IndexOutOfBoundsException("x=$x out of range $xRange")
         }
@@ -64,10 +92,14 @@ class WormsMap(val players: List<WormsPlayer>,
             throw IndexOutOfBoundsException("y=$y out of range $yRange")
         }
 
-        return cells[y * columns + x]
+        return cells[y * size + x]
     }
 
     private fun placeWorm(worm: Worm) {
         this[worm.position].occupier = worm
+    }
+
+    override fun addError(gameError: GameError) {
+        errorList.add(gameError)
     }
 }

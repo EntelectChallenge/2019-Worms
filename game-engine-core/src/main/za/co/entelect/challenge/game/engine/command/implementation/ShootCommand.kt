@@ -1,7 +1,7 @@
-package za.co.entelect.challenge.game.engine.command
+package za.co.entelect.challenge.game.engine.command.implementation
 
-import za.co.entelect.challenge.game.engine.entities.Direction
-import za.co.entelect.challenge.game.engine.entities.MoveValidation
+import za.co.entelect.challenge.game.engine.command.CommandValidation
+import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
 
@@ -14,8 +14,8 @@ class ShootCommand(val direction: Direction) : WormsCommand {
 
     override val order: Int = 3
 
-    override fun validate(gameMap: WormsMap, worm: Worm): MoveValidation {
-        return MoveValidation.validMove()
+    override fun validate(gameMap: WormsMap, worm: Worm): CommandValidation {
+        return CommandValidation.validMove()
     }
 
     override fun execute(gameMap: WormsMap, worm: Worm) {
