@@ -11,10 +11,11 @@ import za.co.entelect.challenge.renderer.RendererResolver;
 
 public abstract class BasePlayer extends Player {
 
-    private static final String NO_COMMAND = "No Command";
     private static final Logger log = LogManager.getLogger(BotPlayer.class);
 
     private String playerId;
+
+    protected String NO_COMMAND = "No Command";
 
     protected GameMapRenderer jsonRenderer;
     protected GameMapRenderer textRenderer;

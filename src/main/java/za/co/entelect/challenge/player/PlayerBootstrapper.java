@@ -41,15 +41,23 @@ public class PlayerBootstrapper {
 
             gameRunnerConfig.playerAConfig = extractBot(playerAZip).getPath();
             gameRunnerConfig.playerBConfig = extractBot(playerBZip).getPath();
+
+            players.add(parsePlayer(gameRunnerConfig.playerAConfig, "A", gameRunnerConfig, playerAZip, 55555));
+            players.add(parsePlayer(gameRunnerConfig.playerBConfig, "B", gameRunnerConfig, playerBZip, 55556));
+        } else {
+            players.add(parsePlayer(gameRunnerConfig.playerAConfig, "A", gameRunnerConfig));
+            players.add(parsePlayer(gameRunnerConfig.playerBConfig, "B", gameRunnerConfig));
         }
 
-        players.add(parsePlayer(gameRunnerConfig.playerAConfig, "A", gameRunnerConfig));
-        players.add(parsePlayer(gameRunnerConfig.playerBConfig, "B", gameRunnerConfig));
 
         return players;
     }
 
     private Player parsePlayer(String playerConfig, String playerNumber, GameRunnerConfig gameRunnerConfig) throws Exception {
+        return parsePlayer(playerConfig, playerNumber, gameRunnerConfig, null, -1);
+    }
+
+    private Player parsePlayer(String playerConfig, String playerNumber, GameRunnerConfig gameRunnerConfig, File botZip, int apiPort) throws Exception {
 
         BasePlayer player;
 
@@ -64,12 +72,10 @@ public class PlayerBootstrapper {
                 throw new FileNotFoundException(String.format("Could not find %s bot file for %s(%s)", botConfig.getBotLanguage(), botConfig.getAuthor(), botConfig.getNickName()));
             }
 
-            player = new BotPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner);
-
-//            if (gameRunnerConfig.isTournamentMode)
-//                return new TournamentPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner, botConfig.getBotLanguage());
-//            else
-//                return new BotPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner);
+            if (gameRunnerConfig.isTournamentMode)
+                return new TournamentPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), apiPort, botZip);
+            else
+                return new BotPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner);
         }
 
         player.setPlayerId(UUID.randomUUID().toString());
