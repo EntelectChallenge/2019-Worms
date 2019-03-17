@@ -1,6 +1,5 @@
 package za.co.entelect.challenge.engine.bootstrapper;
 
-import com.google.gson.Gson;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
 import org.apache.logging.log4j.Level;
@@ -14,6 +13,7 @@ import za.co.entelect.challenge.engine.runner.GameEngineRunner;
 import za.co.entelect.challenge.game.contracts.bootstrapper.GameEngineBootstrapper;
 import za.co.entelect.challenge.game.contracts.game.GameResult;
 import za.co.entelect.challenge.game.contracts.player.Player;
+import za.co.entelect.challenge.network.Dto.RunnerFailedDto;
 import za.co.entelect.challenge.player.PlayerBootstrapper;
 import za.co.entelect.challenge.renderer.RendererResolver;
 import za.co.entelect.challenge.storage.AzureBlobStorageService;
@@ -26,16 +26,25 @@ public class GameBootstrapper {
 
     private static final Logger LOGGER = LogManager.getLogger(GameBootstrapper.class);
 
+    private AzureBlobStorageService blobService;
+    private AzureQueueStorageService queueService;
+
     public static void main(String[] args) {
         new GameBootstrapper().run();
     }
 
     private void run() {
 
+        GameRunnerConfig gameRunnerConfig = null;
         try {
-            GameRunnerConfig gameRunnerConfig = GameRunnerConfig.load("./game-runner-config.json");
+            gameRunnerConfig = GameRunnerConfig.load("./game-runner-config.json");
 
             initLogging(gameRunnerConfig);
+            if (gameRunnerConfig.isTournamentMode) {
+                TournamentConfig tournamentConfig = gameRunnerConfig.tournamentConfig;
+                blobService = new AzureBlobStorageService(tournamentConfig.connectionString, tournamentConfig.matchLogsContainer);
+                queueService = new AzureQueueStorageService(tournamentConfig.connectionString);
+            }
 
             PlayerBootstrapper playerBootstrapper = new PlayerBootstrapper();
             List<Player> players = playerBootstrapper.loadPlayers(gameRunnerConfig);
@@ -69,6 +78,18 @@ public class GameBootstrapper {
         } catch (Exception e) {
             LOGGER.error(e);
             e.printStackTrace();
+            notifyMatchFailure(gameRunnerConfig, e);
+        }
+    }
+
+    private void notifyMatchFailure(GameRunnerConfig gameRunnerConfig, Exception e) {
+        if (gameRunnerConfig != null && gameRunnerConfig.isTournamentMode) {
+            try {
+                queueService.enqueueMessage(gameRunnerConfig.tournamentConfig.deadMatchQueue,
+                        new RunnerFailedDto(gameRunnerConfig.matchId, e));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -96,18 +117,11 @@ public class GameBootstrapper {
 
     private void saveMatchLogs(TournamentConfig tournamentConfig, File matchLogs, String destinationPath) throws Exception {
         LOGGER.info("Saving match logs to storage");
-
-        AzureBlobStorageService storageService = new AzureBlobStorageService(tournamentConfig.connectionString, tournamentConfig.matchLogsContainer);
-        storageService.putFile(matchLogs, destinationPath);
+        blobService.putFile(matchLogs, destinationPath);
     }
 
     private void notifyMatchComplete(TournamentConfig tournamentConfig, GameResult gameResult) throws Exception {
         LOGGER.info("Notifying of match completion");
-
-        Gson gson = new Gson();
-        String jsonResult = gson.toJson(gameResult);
-
-        AzureQueueStorageService azureQueueStorageService = new AzureQueueStorageService(tournamentConfig.connectionString, tournamentConfig.matchResultQueue);
-        azureQueueStorageService.enqueueMessage(jsonResult);
+        queueService.enqueueMessage(tournamentConfig.matchResultQueue, gameResult);
     }
 }
