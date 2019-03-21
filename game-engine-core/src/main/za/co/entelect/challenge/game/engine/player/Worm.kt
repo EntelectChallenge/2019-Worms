@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.player
 
 import za.co.entelect.challenge.game.engine.map.Point
+import za.co.entelect.challenge.game.engine.interfaces.Printable
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import kotlin.jvm.Transient
 
@@ -8,13 +9,16 @@ open class Worm(val id: Int,
                 var health: Int,
                 @Transient var weapon: Weapon,
                 val diggingRange: Int,
-                val movementRange: Int) {
+                val movementRange: Int): Printable {
 
     constructor(id: Int, health: Int, position: Point, weapon: Weapon, diggingRange: Int = 1, movementRange: Int = 1)
             : this(id, health, weapon, diggingRange, movementRange) {
         this.position = position
         this.previousPosition = position
     }
+
+    override val printable
+        get() = "${player.id}$id"
 
     @Transient
     var roundMoved: Int = -1

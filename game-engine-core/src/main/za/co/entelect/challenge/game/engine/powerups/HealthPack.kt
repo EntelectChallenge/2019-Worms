@@ -10,6 +10,8 @@ class HealthPack(private val health: Int) : Powerup {
 
     override val type: String = "healthpack"
 
+    override val printable = PRINTABLE
+
     override fun applyTo(worm: Worm) {
         worm.health += health
     }
@@ -18,5 +20,8 @@ class HealthPack(private val health: Int) : Powerup {
         fun build(config: GameConfig): HealthPack {
             return HealthPack(config.healthPackHp)
         }
+
+        const val PRINTABLE = "╠╣"
     }
+
 }

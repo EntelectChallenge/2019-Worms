@@ -7,7 +7,9 @@ import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.WormsMap
+import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import za.co.entelect.challenge.game.engine.powerups.HealthPack
 import java.lang.Exception
 
 
@@ -20,14 +22,13 @@ class WormsRenderer(private val config: GameConfig, private val rendererType: Re
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    @Throws(Exception::class)
     fun render(wormsMap: WormsMap, player: WormsPlayer): String {
         return when (rendererType) {
             RendererType.TEXT -> renderText(wormsMap, player)
             RendererType.JSON -> renderJson(wormsMap, player)
             RendererType.CONSOLE -> renderConsole(wormsMap, player)
-            else -> {
-                throw Exception("RendererType not recognized: $rendererType")
-            }
+            else -> throw Exception("RendererType not recognized: $rendererType")
         }
     }
 
@@ -47,12 +48,7 @@ class WormsRenderer(private val config: GameConfig, private val rendererType: Re
                 .worms
                 .fold("") { sum, worm ->
                     sum + """
-                        |$EOL
-                        |Worm id: ${worm.id}
-                        |Dead: ${worm.dead}
-                        |Health: ${worm.health}
-                        |Position x: ${worm.position.x}
-                        |Position y: ${worm.position.y}
+                        ${getBaseWormText(worm)}
                         |Digging range: ${worm.diggingRange}
                         |Movement range: ${worm.movementRange}
                         |Weapon damage: ${worm.weapon.damage}
@@ -62,9 +58,7 @@ class WormsRenderer(private val config: GameConfig, private val rendererType: Re
 
         val selfPlayer = """
             |@02 Self Player
-            |Player id: ${wormGameDetails.selfPlayer.id}
-            |Health: ${wormGameDetails.selfPlayer.health}
-            |Score: ${wormGameDetails.selfPlayer.score}
+            ${getBasePlayerText(wormGameDetails.selfPlayer)}
             |Consecutive do nothings count: ${wormGameDetails.selfPlayer.consecutiveDoNothingsCount}
             |Current worm id: ${wormGameDetails.currentWormId}
             |Worms: $selfPlayerWorms
@@ -74,29 +68,22 @@ class WormsRenderer(private val config: GameConfig, private val rendererType: Re
                 .fold("@03 Enemy Players$EOL") { pSum, enemyPlayer ->
                     val worms = enemyPlayer.worms.fold("") { wSum, worm ->
                         wSum + """
-                            |$EOL
-                            |Worm id: ${worm.id}
-                            |Dead: ${worm.dead}
-                            |Health: ${worm.health}
-                            |Position x: ${worm.position.x}
-                            |Position y: ${worm.position.y}
+                            ${getBaseWormText(worm)}
                             """.trimMargin()
                     }
 
                     pSum + """
-                        |Player id: ${enemyPlayer.id}
-                        |Health: ${enemyPlayer.health}
-                        |Score: ${enemyPlayer.score}
+                        ${getBasePlayerText(enemyPlayer)}
                         |Worms: $worms
                         |$EOL """.trimMargin()
                 }
 
         val legend = """
             |@04 Legend
-            |DEEP_SPACE: ██
-            |DIRT: ▓▓
-            |AIR: ░░
-            |HEALTH_PACK: ╠╣
+            |DEEP_SPACE: ${CellType.DEEP_SPACE.printable}
+            |DIRT: ${CellType.DIRT.printable}
+            |AIR: ${CellType.AIR.printable}
+            |HEALTH_PACK: ${HealthPack.PRINTABLE}
             |WORM_MARKERS: PlayerId WormId
             """.trimMargin()
 
@@ -115,6 +102,21 @@ class WormsRenderer(private val config: GameConfig, private val rendererType: Re
             |
             |$map
             """.trimMargin()
+    }
+
+    private fun getBasePlayerText(enemyPlayer: WormsPlayer): String {
+        return """|Player id: ${enemyPlayer.id}
+                  |Health: ${enemyPlayer.health}
+                  |Score: ${enemyPlayer.score}"""
+    }
+
+    private fun getBaseWormText(worm: Worm): String {
+        return """|$EOL
+                  |Worm id: ${worm.id}
+                  |Dead: ${worm.dead}
+                  |Health: ${worm.health}
+                  |Position x: ${worm.position.x}
+                  |Position y: ${worm.position.y}"""
     }
 
     private fun renderJson(wormsMap: WormsMap, player: WormsPlayer): String {
@@ -144,16 +146,14 @@ class WormsRenderer(private val config: GameConfig, private val rendererType: Re
             """.trimMargin()
     }
 
-    fun getStringMap(arrayMap: List<List<MapCell>>): String {
-        //░▒▓
+    private fun getStringMap(arrayMap: List<List<MapCell>>): String {
         return arrayMap.map { i ->
             i.fold("") { sum, cell ->
-                sum + if (cell.powerup != null) "╠╣"
-                else if (cell.occupier != null) cell.occupier?.player?.id.toString() + cell.occupier?.id.toString()
-                else if (cell.type == CellType.AIR) "░░"
-                else if (cell.type == CellType.DIRT) "▓▓"
-                else if (cell.type == CellType.DEEP_SPACE) "██"
-                else "  "
+                sum + when {
+                    cell.powerup != null -> cell.powerup?.printable
+                    cell.occupier != null -> cell.occupier?.printable
+                    else -> cell.type.printable
+                }
             } + EOL
         }
                 .fold("") { sum, string -> sum + string }
