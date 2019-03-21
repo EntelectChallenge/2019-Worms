@@ -177,21 +177,4 @@ class WormsMapGenerator(private val config: GameConfig, private val seed: Long) 
         cell.type = if (cell.ipInfo.srcValue!! > amountOfSoil) CellType.AIR else CellType.DIRT
     }
 
-    //TODO: Can we keep this and move it to the console renderer??? (Or a renderer at least :P)
-    // Yes :D
-    fun printMapInPierreCharacters(blankMap: List<List<MapCell>>): String {
-        //░▒▓
-        return blankMap.map { i ->
-            i.fold("") { sum, cell ->
-                sum + if (cell.powerup != null) "╠╣"
-                else if (cell.occupier != null) cell.occupier?.player?.id.toString() + cell.occupier?.id.toString()
-                else if (cell.type == CellType.AIR) "░░"
-                else if (cell.type == CellType.DIRT) "▓▓"
-                else if (cell.type == CellType.DEEP_SPACE) "██"
-                else "  "
-            } + "\n"
-        }
-                .fold("") { sum, string -> sum + string }
-    }
-
 }

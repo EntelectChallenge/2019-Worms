@@ -13,7 +13,7 @@ import za.co.entelect.challenge.game.renderer.WormsRenderer
 /**
  * Get 2 players with 3 worms each
  */
-private fun getPlayers2Worms3(config: GameConfig) = (1..2).map {
+private fun getPlayers2Worms3(config: GameConfig) = (1..3).map {
     val playerSquad = (1..3).map { wormIndex ->
         CommandoWorm.build(wormIndex, config)
     }
@@ -35,8 +35,8 @@ fun main(args: Array<String>) {
     val players2Worms3 = getPlayers2Worms3(config)
     val wormsMap = wormsMapGenerator.getMap(players2Worms3)
 
-    val player1 = players2Worms3.get(0)
-    val player2 = players2Worms3.get(1)
+    val player1 = players2Worms3[0]
+    val player2 = players2Worms3[1]
     val command = DigCommand(1, 1)
 
     val commandMap = mapOf(Pair(player1, command), Pair(player2, command))
@@ -44,9 +44,13 @@ fun main(args: Array<String>) {
 
     val errorList = wormsRoundProcessor.getErrorList(wormsMap)
 
-    val renderer = WormsRenderer(config, RendererType.JSON)
+    val rendererText = WormsRenderer(config, RendererType.TEXT)
+    val rendererJson = WormsRenderer(config, RendererType.JSON)
+    val rendererConsole = WormsRenderer(config, RendererType.CONSOLE)
 
-    val render = renderer.render(wormsMap, player1)
+    val textFile = rendererText.render(wormsMap, player1)
+    val jsonFile = rendererJson.render(wormsMap, player1)
+    val consoleFile = rendererConsole.render(wormsMap, player1)
 
     println("Bye bye, World!")
 }
