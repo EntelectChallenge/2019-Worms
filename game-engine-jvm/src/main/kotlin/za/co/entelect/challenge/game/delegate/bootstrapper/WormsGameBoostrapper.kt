@@ -12,7 +12,7 @@ import za.co.entelect.challenge.game.delegate.engine.DelegateMapGenerator
 import za.co.entelect.challenge.game.delegate.engine.DelegateRoundProcessor
 import za.co.entelect.challenge.game.delegate.factory.GameConfigFactory
 import za.co.entelect.challenge.game.delegate.referee.DelegateReferee
-import za.co.entelect.challenge.game.renderer.DelegateRenderer
+import za.co.entelect.challenge.game.delegate.renderer.DelegateRenderer
 import kotlin.random.Random
 
 class WormsGameBoostrapper : GameEngineBootstrapper {

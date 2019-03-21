@@ -2,36 +2,22 @@ package za.co.entelect.challenge.game.engine.map
 
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.config.GameConfig
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory
+import za.co.entelect.challenge.game.engine.factory.TestWormsPlayerFactory
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
-import java.lang.Math.pow
 import kotlin.math.abs
-import kotlin.math.sqrt
 import kotlin.test.*
 
 class WormsMapGeneratorTest {
 
     private val config: GameConfig = TEST_CONFIG
 
-    /**
-     * Get 2 players with 3 worms each
-     */
-    private fun getPlayers2Worms3() = (1..2).map {
-        val playerSquad = (1..3).map { wormIndex ->
-            CommandoWorm.build(wormIndex, config)
-        }
-
-        WormsPlayer.build(it, playerSquad, config)
-    }
-
-    private fun getMapCenter(config: GameConfig): Pair<Double, Double> =
-            Pair((((config.mapSize + 1) / 2) - 0.5), ((config.mapSize + 1) / 2) - 0.5)
-
     @Test
     fun test_generated_map_cells_have_worms() {
         val wormsMapGenerator = WormsMapGenerator(config, 0)
-        val wormsMap = wormsMapGenerator.getMap(getPlayers2Worms3())
+        val wormsMap = wormsMapGenerator.getMap(TestWormsPlayerFactory.buildWormsPlayers(config, 2, 3))
 
         assertEquals(wormsMap.cells.size, config.mapSize * config.mapSize,
                 "Map generated does not contain expected amount of cells,\n" +
@@ -85,7 +71,7 @@ class WormsMapGeneratorTest {
     @Test
     fun test_worms_squad_spawns_scattered() {
         val wormsMapGenerator = WormsMapGenerator(config, 0)
-        val wormsMap = wormsMapGenerator.getMap(getPlayers2Worms3())
+        val wormsMap = wormsMapGenerator.getMap(TestWormsPlayerFactory.buildWormsPlayers(config, 2, 3))
 
         val playerWormInterDistances = wormsMap.players
                 .map { p ->
@@ -98,7 +84,7 @@ class WormsMapGeneratorTest {
 
         playerWormInterDistances.forEachIndexed { index, sqaud ->
             val averageMapDistance = listOf(config.mapSize, config.mapSize).average()
-            val squadSD = standardDeviation(sqaud)
+            val squadSD = TestMapFactory.standardDeviation(sqaud)
             assertTrue(squadSD < (averageMapDistance * 0.1), "Worms in squad $index are not equidistant from each other")
         }
     }
@@ -106,8 +92,8 @@ class WormsMapGeneratorTest {
     @Test
     fun test_powerups_spawned() {
         val wormsMapGenerator = WormsMapGenerator(config, 0)
-        val wormsMap = wormsMapGenerator.getMap(getPlayers2Worms3())
-        val (xMid, yMid) = getMapCenter(config)
+        val wormsMap = wormsMapGenerator.getMap(TestWormsPlayerFactory.buildWormsPlayers(config, 2, 3))
+        val (xMid, yMid) = TestMapFactory.getMapCenter(config)
 
         // percentage distance of map that powerups are not allowed to spawn in
         // distance measured radially, where outside should be without powerups
@@ -125,16 +111,6 @@ class WormsMapGeneratorTest {
     }
 
     @Test
-    fun test_renderer() {
-        val wormsMapGenerator = WormsMapGenerator(config, 0)
-        val stringMap = wormsMapGenerator.printMapInPierreCharacters(listOf(listOf(
-                MapCell(CellType.AIR),
-                MapCell(CellType.DIRT),
-                MapCell(CellType.DEEP_SPACE))))
-        assertTrue(stringMap.length > 6, "Map renderer has broken")
-    }
-
-    @Test
     fun test_procedural_random() {
         val noise = SimplexNoise(42)
 
@@ -148,10 +124,5 @@ class WormsMapGeneratorTest {
         assertEquals(noise.n2d(-51.4, 128.9), 0.7977717117332975)
     }
 
-    private fun standardDeviation(elements: List<Double>): Double {
-        val mean = elements.sorted().get(elements.size / 2)
-        val deviationSquared = elements.fold(0.0) { sum, i -> sum + pow(i - mean, 2.0) }
-        return sqrt(deviationSquared / (elements.size - 1))
-    }
 
 }

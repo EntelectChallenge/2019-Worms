@@ -2,6 +2,7 @@ package za.co.entelect.challenge.game.engine.command
 
 import com.nhaarman.mockitokotlin2.*
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory
 import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
 import za.co.entelect.challenge.game.engine.map.CellType

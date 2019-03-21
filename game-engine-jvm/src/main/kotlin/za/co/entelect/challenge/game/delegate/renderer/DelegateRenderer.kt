@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.game.renderer
+package za.co.entelect.challenge.game.delegate.renderer
 
 import za.co.entelect.challenge.game.contracts.game.GamePlayer
 import za.co.entelect.challenge.game.contracts.map.GameMap
@@ -13,7 +13,10 @@ class DelegateRenderer(config: GameConfig, rendererType: RendererType) : GameMap
     private val renderer = WormsRenderer(config, rendererType)
 
     override fun commandPrompt(gamePlayer: GamePlayer?): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (gamePlayer !is DelegatePlayer) {
+            throw IllegalArgumentException("Unknown Map Class")
+        }
+        return renderer.commandPrompt(gamePlayer.wormsPlayer)
     }
 
     override fun render(gameMap: GameMap?, player: GamePlayer?): String {

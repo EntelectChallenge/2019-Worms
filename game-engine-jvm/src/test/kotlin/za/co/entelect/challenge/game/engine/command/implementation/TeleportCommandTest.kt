@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
-import za.co.entelect.challenge.game.engine.command.TestMapFactory.buildMapWithCellType
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point

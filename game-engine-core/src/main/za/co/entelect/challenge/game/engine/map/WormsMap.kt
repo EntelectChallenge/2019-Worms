@@ -27,7 +27,7 @@ interface GameMap {
 }
 
 class WormsMap(override val players: List<WormsPlayer>,
-               private val size: Int,
+               val size: Int,
                cells: List<MapCell>) : GameMap {
 
     override val currentRoundFeedback = mutableListOf<CommandFeedback>()

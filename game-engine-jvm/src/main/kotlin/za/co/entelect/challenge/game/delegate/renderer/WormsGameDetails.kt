@@ -1,12 +1,11 @@
-package za.co.entelect.challenge.game.renderer
+package za.co.entelect.challenge.game.delegate.renderer
 
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.MapCell
-import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 
-class WormGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlayer) {
+class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlayer) {
 
     var currentRound: Int
     var maxRounds: Int
@@ -18,11 +17,7 @@ class WormGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlaye
 
     init {
         val mapSize = config.mapSize
-        var groupedArrayMap = (0 until mapSize).map { x ->
-            (0 until mapSize).map { y ->
-                wormsMap[Point(x, y)]
-            }
-        }
+        var groupedArrayMap = wormsMap.cells.chunked(wormsMap.size)
         groupedArrayMap = modifyCellsForPlayer(groupedArrayMap, player)
         this.currentRound = wormsMap.currentRound
         this.maxRounds = config.maxRounds

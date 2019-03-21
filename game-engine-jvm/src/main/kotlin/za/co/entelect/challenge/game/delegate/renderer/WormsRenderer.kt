@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.game.renderer
+package za.co.entelect.challenge.game.delegate.renderer
 
 import com.google.gson.Gson
 import za.co.entelect.challenge.game.contracts.game.GamePlayer
@@ -18,22 +18,20 @@ class WormsRenderer(private val config: GameConfig, private val rendererType: Re
     private val gson = Gson()
     private val EOL = System.getProperty("line.separator")
 
-    fun commandPrompt(gamePlayer: GamePlayer?): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun commandPrompt(wormsPlayer: WormsPlayer): String {
+        return "Player ${wormsPlayer.id}, enter a command (move x y)/(dig x y)/(shoot U/UR/R/DR/D/DL/L/UL)/(nothing)"
     }
 
-    @Throws(Exception::class)
     fun render(wormsMap: WormsMap, player: WormsPlayer): String {
         return when (rendererType) {
             RendererType.TEXT -> renderText(wormsMap, player)
             RendererType.JSON -> renderJson(wormsMap, player)
             RendererType.CONSOLE -> renderConsole(wormsMap, player)
-            else -> throw Exception("RendererType not recognized: $rendererType")
         }
     }
 
     private fun renderText(wormsMap: WormsMap, player: WormsPlayer): String {
-        val wormGameDetails = WormGameDetails(config, wormsMap, player)
+        val wormGameDetails = WormsGameDetails(config, wormsMap, player)
 
         val matchDetails = """
             |@01 Match Details
@@ -120,13 +118,13 @@ class WormsRenderer(private val config: GameConfig, private val rendererType: Re
     }
 
     private fun renderJson(wormsMap: WormsMap, player: WormsPlayer): String {
-        val wormGameDetails = WormGameDetails(config, wormsMap, player)
+        val wormGameDetails = WormsGameDetails(config, wormsMap, player)
 
         return gson.toJson(wormGameDetails)
     }
 
     private fun renderConsole(wormsMap: WormsMap, player: WormsPlayer): String {
-        val wormGameDetails = WormGameDetails(config, wormsMap, player)
+        val wormGameDetails = WormsGameDetails(config, wormsMap, player)
         val selfPlayer = "Self:     H=${wormGameDetails.selfPlayer.health} S=${wormGameDetails.selfPlayer.score} " +
                 "W=${wormGameDetails.currentWormId}"
 

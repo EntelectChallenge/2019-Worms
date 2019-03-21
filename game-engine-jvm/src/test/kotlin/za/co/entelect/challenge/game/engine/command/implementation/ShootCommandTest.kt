@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.command.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.command.feedback.ShootResult
 import za.co.entelect.challenge.game.engine.command.implementation.Direction.*
