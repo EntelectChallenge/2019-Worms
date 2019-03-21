@@ -154,6 +154,10 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         gameResult.verificationRequired = referee.isMatchValid();
 
         writeEndGameFile(winner);
+
+        for (Player player : players) {
+            player.gameEnded(gameMap);
+        }
     }
 
     private boolean isGameComplete() throws TimeoutException {
@@ -260,9 +264,10 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         gameMap = gameMapGenerator.generateGameMap(players);
     }
 
-    private void preparePlayers() {
+    private void preparePlayers() throws Exception {
         for (Player player : players) {
             ((BasePlayer) player).instantiateRenderers(rendererResolver);
+            ((BasePlayer) player).gameStarted();
         }
     }
 

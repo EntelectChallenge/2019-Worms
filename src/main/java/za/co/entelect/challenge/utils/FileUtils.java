@@ -8,7 +8,10 @@ import java.io.IOException;
 public final class FileUtils {
 
     public static void writeToFile(String fileLocation, String stringToWrite) throws IOException {
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(fileLocation)));
+        File stateDirectory = new File(fileLocation);
+        stateDirectory.getParentFile().mkdirs();
+
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(stateDirectory));
         bufferedWriter.write(stringToWrite);
         bufferedWriter.flush();
         bufferedWriter.close();

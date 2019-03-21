@@ -1,7 +1,6 @@
 package za.co.entelect.challenge.botrunners;
 
 import za.co.entelect.challenge.config.BotMetaData;
-import za.co.entelect.challenge.game.contracts.exceptions.TimeoutException;
 
 import java.io.IOException;
 
@@ -12,9 +11,9 @@ public class ScalaBotRunner extends BotRunner {
     }
 
     @Override
-    protected String runBot() throws IOException, TimeoutException {
+    protected void runBot() throws IOException {
         String line = "java -jar \"" + this.getBotFileName() + "\"";
-        return RunSimpleCommandLineCommand(line, 0);
+        runSimpleCommandLineCommand(line, 0);
     }
 
     @Override
