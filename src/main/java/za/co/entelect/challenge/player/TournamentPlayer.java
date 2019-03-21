@@ -1,9 +1,7 @@
 package za.co.entelect.challenge.player;
 
-import com.google.gson.JsonObject;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,23 +9,16 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import za.co.entelect.challenge.botrunners.BotRunner;
-import za.co.entelect.challenge.enums.BotLanguage;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.network.BotServices;
 import za.co.entelect.challenge.network.Dto.RunBotResponseDto;
 import za.co.entelect.challenge.player.entity.BotExecutionContext;
-import za.co.entelect.challenge.utils.FileUtils;
+import za.co.entelect.challenge.utils.NetworkUtil;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class TournamentPlayer extends BasePlayer {
-    private static final String BOT_COMMAND = "command.txt";
-    private static final String BOT_STATE = "state.json";
-    private static final String TEXT_MAP = "textMap.txt";
 
     private final int apiPort;
     private final File botZip;
@@ -41,6 +32,7 @@ public class TournamentPlayer extends BasePlayer {
         this.apiPort = apiPort;
         this.botZip = botZip;
 
+//        String apiUrl = String.format("http://host.docker.internal:%d", apiPort);
         String apiUrl = String.format("http://localhost:%d", apiPort);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(apiUrl)
@@ -57,8 +49,8 @@ public class TournamentPlayer extends BasePlayer {
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", botZip.getName(), requestBody);
 
         Call<Void> instantiateBotCall = botServices.instantiateBot(fileToUpload);
-        Response<Void> execute = instantiateBotCall.execute();
-        if (!execute.isSuccessful()) {
+        Response<Void> response = NetworkUtil.executeWithRetry(instantiateBotCall);
+        if (!response.isSuccessful()) {
             String errorMessage = String.format("Failed to instantiate bot: %s on api port %d", getName(), apiPort);
 
             LOGGER.error(errorMessage);
