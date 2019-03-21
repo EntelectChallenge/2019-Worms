@@ -19,7 +19,7 @@ class GameConfigFactoryTest {
         assertEquals(100, config.commandoWorms.initialHp)
         assertEquals(1, config.commandoWorms.movementRage)
         assertEquals(1, config.commandoWorms.diggingRange)
-        assertEquals(1, config.commandoWorms.weapon.damage)
+        assertEquals(10, config.commandoWorms.weapon.damage)
         assertEquals(3, config.commandoWorms.weapon.range)
 
         assertEquals(4, config.pushbackDamage)

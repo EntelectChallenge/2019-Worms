@@ -7,7 +7,7 @@
     "movementRage": 1,
     "diggingRange": 1,
     "weapon": {
-      "damage": 1,
+      "damage": 10,
       "range": 3
     }
   },
