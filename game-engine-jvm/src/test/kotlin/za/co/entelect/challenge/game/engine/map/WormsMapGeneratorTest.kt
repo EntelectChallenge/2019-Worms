@@ -91,7 +91,7 @@ class WormsMapGeneratorTest {
                 .map { p ->
                     p.worms.map { w ->
                         p.worms.filter { otherWorm -> otherWorm != w }
-                                .map { otherWorm -> otherWorm.position.euclidianDistance(w.position) }
+                                .map { otherWorm -> otherWorm.position.euclideanDistance(w.position) }
                                 .average()
                     }
                 }

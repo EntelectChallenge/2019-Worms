@@ -8,4 +8,6 @@ interface Powerup {
      * Apply this powerup to a worm
      */
     fun applyTo(worm: Worm)
+
+    val type: String
 }

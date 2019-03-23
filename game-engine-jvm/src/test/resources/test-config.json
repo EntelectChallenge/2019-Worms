@@ -7,20 +7,20 @@
     "movementRage": 1,
     "diggingRange": 1,
     "weapon": {
-      "damage": 10,
+      "damage": 1,
       "range": 4
     }
   },
   "pushbackDamage": 4,
   "mapSize": 32,
   "healthPackHp": 5,
-  "scores": {
-    "attack": 5,
+  "scores" : {
+    "attack" : 5,
     "killShot": 10,
     "missedAttack": 2,
-    "powerup": 6,
-    "dig": 4,
-    "move": 1,
+    "powerup" : 6,
+    "dig" : 4,
+    "move" : 1,
     "invalidCommand": -1,
     "doNothing": 0
   }

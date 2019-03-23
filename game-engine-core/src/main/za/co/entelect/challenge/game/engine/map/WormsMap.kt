@@ -1,5 +1,6 @@
 package za.co.entelect.challenge.game.engine.map
 
+import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
 import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.processor.GameError
@@ -15,6 +16,7 @@ interface GameMap {
     val cells: List<MapCell>
     var currentRound: Int
     val currentRoundErrors: List<GameError>
+    val currentRoundFeedback: MutableList<CommandFeedback>
 
     operator fun contains(target: Point): Boolean
 
@@ -27,6 +29,8 @@ interface GameMap {
 class WormsMap(override val players: List<WormsPlayer>,
                private val size: Int,
                cells: List<MapCell>) : GameMap {
+
+    override val currentRoundFeedback = mutableListOf<CommandFeedback>()
 
     override val cells: List<MapCell>
 
@@ -101,5 +105,10 @@ class WormsMap(override val players: List<WormsPlayer>,
 
     override fun addError(gameError: GameError) {
         errorList.add(gameError)
+    }
+
+    fun startRound() {
+        currentRound++
+        currentRoundFeedback.clear()
     }
 }

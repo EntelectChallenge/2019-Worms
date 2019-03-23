@@ -29,7 +29,7 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
             "move" -> teleportCommand(splitCommand)
             "dig" -> digCommand(splitCommand)
             "shoot" -> shootCommand(splitCommand)
-            "nothing" -> DoNothingCommand()
+            "nothing" -> DoNothingCommand(config)
             else -> InvalidCommand("Unknown command ${splitCommand[0]}")
         }
     }
@@ -45,7 +45,7 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
             return InvalidCommand("Cannot parse direction command: Invalid direction $direction")
         }
 
-        return ShootCommand(Direction.fromShortened(direction))
+        return ShootCommand(Direction.fromShortened(direction), config)
     }
 
     private fun digCommand(splitCommand: List<String>): WormsCommand {
@@ -60,7 +60,7 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
             return InvalidCommand("Cannot parse move coordinates as numbers: ${splitCommand.subList(1, 2)}")
         }
 
-        return DigCommand(x, y)
+        return DigCommand(x, y, config)
     }
 
     private fun teleportCommand(splitCommand: List<String>): WormsCommand {

@@ -8,6 +8,8 @@ import za.co.entelect.challenge.game.engine.player.Worm
  */
 class HealthPack(private val health: Int) : Powerup {
 
+    override val type: String = "healthpack"
+
     override fun applyTo(worm: Worm) {
         worm.health += health
     }

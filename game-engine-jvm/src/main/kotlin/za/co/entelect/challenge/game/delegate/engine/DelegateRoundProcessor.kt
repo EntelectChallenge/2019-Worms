@@ -12,7 +12,7 @@ import kotlin.random.Random
 
 class DelegateRoundProcessor(random: Random, config: GameConfig) : GameRoundProcessor {
 
-    private val wormsRoundProcessor = WormsRoundProcessor()
+    private val wormsRoundProcessor = WormsRoundProcessor(config)
     private val commandParser = CommandParser(random, config)
 
     override fun processRound(map: GameMap, commands: Map<GamePlayer, RawCommand>): Boolean {

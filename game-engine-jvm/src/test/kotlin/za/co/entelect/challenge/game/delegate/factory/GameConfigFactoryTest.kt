@@ -3,7 +3,7 @@ package za.co.entelect.challenge.game.delegate.factory
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-const val TEST_CONFIG_PATH = "game-engine-jvm/src/main/resources/default-config.json"
+const val TEST_CONFIG_PATH = "game-engine-jvm/src/test/resources/test-config.json"
 val TEST_CONFIG = GameConfigFactory.getConfig(TEST_CONFIG_PATH)
 
 class GameConfigFactoryTest {
@@ -19,8 +19,8 @@ class GameConfigFactoryTest {
         assertEquals(100, config.commandoWorms.initialHp)
         assertEquals(1, config.commandoWorms.movementRage)
         assertEquals(1, config.commandoWorms.diggingRange)
-        assertEquals(10, config.commandoWorms.weapon.damage)
-        assertEquals(3, config.commandoWorms.weapon.range)
+        assertEquals(1, config.commandoWorms.weapon.damage)
+        assertEquals(4, config.commandoWorms.weapon.range)
 
         assertEquals(4, config.pushbackDamage)
         assertEquals(32, config.mapSize)

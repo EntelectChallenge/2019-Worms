@@ -20,8 +20,8 @@ class DoNothingCommandTest {
 
     @Test
     fun testDoNothing() {
-        val command = DoNothingCommand()
-        val commandExecutor = CommandExecutor(player, map, command)
+        val command = DoNothingCommand(config)
+        val commandExecutor = CommandExecutor(player, map, command, config)
 
         assertTrue(command.validate(map, player.currentWorm).isValid)
         commandExecutor.execute()

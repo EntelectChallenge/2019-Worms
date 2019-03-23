@@ -13,7 +13,7 @@ import kotlin.test.*
 class WormsRoundProcessorTest {
 
     val config = TEST_CONFIG
-    val roundProcessor = WormsRoundProcessor()
+    val roundProcessor = WormsRoundProcessor(config)
     val random = Random(0)
 
     @Test
@@ -21,7 +21,7 @@ class WormsRoundProcessorTest {
         val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
         val player2 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(2, 2))), config)
         val map = TestMapFactory.buildMapWithCellType(listOf(player1, player2), 3, CellType.DIRT)
-        val command = DigCommand(1, 1)
+        val command = DigCommand(1, 1, TEST_CONFIG)
 
         val commandMap = mapOf(Pair(player1, command), Pair(player2, command))
         roundProcessor.processRound(map, commandMap)
@@ -49,7 +49,7 @@ class WormsRoundProcessorTest {
         val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
         val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(2, 2))), config)
         val map = TestMapFactory.buildMapWithCellType(listOf(player1, player2), 3, CellType.DIRT)
-        val digCommand =  DigCommand(1, 1)
+        val digCommand =  DigCommand(1, 1, TEST_CONFIG)
         val moveCommand = TeleportCommand(Point(1, 1), random, TEST_CONFIG)
 
         val commandMap = mapOf(Pair(player1, digCommand), Pair(player2, moveCommand))
@@ -70,8 +70,8 @@ class WormsRoundProcessorTest {
         val map = TestMapFactory.buildMapWithCellType(listOf(player1, player2), 3, CellType.DIRT)
         map[0,0].type = CellType.AIR
 
-        val digCommand =  DigCommand(1, 1)
-        val shootCommand = ShootCommand(Direction.UP_LEFT)
+        val digCommand =  DigCommand(1, 1, TEST_CONFIG)
+        val shootCommand = ShootCommand(Direction.UP_LEFT, TEST_CONFIG)
 
         val commandMap = mapOf(Pair(player1, digCommand), Pair(player2, shootCommand))
         roundProcessor.processRound(map, commandMap)
@@ -88,7 +88,7 @@ class WormsRoundProcessorTest {
         val player2 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(1, 1))), config)
         val map = TestMapFactory.buildMapWithCellType(listOf(player1, player2), 3, CellType.AIR)
 
-        val shootCommand = ShootCommand(Direction.DOWN)
+        val shootCommand = ShootCommand(Direction.DOWN, TEST_CONFIG)
         val moveCommand = TeleportCommand(Point(0, 2), random, TEST_CONFIG)
 
         val commandMap = mapOf(Pair(player1, shootCommand), Pair(player2, moveCommand))
@@ -104,7 +104,7 @@ class WormsRoundProcessorTest {
         val player2 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 2))), config)
         val map = TestMapFactory.buildMapWithCellType(listOf(player1, player2), 3, CellType.AIR)
 
-        val shootCommand = ShootCommand(Direction.DOWN)
+        val shootCommand = ShootCommand(Direction.DOWN, TEST_CONFIG)
         val moveCommand = TeleportCommand(Point(1, 1), random, TEST_CONFIG)
 
         val commandMap = mapOf(Pair(player1, shootCommand), Pair(player2, moveCommand))

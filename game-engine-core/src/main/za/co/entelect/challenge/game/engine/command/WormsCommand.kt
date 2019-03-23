@@ -1,5 +1,7 @@
 package za.co.entelect.challenge.game.engine.command
 
+import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
+import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
 
@@ -18,5 +20,5 @@ interface WormsCommand {
      * @param gameMap The game map to make command calculations
      * @param worm  The issuing occupier for this command
      */
-    fun execute(gameMap: WormsMap, worm: Worm)
+    fun execute(gameMap: WormsMap, worm: Worm): CommandFeedback
 }

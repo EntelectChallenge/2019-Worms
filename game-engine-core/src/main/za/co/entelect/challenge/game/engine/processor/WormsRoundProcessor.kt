@@ -2,16 +2,17 @@ package za.co.entelect.challenge.game.engine.processor
 
 import za.co.entelect.challenge.game.engine.command.CommandExecutor
 import za.co.entelect.challenge.game.engine.command.WormsCommand
+import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 
-class WormsRoundProcessor {
+class WormsRoundProcessor(val config: GameConfig) {
 
     fun processRound(wormsMap: WormsMap, wormsCommands: Map<WormsPlayer, WormsCommand>): Boolean {
-        wormsMap.currentRound++
+        wormsMap.startRound()
 
         val commands = wormsCommands.entries.sortedBy { it.value.order }
-                .map { (player, command) -> CommandExecutor(player, wormsMap, command) }
+                .map { (player, command) -> CommandExecutor(player, wormsMap, command, config) }
 
         for (command in commands) {
             command.execute()

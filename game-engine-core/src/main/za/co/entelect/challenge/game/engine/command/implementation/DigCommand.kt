@@ -1,7 +1,9 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
-import za.co.entelect.challenge.game.engine.command.CommandValidation
 import za.co.entelect.challenge.game.engine.command.WormsCommand
+import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
+import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
+import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
@@ -10,11 +12,11 @@ import za.co.entelect.challenge.game.engine.player.Worm
 /**
  * Command to dig through a cell
  */
-class DigCommand(val target: Point) : WormsCommand {
+class DigCommand(val target: Point, val config: GameConfig) : WormsCommand {
 
     override val order: Int = 1
 
-    constructor(x: Int, y: Int) : this(Point(x, y))
+    constructor(x: Int, y: Int, config: GameConfig) : this(Point(x, y), config)
 
     /**
      * For a dig command to be valid:
@@ -39,9 +41,11 @@ class DigCommand(val target: Point) : WormsCommand {
         return CommandValidation.validMove()
     }
 
-    override fun execute(gameMap: WormsMap, worm: Worm) {
+    override fun execute(gameMap: WormsMap, worm: Worm): CommandFeedback {
         val targetCell = gameMap[target]
         targetCell.type = CellType.AIR
+
+        return CommandFeedback(config.scores.dig)
     }
 
 }

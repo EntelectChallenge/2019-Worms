@@ -113,8 +113,7 @@ task testCoverageVerification(type: JacocoCoverageVerification) {
             excludes = [
                     'za.co.entelect.challenge.game.delegate.*',
                     'za.co.entelect.challenge.game.engine.simplexNoise.*',
-                    'za.co.entelect.challenge.game.engine.config.GameConfig',
-                    'za.co.entelect.challenge.game.engine.config.PlayerWormDefinition',
+                    'za.co.entelect.challenge.game.engine.config.*',
                     'za.co.entelect.challenge.game.engine.player.Weapon',
                     'za.co.entelect.challenge.game.engine.processor.GameError'
             ]

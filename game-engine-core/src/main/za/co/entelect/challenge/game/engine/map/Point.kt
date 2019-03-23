@@ -12,10 +12,11 @@ data class Point(val x: Int, val y: Int) {
      * Movement is vertical, horizontal or diagonal so this is the maximum of x and y distance
      */
     fun movementDistance(other: Point): Int = maximumDimension(other)
-    fun shootingDistance(other: Point): Int = maximumDimension(other)
+
+    fun shootingDistance(other: Point): Double = euclideanDistance(other)
 
     fun manhattanDistance(other: Point) = abs(x - other.x) + abs(y - other.y)
-    fun euclidianDistance(other: Point) = sqrt((x - other.x).pow(2) + (y - other.y).pow(2))
+    fun euclideanDistance(other: Point) = sqrt((x - other.x).pow(2) + (y - other.y).pow(2))
     fun maximumDimension(other: Point) = max(abs(x - other.x), abs(y - other.y))
 
     fun abs(): Point = Point(abs(x), abs(y))
@@ -24,4 +25,5 @@ data class Point(val x: Int, val y: Int) {
 
     override fun toString(): String = "($x, $y)"
 }
+
 

@@ -2,6 +2,7 @@ package za.co.entelect.challenge.game.engine.command.implementation
 
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.command.TestMapFactory.buildMapWithCellType
+import za.co.entelect.challenge.game.engine.command.feedback.ShootResult
 import za.co.entelect.challenge.game.engine.command.implementation.Direction.*
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.CellType
@@ -45,13 +46,15 @@ class ShootCommandTest {
 
         for ((index, direction) in directions.withIndex()) {
             testMap.currentRound++
-            val testCommand = ShootCommand(direction)
+            val testCommand = ShootCommand(direction, TEST_CONFIG)
 
             assertTrue(testCommand.validate(testMap, attacker).isValid)
-            testCommand.execute(testMap, attacker)
+            val result = testCommand.execute(testMap, attacker)
 
             assertEquals(testMap.currentRound, targetWorms[index].roundHit, "Hit round for worm in direction $direction")
             assertEquals(expectedHp, targetWorms[index].health, "Health for worm in direction $direction")
+            assertEquals(ShootResult.HIT, result.result, "Result correct for attack in direction $direction")
+            assertEquals(config.scores.attack, result.score, "Score correct for attack in direction $direction")
         }
 
         assertEquals(initialHp, attacker.health)
@@ -83,13 +86,14 @@ class ShootCommandTest {
 
         for ((index, direction) in directions.withIndex()) {
             testMap.currentRound++
-            val testCommand = ShootCommand(direction)
+            val testCommand = ShootCommand(direction, TEST_CONFIG)
 
             assertTrue(testCommand.validate(testMap, attacker).isValid)
-            testCommand.execute(testMap, attacker)
+            val feedback = testCommand.execute(testMap, attacker)
 
             assertEquals(testMap.currentRound, targetWorms[index].roundHit, "Hit round for worm in direction $direction")
             assertEquals(expectedHp, targetWorms[index].health, "Health for worm in direction $direction")
+            assertEquals(ShootResult.HIT, feedback.result, "Result correct for attack in direction $direction")
         }
 
         assertEquals(initialHp, attacker.health)
@@ -120,12 +124,15 @@ class ShootCommandTest {
 
         for ((index, direction) in directions.withIndex()) {
             testMap.currentRound++
-            val testCommand = ShootCommand(direction)
+            val testCommand = ShootCommand(direction, TEST_CONFIG)
 
-            testCommand.execute(testMap, attacker)
+            val feedback = testCommand.execute(testMap, attacker)
 
-            assertEquals(testMap.currentRound, targetWorms[index].roundHit, "Hit round for worm in direction $direction")
-            assertEquals(expectedHp, targetWorms[index].health, "Health for worm in direction $direction")
+            val targetWorm = targetWorms[index]
+            assertEquals(testMap.currentRound, targetWorm.roundHit, "Hit round for worm in direction $direction")
+            assertEquals(expectedHp, targetWorm.health, "Health for worm in direction $direction")
+            assertEquals(ShootResult.HIT, feedback.result, "Result correct for attack in direction $direction")
+            assertEquals(targetWorm.position, feedback.target, "Target correct for attack in direction $direction")
         }
 
         assertEquals(initialHp, attacker.health)
@@ -145,10 +152,11 @@ class ShootCommandTest {
 
         for (direction in directions) {
             testMap.currentRound++
-            val testCommand = ShootCommand(direction)
+            val testCommand = ShootCommand(direction, TEST_CONFIG)
 
             assertTrue(testCommand.validate(testMap, attacker).isValid)
-            testCommand.execute(testMap, attacker)
+            val feedback = testCommand.execute(testMap, attacker)
+            assertEquals(ShootResult.OUT_OF_RANGE, feedback.result, "Result correct for attack in direction $direction")
         }
 
         assertEquals(initialHp, attacker.health)
@@ -186,10 +194,12 @@ class ShootCommandTest {
 
         for (direction in directions) {
             testMap.currentRound++
-            val testCommand = ShootCommand(direction)
+            val testCommand = ShootCommand(direction, TEST_CONFIG)
 
             assertTrue(testCommand.validate(testMap, attacker).isValid)
-            testCommand.execute(testMap, attacker)
+            val feedback = testCommand.execute(testMap, attacker)
+            assertEquals(ShootResult.BLOCKED, feedback.result, "Result correct for attack in direction $direction")
+            assertEquals(config.scores.missedAttack, feedback.score, "Score correct for attack in direction $direction")
         }
 
         assertEquals(initialHp, attacker.health)
@@ -198,48 +208,51 @@ class ShootCommandTest {
     @Test
     fun test_wormAtMaxRange() {
 
-        val targetWorms = listOf(
-                CommandoWorm.build(0, config, Point(0, 0))
-        )
+        val targetWorm = CommandoWorm.build(0, config, Point(0, 0))
 
-        val targetPlayer = WormsPlayer.build(0, targetWorms, config)
+        val targetPlayer = WormsPlayer.build(0, listOf(targetWorm), config)
+
+        val attacker = CommandoWorm.build(0, config, Point(3, 0))
+        val attackingPlayer = WormsPlayer.build(1, listOf(attacker), config)
+
+        val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 5, CellType.AIR)
+
+        val testCommand = ShootCommand(LEFT, TEST_CONFIG)
+
+        assertTrue(testCommand.validate(testMap, attacker).isValid)
+        val feedback = testCommand.execute(testMap, attacker)
+
+        assertEquals(expectedHp, targetWorm.health)
+        assertEquals(initialHp, attacker.health)
+        assertEquals(ShootResult.HIT, feedback.result)
+        assertEquals(config.scores.attack, feedback.score)
+        assertEquals(targetWorm.position, feedback.target)
+    }
+
+    @Test
+    fun test_wormOutOfRange() {
+
+        val missedWorm = CommandoWorm.build(0, config, Point(0, 0))
+
+        val targetPlayer = WormsPlayer.build(0, listOf(
+                missedWorm
+        ), config)
         val startingPosition = Point(3, 3)
         val attacker = CommandoWorm.build(0, config, startingPosition)
         val attackingPlayer = WormsPlayer.build(1, listOf(attacker), config)
 
         val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 5, CellType.AIR)
 
-        val testCommand = ShootCommand(UP_LEFT)
+        val testCommand = ShootCommand(UP_LEFT, TEST_CONFIG)
 
         assertTrue(testCommand.validate(testMap, attacker).isValid)
-        testCommand.execute(testMap, attacker)
+        val feedback = testCommand.execute(testMap, attacker)
 
-        assertEquals(expectedHp, targetWorms[0].health)
+        assertEquals(initialHp, missedWorm.health)
         assertEquals(initialHp, attacker.health)
+
+        assertEquals(ShootResult.OUT_OF_RANGE, feedback.result, "Result correct for missed shot")
+        assertEquals(config.scores.missedAttack, feedback.score, "Score correct for missed shot")
+        assertEquals(missedWorm.position, feedback.target, "Target correct for missed shot")
     }
-
-    @Test
-    fun test_wormOutOfRange() {
-
-        val targetWorms = listOf(
-                CommandoWorm.build(0, config, Point(0, 0))
-        )
-
-        val targetPlayer = WormsPlayer.build(0, targetWorms, config)
-        val startingPosition = Point(4, 4)
-        val attacker = CommandoWorm.build(0, config, startingPosition)
-        val attackingPlayer = WormsPlayer.build(1, listOf(attacker), config)
-
-        val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 5, CellType.AIR)
-
-        val testCommand = ShootCommand(UP_LEFT)
-
-        assertTrue(testCommand.validate(testMap, attacker).isValid)
-        testCommand.execute(testMap, attacker)
-
-        assertEquals(initialHp, targetWorms[0].health)
-        assertEquals(initialHp, attacker.health)
-    }
-
-
 }

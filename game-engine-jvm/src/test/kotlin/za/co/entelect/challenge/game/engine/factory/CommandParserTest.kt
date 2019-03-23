@@ -82,6 +82,13 @@ class CommandParserTest {
     }
 
     @Test
+    fun shoot_valid_cartesian() {
+        val command = parser.parseCommand("shoot NW")
+        assertTrue(command is ShootCommand)
+        assertEquals(Direction.UP_LEFT, command.direction)
+    }
+
+    @Test
     fun shoot_invalid() {
         val command = parser.parseCommand("shoot TEST")
         assertTrue(command is InvalidCommand)
