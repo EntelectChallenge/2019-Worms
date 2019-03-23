@@ -10,7 +10,11 @@ import za.co.entelect.challenge.game.engine.config.GameConfig
 
 class DelegateRenderer(config: GameConfig, rendererType: RendererType) : GameMapRenderer {
 
-    private val renderer = WormsRenderer(config, rendererType)
+    private val renderer = when (rendererType) {
+        RendererType.JSON -> WormsRendererJson(config)
+        RendererType.TEXT -> WormsRendererText(config)
+        RendererType.CONSOLE -> WormsRendererConsole(config)
+    }
 
     override fun commandPrompt(gamePlayer: GamePlayer?): String {
         if (gamePlayer !is DelegatePlayer) {

@@ -55,9 +55,9 @@ class WormsRendererTest {
                 .map { (x, y) -> Point(x + 5, y + 4) }
         upSignPoints.forEach { wormsMap[it].type = darkPixel }
 
-        val rendererText = WormsRenderer(config, RendererType.TEXT)
-        val rendererJson = WormsRenderer(config, RendererType.JSON)
-        val rendererConsole = WormsRenderer(config, RendererType.CONSOLE)
+        val rendererText = WormsRendererText(config)
+        val rendererJson = WormsRendererJson(config)
+        val rendererConsole = WormsRendererConsole(config)
 
         val textFileString = rendererText.render(wormsMap, player1)
         val jsonFileString = rendererJson.render(wormsMap, player1)
@@ -115,7 +115,7 @@ class WormsRendererTest {
     @Test
     fun test_command_prompt() {
         val player = buildWormsPlayers(config, 1, 1)[0]
-        val consoleRenderer = WormsRenderer(config, RendererType.CONSOLE)
+        val consoleRenderer = WormsRendererConsole(config)
         val commandPrompt = consoleRenderer.commandPrompt(player)
 
         assertNotNull(commandPrompt, "Console command prompt is not supposed to be null")
