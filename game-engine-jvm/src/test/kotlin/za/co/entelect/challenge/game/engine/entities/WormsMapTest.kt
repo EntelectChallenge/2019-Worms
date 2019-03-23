@@ -1,7 +1,8 @@
 package za.co.entelect.challenge.game.engine.entities
 
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
-import za.co.entelect.challenge.game.engine.factory.TestMapFactory
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapCells
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
@@ -17,25 +18,25 @@ class WormsMapTest {
 
     @Test(expected = IndexOutOfBoundsException::class)
     fun test_get_xLow() {
-        val map = TestMapFactory.buildMapWithCellType(emptyList(), 2, CellType.AIR)
+        val map = buildMapWithCellType(emptyList(), 2, CellType.AIR)
         map[-1, 0]
     }
 
     @Test(expected = IndexOutOfBoundsException::class)
     fun test_get_xHigh() {
-        val map = TestMapFactory.buildMapWithCellType(emptyList(), 2, CellType.AIR)
+        val map = buildMapWithCellType(emptyList(), 2, CellType.AIR)
         map[2, 0]
     }
 
     @Test(expected = IndexOutOfBoundsException::class)
     fun test_get_yLow() {
-        val map = TestMapFactory.buildMapWithCellType(emptyList(), 2, CellType.AIR)
+        val map = buildMapWithCellType(emptyList(), 2, CellType.AIR)
         map[0, -1]
     }
 
     @Test(expected = IndexOutOfBoundsException::class)
     fun test_get_yHigh() {
-        val map = TestMapFactory.buildMapWithCellType(emptyList(), 2, CellType.AIR)
+        val map = buildMapWithCellType(emptyList(), 2, CellType.AIR)
         map[0, 2]
     }
 
@@ -48,7 +49,7 @@ class WormsMapTest {
         val worm2 = CommandoWorm.build(0, config, Point(1, 1))
         val player2 = WormsPlayer.build(0, listOf(worm2), config)
 
-        val map = TestMapFactory.buildMapWithCellType(listOf(player, player2), 2, CellType.AIR)
+        val map = buildMapWithCellType(listOf(player, player2), 2, CellType.AIR)
         assertEquals(1, map.livingPlayers.size)
         assertEquals(player2, map.livingPlayers[0])
         assertEquals(player2, map.winningPlayer)
@@ -64,7 +65,7 @@ class WormsMapTest {
         val player2 = WormsPlayer.build(1, listOf(worm2), config)
         player2.score = 10
 
-        val map = TestMapFactory.buildMapWithCellType(listOf(player1, player2), 2, CellType.AIR)
+        val map = buildMapWithCellType(listOf(player1, player2), 2, CellType.AIR)
         assertEquals(2, map.livingPlayers.size)
 
 
@@ -86,7 +87,7 @@ class WormsMapTest {
         val worm3 = CommandoWorm.build(0, config, Point(2, 2))
         val player3 = WormsPlayer.build(1, listOf(worm3), config)
 
-        val map = TestMapFactory.buildMapWithCellType(listOf(player1, player2, player3), 3, CellType.AIR)
+        val map = buildMapWithCellType(listOf(player1, player2, player3), 3, CellType.AIR)
 
         val winningPlayer = map.winningPlayer
 
@@ -102,7 +103,7 @@ class WormsMapTest {
         val player2 = WormsPlayer.build(1, listOf(worm2), config)
         player2.consecutiveDoNothingsCount = config.maxDoNothings + 1
 
-        val map = TestMapFactory.buildMapWithCellType(listOf(player1, player2), 3, CellType.AIR)
+        val map = buildMapWithCellType(listOf(player1, player2), 3, CellType.AIR)
 
         val winningPlayer = map.winningPlayer
 
@@ -113,7 +114,7 @@ class WormsMapTest {
 
     @Test
     fun test_getLivingPlayers_none() {
-        val map = TestMapFactory.buildMapWithCellType(emptyList(), 2, CellType.AIR)
+        val map = buildMapWithCellType(emptyList(), 2, CellType.AIR)
 
         assertEquals(0, map.livingPlayers.size)
         assertNull(map.winningPlayer)
@@ -124,7 +125,7 @@ class WormsMapTest {
      */
     @Test
     fun test_getValid() {
-        val map = TestMapFactory.buildMapWithCellType(emptyList(), 2, CellType.AIR)
+        val map = buildMapWithCellType(emptyList(), 2, CellType.AIR)
         map[0, 0]
         map[0, 1]
         map[1, 0]
@@ -133,12 +134,12 @@ class WormsMapTest {
 
     @Test(expected = IllegalArgumentException::class)
     fun test_init_tooManyCells() {
-        WormsMap(emptyList(), 2, TestMapFactory.buildMapCells(5, CellType.AIR))
+        WormsMap(emptyList(), 2, buildMapCells(5, CellType.AIR))
 
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun test_init_tooLittleCells() {
-        WormsMap(emptyList(), 2, TestMapFactory.buildMapCells(3, CellType.AIR))
+        WormsMap(emptyList(), 2, buildMapCells(3, CellType.AIR))
     }
 }

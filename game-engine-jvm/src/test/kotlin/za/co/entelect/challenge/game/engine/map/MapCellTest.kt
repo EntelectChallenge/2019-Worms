@@ -16,13 +16,13 @@ class MapCellTest {
     fun test_initial_properties_are_null() {
         val mapCell = MapCell(CellType.AIR)
 
-        val prefixMessage = "MapCell property "
-        val errMessageNullProperty = " was supposed to be null"
-        assertNull(mapCell.powerup, prefixMessage + "powerup" + errMessageNullProperty)
-        assertNull(mapCell.occupier, prefixMessage + "occupier" + errMessageNullProperty)
-        assertNull(mapCell.occupierId, prefixMessage + "occupierId" + errMessageNullProperty)
-        assertNotNull(mapCell.ipInfo, prefixMessage + "ipInfo was not supposed to be null")
-        assertNotNull(mapCell.nearCells, prefixMessage + "nearCells was not supposed to be null")
+        val prefixMessage = "MapCell property"
+        val errMessageNullProperty = "was supposed to be null."
+        assertNull(mapCell.powerup, "$prefixMessage powerup $errMessageNullProperty")
+        assertNull(mapCell.occupier, "$prefixMessage occupier $errMessageNullProperty")
+        assertNull(mapCell.occupierId, "$prefixMessage occupierId $errMessageNullProperty")
+        assertNotNull(mapCell.ipInfo, "$prefixMessage ipInfo was not supposed to be null")
+        assertNotNull(mapCell.nearCells, "$prefixMessage nearCells was not supposed to be null")
     }
 
 }

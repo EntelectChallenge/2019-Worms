@@ -14,7 +14,7 @@ class DelegateRenderer(config: GameConfig, rendererType: RendererType) : GameMap
 
     override fun commandPrompt(gamePlayer: GamePlayer?): String {
         if (gamePlayer !is DelegatePlayer) {
-            throw IllegalArgumentException("Unknown Map Class")
+            throw IllegalArgumentException("Unknown Player Class")
         }
         return renderer.commandPrompt(gamePlayer.wormsPlayer)
     }
@@ -25,7 +25,7 @@ class DelegateRenderer(config: GameConfig, rendererType: RendererType) : GameMap
         }
 
         if (player !is DelegatePlayer) {
-            throw IllegalArgumentException("Unknown Map Class")
+            throw IllegalArgumentException("Unknown Player Class")
         }
 
         return renderer.render(gameMap.wormsMap, player.wormsPlayer)

@@ -2,13 +2,15 @@ package za.co.entelect.challenge.game.delegate.renderer
 
 import za.co.entelect.challenge.game.contracts.renderer.RendererType
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
-import za.co.entelect.challenge.game.engine.factory.TestMapFactory
 import za.co.entelect.challenge.game.engine.config.GameConfig
-import za.co.entelect.challenge.game.engine.factory.TestWormsPlayerFactory
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
+import za.co.entelect.challenge.game.engine.factory.TestWormsPlayerFactory.buildWormsPlayers
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class WormsRendererTest {
 
@@ -16,7 +18,7 @@ class WormsRendererTest {
 
     @Test
     fun test_rendered_output_matches() {
-        val wormsPlayers = TestWormsPlayerFactory.buildWormsPlayers(config, 3, 3)
+        val wormsPlayers = buildWormsPlayers(config, 3, 3)
         val player1 = wormsPlayers.first()
 
         wormsPlayers.forEachIndexed { i, p ->
@@ -27,7 +29,7 @@ class WormsRendererTest {
 
         val lightPixel = CellType.AIR
         val darkPixel = CellType.DEEP_SPACE
-        val wormsMap = TestMapFactory.buildMapWithCellType(wormsPlayers, config.mapSize, lightPixel)
+        val wormsMap = buildMapWithCellType(wormsPlayers, config.mapSize, lightPixel)
 
         wormsMap[3, 0].type = CellType.AIR
         wormsMap[3, 1].type = CellType.DIRT
@@ -112,7 +114,7 @@ class WormsRendererTest {
 
     @Test
     fun test_command_prompt() {
-        val player = TestWormsPlayerFactory.buildWormsPlayers(config, 1, 1)[0]
+        val player = buildWormsPlayers(config, 1, 1)[0]
         val consoleRenderer = WormsRenderer(config, RendererType.CONSOLE)
         val commandPrompt = consoleRenderer.commandPrompt(player)
 

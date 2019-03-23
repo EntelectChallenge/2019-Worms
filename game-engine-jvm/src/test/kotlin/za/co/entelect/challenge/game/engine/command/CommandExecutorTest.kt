@@ -2,9 +2,9 @@ package za.co.entelect.challenge.game.engine.command
 
 import com.nhaarman.mockitokotlin2.*
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
-import za.co.entelect.challenge.game.engine.factory.TestMapFactory
 import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
@@ -17,7 +17,7 @@ class CommandExecutorTest {
     val config = TEST_CONFIG
     val worms = CommandoWorm.build(0, config, Point(1, 1))
     val player = WormsPlayer.build(1, listOf(worms), config)
-    val mockMap = TestMapFactory.buildMapWithCellType(listOf(player), 4, CellType.AIR)
+    val mockMap = buildMapWithCellType(listOf(player), 4, CellType.AIR)
 
     @Test
     fun test_invalidMove() {

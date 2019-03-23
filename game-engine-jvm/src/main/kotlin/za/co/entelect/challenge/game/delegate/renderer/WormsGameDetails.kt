@@ -7,23 +7,16 @@ import za.co.entelect.challenge.game.engine.player.WormsPlayer
 
 class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlayer) {
 
-    var currentRound: Int
-    var maxRounds: Int
-    var mapSize: Int
+    var currentRound: Int = wormsMap.currentRound
+    var maxRounds: Int = config.maxRounds
+    var mapSize: Int = wormsMap.size
     var currentWormId: Int = player.currentWorm.id
     var selfPlayer: WormsPlayer = player
-    var enemyPlayers: List<WormsPlayer>
+    var enemyPlayers: List<WormsPlayer> = wormsMap.players.filter { it != player }
     var map: List<List<MapCell>>
 
     init {
-        val mapSize = config.mapSize
-        var groupedArrayMap = wormsMap.cells.chunked(wormsMap.size)
-        groupedArrayMap = modifyCellsForPlayer(groupedArrayMap, player)
-        this.currentRound = wormsMap.currentRound
-        this.maxRounds = config.maxRounds
-        this.mapSize = config.mapSize
-        this.enemyPlayers = wormsMap.players.filter { it != player }
-        this.map = groupedArrayMap
+        this.map = modifyCellsForPlayer(wormsMap.cells.chunked(wormsMap.size), player)
     }
 
     /**

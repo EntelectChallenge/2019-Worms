@@ -2,8 +2,9 @@ package za.co.entelect.challenge.game.engine.map
 
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.config.GameConfig
-import za.co.entelect.challenge.game.engine.factory.TestMapFactory
-import za.co.entelect.challenge.game.engine.factory.TestWormsPlayerFactory
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory.getMapCenter
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory.standardDeviation
+import za.co.entelect.challenge.game.engine.factory.TestWormsPlayerFactory.buildWormsPlayers
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
@@ -17,7 +18,7 @@ class WormsMapGeneratorTest {
     @Test
     fun test_generated_map_cells_have_worms() {
         val wormsMapGenerator = WormsMapGenerator(config, 0)
-        val wormsMap = wormsMapGenerator.getMap(TestWormsPlayerFactory.buildWormsPlayers(config, 2, 3))
+        val wormsMap = wormsMapGenerator.getMap(buildWormsPlayers(config, 2, 3))
 
         assertEquals(wormsMap.cells.size, config.mapSize * config.mapSize,
                 "Map generated does not contain expected amount of cells,\n" +
@@ -71,7 +72,7 @@ class WormsMapGeneratorTest {
     @Test
     fun test_worms_squad_spawns_scattered() {
         val wormsMapGenerator = WormsMapGenerator(config, 0)
-        val wormsMap = wormsMapGenerator.getMap(TestWormsPlayerFactory.buildWormsPlayers(config, 2, 3))
+        val wormsMap = wormsMapGenerator.getMap(buildWormsPlayers(config, 2, 3))
 
         val playerWormInterDistances = wormsMap.players
                 .map { p ->
@@ -84,7 +85,7 @@ class WormsMapGeneratorTest {
 
         playerWormInterDistances.forEachIndexed { index, sqaud ->
             val averageMapDistance = listOf(config.mapSize, config.mapSize).average()
-            val squadSD = TestMapFactory.standardDeviation(sqaud)
+            val squadSD = standardDeviation(sqaud)
             assertTrue(squadSD < (averageMapDistance * 0.1), "Worms in squad $index are not equidistant from each other")
         }
     }
@@ -92,8 +93,8 @@ class WormsMapGeneratorTest {
     @Test
     fun test_powerups_spawned() {
         val wormsMapGenerator = WormsMapGenerator(config, 0)
-        val wormsMap = wormsMapGenerator.getMap(TestWormsPlayerFactory.buildWormsPlayers(config, 2, 3))
-        val (xMid, yMid) = TestMapFactory.getMapCenter(config)
+        val wormsMap = wormsMapGenerator.getMap(buildWormsPlayers(config, 2, 3))
+        val (xMid, yMid) = getMapCenter(config)
 
         // percentage distance of map that powerups are not allowed to spawn in
         // distance measured radially, where outside should be without powerups

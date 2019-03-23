@@ -145,35 +145,15 @@ class WormsRenderer(private val config: GameConfig, private val rendererType: Re
     }
 
     private fun getStringMap(arrayMap: List<List<MapCell>>): String {
-        return arrayMap.map { i ->
-            i.fold("") { sum, cell ->
-                sum + when {
-                    cell.powerup != null -> cell.powerup?.printable
-                    cell.occupier != null -> cell.occupier?.printable
+        return arrayMap.joinToString(EOL) {
+            it.joinToString("") { cell ->
+                when {
+                    cell.powerup != null -> cell.powerup?.printable.toString()
+                    cell.occupier != null -> cell.occupier?.printable.toString()
                     else -> cell.type.printable
                 }
-            } + EOL
+            }
         }
-                .fold("") { sum, string -> sum + string }
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

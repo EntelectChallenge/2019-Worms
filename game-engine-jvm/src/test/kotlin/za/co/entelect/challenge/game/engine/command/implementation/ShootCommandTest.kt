@@ -1,11 +1,10 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
-import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
-import za.co.entelect.challenge.game.engine.command.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.command.feedback.ShootResult
 import za.co.entelect.challenge.game.engine.command.implementation.Direction.*
 import za.co.entelect.challenge.game.engine.config.GameConfig
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.CommandoWorm

@@ -9,10 +9,10 @@ import kotlin.jvm.Transient
  */
 class HealthPack(private val health: Int) : Powerup {
 
-    @Transient override val printable = PRINTABLE
-    override val type: String = "healthpack"
-
+    @Transient
     override val printable = PRINTABLE
+
+    override val type: String = "healthpack"
 
     override fun applyTo(worm: Worm) {
         worm.health += health
