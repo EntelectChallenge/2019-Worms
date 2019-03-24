@@ -3,6 +3,7 @@ package za.co.entelect.challenge.player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
+import za.co.entelect.challenge.player.entity.BasePlayer;
 import za.co.entelect.challenge.player.entity.BotExecutionContext;
 
 import java.util.Scanner;

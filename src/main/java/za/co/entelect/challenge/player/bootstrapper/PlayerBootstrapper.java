@@ -1,6 +1,5 @@
-package za.co.entelect.challenge.player;
+package za.co.entelect.challenge.player.bootstrapper;
 
-import net.lingala.zip4j.core.ZipFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import za.co.entelect.challenge.botrunners.BotRunner;
@@ -9,8 +8,13 @@ import za.co.entelect.challenge.config.BotMetaData;
 import za.co.entelect.challenge.config.GameRunnerConfig;
 import za.co.entelect.challenge.config.TournamentConfig;
 import za.co.entelect.challenge.game.contracts.player.Player;
+import za.co.entelect.challenge.player.entity.BasePlayer;
+import za.co.entelect.challenge.player.BotPlayer;
+import za.co.entelect.challenge.player.ConsolePlayer;
+import za.co.entelect.challenge.player.TournamentPlayer;
 import za.co.entelect.challenge.storage.AzureBlobStorageService;
 import za.co.entelect.challenge.utils.EnvironmentVariable;
+import za.co.entelect.challenge.utils.ZipUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,12 +39,12 @@ public class PlayerBootstrapper {
             String playerBEnv = System.getenv(EnvironmentVariable.PLAYER_B.name());
 
             LOGGER.info("Downloading bots");
-            AzureBlobStorageService storageService = new AzureBlobStorageService(tournamentConfig.connectionString, tournamentConfig.botsContainer);
-            File playerAZip = storageService.getFile(playerAEnv, String.format("./tournament-tmp/%s.zip", UUID.randomUUID()));
-            File playerBZip = storageService.getFile(playerBEnv, String.format("./tournament-tmp/%s.zip", UUID.randomUUID()));
+            AzureBlobStorageService storageService = new AzureBlobStorageService(tournamentConfig.connectionString);
+            File playerAZip = storageService.getFile(playerAEnv, String.format("./tournament-tmp/player-%s.zip", UUID.randomUUID()), tournamentConfig.botsContainer);
+            File playerBZip = storageService.getFile(playerBEnv, String.format("./tournament-tmp/player-%s.zip", UUID.randomUUID()), tournamentConfig.botsContainer);
 
-            gameRunnerConfig.playerAConfig = extractBot(playerAZip).getPath();
-            gameRunnerConfig.playerBConfig = extractBot(playerBZip).getPath();
+            gameRunnerConfig.playerAConfig = ZipUtils.extractZip(playerAZip).getPath();
+            gameRunnerConfig.playerBConfig = ZipUtils.extractZip(playerBZip).getPath();
 
             players.add(parsePlayer(gameRunnerConfig.playerAConfig, "A", gameRunnerConfig, playerAZip, 55555));
             players.add(parsePlayer(gameRunnerConfig.playerBConfig, "B", gameRunnerConfig, playerBZip, 55556));
@@ -73,28 +77,12 @@ public class PlayerBootstrapper {
             }
 
             if (gameRunnerConfig.isTournamentMode)
-                return new TournamentPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), apiPort, botZip);
+                player = new TournamentPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), apiPort, botZip);
             else
-                return new BotPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner);
+                player = new BotPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner);
         }
 
         player.setPlayerId(UUID.randomUUID().toString());
         return player;
-    }
-
-    private File extractBot(File botZip) throws Exception {
-
-        LOGGER.info(String.format("Extracting bot: %s", botZip.getName()));
-        ZipFile zipFile = new ZipFile(botZip);
-
-        String extractFilePath = String.format("%s/extracted/%s", "tournament-tmp", botZip.getName().replace(".zip", ""));
-        File extractedFile = new File(extractFilePath);
-
-        zipFile.extractAll(extractedFile.getCanonicalPath());
-
-        // Select the actual bot folder located inside the extraction folder container
-        extractedFile = extractedFile.listFiles()[0];
-
-        return extractedFile;
     }
 }

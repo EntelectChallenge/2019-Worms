@@ -1,7 +1,5 @@
 package za.co.entelect.challenge.engine.bootstrapper;
 
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.model.ZipParameters;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,14 +11,16 @@ import za.co.entelect.challenge.engine.runner.GameEngineRunner;
 import za.co.entelect.challenge.game.contracts.bootstrapper.GameEngineBootstrapper;
 import za.co.entelect.challenge.game.contracts.game.GameResult;
 import za.co.entelect.challenge.game.contracts.player.Player;
-import za.co.entelect.challenge.network.Dto.RunnerFailedDto;
-import za.co.entelect.challenge.player.PlayerBootstrapper;
+import za.co.entelect.challenge.player.bootstrapper.PlayerBootstrapper;
 import za.co.entelect.challenge.renderer.RendererResolver;
 import za.co.entelect.challenge.storage.AzureBlobStorageService;
 import za.co.entelect.challenge.storage.AzureQueueStorageService;
+import za.co.entelect.challenge.utils.EnvironmentVariable;
+import za.co.entelect.challenge.utils.ZipUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 public class GameBootstrapper {
 
@@ -42,15 +42,17 @@ public class GameBootstrapper {
             initLogging(gameRunnerConfig);
             if (gameRunnerConfig.isTournamentMode) {
                 TournamentConfig tournamentConfig = gameRunnerConfig.tournamentConfig;
-                blobService = new AzureBlobStorageService(tournamentConfig.connectionString, tournamentConfig.matchLogsContainer);
+                blobService = new AzureBlobStorageService(tournamentConfig.connectionString);
                 queueService = new AzureQueueStorageService(tournamentConfig.connectionString);
+
+                downloadGameEngine(gameRunnerConfig);
             }
 
             PlayerBootstrapper playerBootstrapper = new PlayerBootstrapper();
             List<Player> players = playerBootstrapper.loadPlayers(gameRunnerConfig);
 
-            GameEngineClassLoader gameEngineClassLoader = new GameEngineClassLoader(gameRunnerConfig.gameEngineJar);
             // Class load the game engine bootstrapper. This is the entry point for the runner into the engine
+            GameEngineClassLoader gameEngineClassLoader = new GameEngineClassLoader(gameRunnerConfig.gameEngineJar);
             GameEngineBootstrapper gameEngineBootstrapper = gameEngineClassLoader.loadEngineObject(GameEngineBootstrapper.class);
             gameEngineBootstrapper.setConfigPath(gameRunnerConfig.gameConfigFileLocation);
             gameEngineBootstrapper.setSeed(gameRunnerConfig.seed);
@@ -70,7 +72,7 @@ public class GameBootstrapper {
             GameResult gameResult = engineRunner.runMatch();
 
             if (gameRunnerConfig.isTournamentMode) {
-                File zippedLogs = zipMatchLogs(gameRunnerConfig.matchId, gameRunnerConfig.roundStateOutputLocation);
+                File zippedLogs = ZipUtils.createZip(gameRunnerConfig.matchId, gameRunnerConfig.roundStateOutputLocation);
                 saveMatchLogs(gameRunnerConfig.tournamentConfig, zippedLogs, ".");
                 notifyMatchComplete(gameRunnerConfig.tournamentConfig, gameResult);
             }
@@ -82,15 +84,29 @@ public class GameBootstrapper {
         }
     }
 
+    private void downloadGameEngine(GameRunnerConfig gameRunnerConfig) throws Exception {
+        LOGGER.info("Downloading game engine");
+        File gameEngineZip = blobService.getFile(
+                System.getenv(EnvironmentVariable.GAME_ENGINE.name()),
+                String.format("tournament-tmp/engine-%s.zip", UUID.randomUUID().toString()),
+                gameRunnerConfig.tournamentConfig.gameEngineContainer);
+
+        File gameEngineDir = ZipUtils.extractZip(gameEngineZip).getParentFile();
+        gameRunnerConfig.gameEngineJar = gameEngineDir.listFiles((dir, name) -> name.endsWith(".jar"))[0].getPath();
+        gameRunnerConfig.gameConfigFileLocation = gameEngineDir.listFiles(
+                (dir, name) -> name.endsWith(".json") || name.endsWith(".properties")
+        )[0].getPath();
+    }
+
     private void notifyMatchFailure(GameRunnerConfig gameRunnerConfig, Exception e) {
-        if (gameRunnerConfig != null && gameRunnerConfig.isTournamentMode) {
-            try {
-                queueService.enqueueMessage(gameRunnerConfig.tournamentConfig.deadMatchQueue,
-                        new RunnerFailedDto(gameRunnerConfig.matchId, e));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+//        if (gameRunnerConfig != null && gameRunnerConfig.isTournamentMode) {
+//            try {
+//                queueService.enqueueMessage(gameRunnerConfig.tournamentConfig.deadMatchQueue,
+//                        new RunnerFailedDto(gameRunnerConfig.matchId, e));
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        }
     }
 
     private void initLogging(GameRunnerConfig gameRunnerConfig) {
@@ -102,26 +118,13 @@ public class GameBootstrapper {
         }
     }
 
-    private File zipMatchLogs(String matchId, String localMatchLogsDir) throws Exception {
-
-        ZipFile zipFile = new ZipFile(new File(String.format("%s.zip", matchId)));
-
-        File path = new File(localMatchLogsDir);
-        path = path.listFiles()[0];
-
-        ZipParameters parameters = new ZipParameters();
-        zipFile.addFolder(path, parameters);
-
-        return zipFile.getFile();
-    }
-
     private void saveMatchLogs(TournamentConfig tournamentConfig, File matchLogs, String destinationPath) throws Exception {
-        LOGGER.info("Saving match logs to storage");
-        blobService.putFile(matchLogs, destinationPath);
+//        LOGGER.info("Saving match logs to storage");
+//        blobService.putFile(matchLogs, destinationPath);
     }
 
     private void notifyMatchComplete(TournamentConfig tournamentConfig, GameResult gameResult) throws Exception {
-        LOGGER.info("Notifying of match completion");
-        queueService.enqueueMessage(tournamentConfig.matchResultQueue, gameResult);
+//        LOGGER.info("Notifying of match completion");
+//        queueService.enqueueMessage(tournamentConfig.matchResultQueue, gameResult);
     }
 }

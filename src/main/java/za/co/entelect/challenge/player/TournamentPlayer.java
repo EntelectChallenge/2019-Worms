@@ -12,6 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.network.BotServices;
 import za.co.entelect.challenge.network.Dto.RunBotResponseDto;
+import za.co.entelect.challenge.player.entity.BasePlayer;
 import za.co.entelect.challenge.player.entity.BotExecutionContext;
 import za.co.entelect.challenge.utils.NetworkUtil;
 
