@@ -46,22 +46,22 @@ public class PlayerBootstrapper {
             gameRunnerConfig.playerAConfig = ZipUtils.extractZip(playerAZip).getPath();
             gameRunnerConfig.playerBConfig = ZipUtils.extractZip(playerBZip).getPath();
 
-            players.add(parsePlayer(gameRunnerConfig.playerAConfig, "A", gameRunnerConfig, playerAZip, 55555));
-            players.add(parsePlayer(gameRunnerConfig.playerBConfig, "B", gameRunnerConfig, playerBZip, 55556));
+            players.add(parsePlayer(gameRunnerConfig.playerAConfig, "A", gameRunnerConfig, gameRunnerConfig.playerAId, playerAZip, 55555));
+            players.add(parsePlayer(gameRunnerConfig.playerBConfig, "B", gameRunnerConfig, gameRunnerConfig.playerBId, playerBZip, 55556));
         } else {
-            players.add(parsePlayer(gameRunnerConfig.playerAConfig, "A", gameRunnerConfig));
-            players.add(parsePlayer(gameRunnerConfig.playerBConfig, "B", gameRunnerConfig));
+            players.add(parsePlayer(gameRunnerConfig.playerAConfig, "A", gameRunnerConfig, gameRunnerConfig.playerAId));
+            players.add(parsePlayer(gameRunnerConfig.playerBConfig, "B", gameRunnerConfig, gameRunnerConfig.playerBId));
         }
 
 
         return players;
     }
 
-    private Player parsePlayer(String playerConfig, String playerNumber, GameRunnerConfig gameRunnerConfig) throws Exception {
-        return parsePlayer(playerConfig, playerNumber, gameRunnerConfig, null, -1);
+    private Player parsePlayer(String playerConfig, String playerNumber, GameRunnerConfig gameRunnerConfig, String playerId) throws Exception {
+        return parsePlayer(playerConfig, playerNumber, gameRunnerConfig, playerId, null, -1);
     }
 
-    private Player parsePlayer(String playerConfig, String playerNumber, GameRunnerConfig gameRunnerConfig, File botZip, int apiPort) throws Exception {
+    private Player parsePlayer(String playerConfig, String playerNumber, GameRunnerConfig gameRunnerConfig, String playerId, File botZip, int apiPort) throws Exception {
 
         BasePlayer player;
 
@@ -82,7 +82,7 @@ public class PlayerBootstrapper {
                 player = new BotPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner);
         }
 
-        player.setPlayerId(UUID.randomUUID().toString());
+        player.setPlayerId(playerId);
         return player;
     }
 }
