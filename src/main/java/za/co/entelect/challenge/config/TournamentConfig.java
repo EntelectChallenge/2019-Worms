@@ -15,4 +15,7 @@ public class TournamentConfig {
 
     @SerializedName("match-result-queue")
     public String matchResultQueue;
+
+    @SerializedName("dead-match-queue")
+    public String deadMatchQueue;
 }

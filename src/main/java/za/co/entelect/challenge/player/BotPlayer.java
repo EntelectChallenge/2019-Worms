@@ -3,19 +3,14 @@ package za.co.entelect.challenge.player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import za.co.entelect.challenge.botrunners.BotRunner;
-import za.co.entelect.challenge.game.contracts.exceptions.TimeoutException;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.player.entity.BotExecutionContext;
 import za.co.entelect.challenge.utils.FileUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class BotPlayer extends BasePlayer {
 
-    private static final String BOT_COMMAND = "command.txt";
     private static final String BOT_STATE = "state.json";
     private static final String TEXT_MAP = "textMap.txt";
 
@@ -30,6 +25,19 @@ public class BotPlayer extends BasePlayer {
     }
 
     @Override
+    public void gameStarted() throws Exception {
+        super.gameStarted();
+        try {
+            botRunner.run();
+        }
+
+        catch (IOException e) {
+            log.error("Failed to start bot process", e);
+            throw e;
+        }
+    }
+
+    @Override
     public void startGame(GameMap gameMap) {
         newRoundStarted(gameMap);
     }
@@ -37,43 +45,15 @@ public class BotPlayer extends BasePlayer {
     @Override
     public String getCommand(BotExecutionContext botExecutionContext) throws Exception {
 
-        File existingCommandFile = new File(String.format("%s/%s", botRunner.getBotDirectory(), BOT_COMMAND));
+        FileUtils.writeToFile(String.format("%s/rounds/%d/%s", botRunner.getBotDirectory(), botExecutionContext.round, BOT_STATE), botExecutionContext.jsonState);
+        FileUtils.writeToFile(String.format("%s/rounds/%d/%s", botRunner.getBotDirectory(), botExecutionContext.round, TEXT_MAP), botExecutionContext.textState);
 
-        if (existingCommandFile.exists()) {
-            existingCommandFile.delete();
-        }
-
-        FileUtils.writeToFile(String.format("%s/%s", botRunner.getBotDirectory(), BOT_STATE), botExecutionContext.jsonState);
-        FileUtils.writeToFile(String.format("%s/%s", botRunner.getBotDirectory(), TEXT_MAP), botExecutionContext.textState);
-
-        String botCommand = "";
-        File botCommandFile = new File(String.format("%s/%s", botRunner.getBotDirectory(), BOT_COMMAND));
-
-        try {
-            botRunner.run();
-
-            // Try to read the bot output.
-            // Dispose the reader whether or not the read is successful
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(botCommandFile))) {
-                botCommand = bufferedReader.readLine();
-            }
-        }
-
-        catch (IOException e) {
-            log.info("Bot execution failed: " + e.getLocalizedMessage());
-        }
-
-        // IOException caught first, nothing happens after
-        catch (TimeoutException e) {
-            log.info("Bot execution failed: " + e.getLocalizedMessage());
-            incrementTimeoutCounts();
-        }
-
-        return botCommand;
+        botRunner.newRound(botExecutionContext.round);
+        return  botRunner.getLastCommand();
     }
 
     @Override
     public void gameEnded(GameMap gameMap) {
-
+        botRunner.shutdown();
     }
 }
