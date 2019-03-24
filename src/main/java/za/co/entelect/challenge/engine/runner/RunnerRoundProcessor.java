@@ -40,8 +40,9 @@ public class RunnerRoundProcessor {
         boolean processed = gameRoundProcessor.processRound(gameMap, commandsToProcess);
 
         List<String> errorList = gameRoundProcessor.getErrorList(gameMap);
-        String errorListText = "Error List: " + Arrays.toString(errorList.toArray());
-        addToConsoleOutput.onNext(errorListText);
+        for (String error : errorList) {
+            log.error(error);
+        }
 
         roundProcessed = true;
 

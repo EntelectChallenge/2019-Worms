@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GameEngineRunner implements LifecycleEngineRunner {
@@ -45,7 +46,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
     private GameReferee referee;
 
     private RendererResolver rendererResolver;
-    private ArrayList<BotExecutionContext> botExecutionContexts;
+    private List<BotExecutionContext> botExecutionContexts;
 
     public GameResult runMatch() throws Exception {
 
@@ -88,7 +89,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         gameResult.verificationRequired = false;
         gameResult.matchId = gameRunnerConfig.matchId;
 
-        botExecutionContexts = new ArrayList<>();
+        botExecutionContexts = Collections.synchronizedList(new ArrayList<>());
     }
 
     @Override
@@ -107,7 +108,23 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     @Override
     public void onProcessRound() throws Exception {
-        processRound();
+        GameMapRenderer renderer = rendererResolver.resolve(RendererType.CONSOLE);
+        log.info(renderer.render(gameMap, players.get(0).getGamePlayer()));
+
+        for (Player player : players) {
+
+            Thread thread = new Thread(() -> {
+                BasePlayer currentPlayer = (BasePlayer) player;
+                BotExecutionContext botExecutionContext = currentPlayer.executeBot(gameMap);
+
+                botExecutionContexts.add(botExecutionContext);
+                roundProcessor.addPlayerCommand(player, new RawCommand(botExecutionContext.command));
+            });
+            thread.start();
+            thread.join();
+        }
+        roundProcessor.processRound(addToConsoleOutput);
+        players.forEach(p -> p.roundComplete(gameMap, gameMap.getCurrentRound()));
     }
 
     @Override
@@ -211,44 +228,6 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void processRound() throws Exception {
-        GameMapRenderer renderer = rendererResolver.resolve(RendererType.CONSOLE);
-
-        // Only execute the render if the log mode is in INFO.
-        log.info(() -> {
-            String consoleText = consoleOutput + renderer.render(gameMap, players.get(0).getGamePlayer());
-            consoleOutput = "";
-
-            return consoleText;
-        });
-
-        try {
-            if (gameEngine.isGameComplete(gameMap)) {
-                publishGameComplete(true);
-                return;
-            }
-        } catch (TimeoutException e) {
-            publishGameComplete(false);
-            return;
-        }
-
-        for (Player player : players) {
-
-            Thread thread = new Thread(() -> {
-                BasePlayer currentPlayer = (BasePlayer) player;
-                BotExecutionContext botExecutionContext = currentPlayer.executeBot(gameMap);
-
-                botExecutionContexts.add(botExecutionContext);
-                roundProcessor.addPlayerCommand(player, new RawCommand(botExecutionContext.command));
-            });
-            thread.start();
-            thread.join();
-        }
-
-        roundProcessor.processRound(addToConsoleOutput);
-        players.forEach(p -> p.roundComplete(gameMap, gameMap.getCurrentRound()));
     }
 
     private void prepareGameMap() throws InvalidRunnerState {
