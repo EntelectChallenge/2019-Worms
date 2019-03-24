@@ -13,6 +13,9 @@ public class TournamentConfig {
     @SerializedName("match-logs-container")
     public String matchLogsContainer;
 
+    @SerializedName("game-engine-container")
+    public String gameEngineContainer;
+
     @SerializedName("match-result-queue")
     public String matchResultQueue;
 

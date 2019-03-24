@@ -6,4 +6,5 @@ public enum EnvironmentVariable {
     PLAYER_B,
     MATCH_ID,
     SEED,
+    GAME_ENGINE;
 }
