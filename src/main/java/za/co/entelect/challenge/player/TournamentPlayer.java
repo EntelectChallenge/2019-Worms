@@ -68,8 +68,8 @@ public class TournamentPlayer extends BasePlayer {
             MultipartBody.Part jsonPart = createPart("json", botExecutionContext.jsonState);
             MultipartBody.Part textPart = createPart("text", botExecutionContext.textState);
 
-            Response<RunBotResponseDto> execute = botServices.runBot(jsonPart, textPart).execute();
-            return execute.body().getCommand();
+            Response<RunBotResponseDto> execute = botServices.runBot(jsonPart, textPart, botExecutionContext.round).execute();
+            return execute.body().getCommand().trim();
         } catch (IOException e) {
             LOGGER.error("Failed to get bot command", e);
         }
