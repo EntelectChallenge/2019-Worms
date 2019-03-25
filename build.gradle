@@ -127,7 +127,7 @@ task testCoverageVerification(type: JacocoCoverageVerification) {
 check.dependsOn testCoverageVerification
 check.dependsOn testCoverageReport
 
-task shadowJar(type: ShadowJar) {
+task shadowJarJvm(type: ShadowJar) {
     group = 'shadow'
     description = 'Creates a fat jar with all jvm classes and dependencies'
 
@@ -137,10 +137,25 @@ task shadowJar(type: ShadowJar) {
     configurations = [runtimeClasspath]
     archiveAppendix.set('jvm-full')
 
-    mustRunAfter check
+    shouldRunAfter check
 }
 
-build.dependsOn shadowJar
+assemble.dependsOn shadowJarJvm
+
+task shadowJarJs(type: ShadowJar) {
+    group = 'shadow'
+    description = 'Creates a fat jar with all js classes and dependencies'
+
+    from kotlinCompilation('js', 'main').output
+    def runtimeClasspath = kotlinCompilation('js', 'main').runtimeDependencyFiles
+
+    configurations = [runtimeClasspath]
+    archiveAppendix.set('js-full')
+
+    shouldRunAfter check
+}
+
+assemble.dependsOn shadowJarJs
 
 private Stream<FileCollection> sourceDirectories(String target, String compilation) {
     kotlinCompilation(target, compilation).allKotlinSourceSets.stream().map {
