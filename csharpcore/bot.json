@@ -1,0 +1,8 @@
+{
+	"author": "John Doe",
+	"email": "john.doe@example.com",
+	"nickName": "Bill",
+	"botLocation": "/StarterBot/bin/Debug/netcoreapp2.0",
+	"botFileName": "StarterBot.dll",
+	"botLanguage": "c#core"
+}
