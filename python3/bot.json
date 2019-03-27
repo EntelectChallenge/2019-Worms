@@ -1,0 +1,8 @@
+{
+	"author": "John Doe",
+	"email": "john.doe@example.com",
+	"nickName": "Guido",
+	"botLocation": "/",
+	"botFileName": "StarterBot.py",
+	"botLanguage": "python3"
+}
