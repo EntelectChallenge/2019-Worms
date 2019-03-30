@@ -12,7 +12,7 @@ import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.player.Player;
 import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer;
 import za.co.entelect.challenge.game.contracts.renderer.RendererType;
-import za.co.entelect.challenge.player.BasePlayer;
+import za.co.entelect.challenge.player.entity.BasePlayer;
 import za.co.entelect.challenge.player.entity.BotExecutionContext;
 import za.co.entelect.challenge.renderer.RendererResolver;
 import za.co.entelect.challenge.utils.FileUtils;
