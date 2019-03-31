@@ -28,7 +28,7 @@ public abstract class BotRunner implements ProcessDestroyer {
     protected BotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
         this.botMetaData = botMetaData;
         this.timeoutInMilliseconds = timeoutInMilliseconds;
-        this.commandHandler = new CommandHandler();
+        this.commandHandler = new CommandHandler(timeoutInMilliseconds);
         this.processes = new ArrayList<>();
     }
 

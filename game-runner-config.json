@@ -3,7 +3,7 @@
   "game-config-file-location": "./game-config.properties",
   "game-engine-jar": "./core-3.1.0.jar",
   "verbose-mode": true,
-  "max-runtime-ms": 2000,
+  "max-runtime-ms": 1000,
   "player-a": "../starter-bots/java",
   "player-b": "../reference-bot/java",
   "player-a-id": "3c808a7b-36c5-48ff-a42e-cae141664f2c",

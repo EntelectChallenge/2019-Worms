@@ -16,6 +16,8 @@ public class CommandHandler implements ExecuteStreamHandler {
 
     private static final Logger log = LogManager.getLogger(CommandHandler.class);
 
+    private int timeoutInMilliseconds;
+
     private OutputStream botInputStream;
     private InputStream botErrorStream;
     private InputStream botOutputStream;
@@ -32,6 +34,10 @@ public class CommandHandler implements ExecuteStreamHandler {
 
     private AtomicBoolean started = new AtomicBoolean(false);
     private AtomicBoolean stopped = new AtomicBoolean(false);
+
+    public CommandHandler(int timeoutInMilliseconds) {
+        this.timeoutInMilliseconds = timeoutInMilliseconds;
+    }
 
     @Override
     public void setProcessInputStream(OutputStream os) throws IOException {
@@ -89,7 +95,7 @@ public class CommandHandler implements ExecuteStreamHandler {
         if (!stopped.get()) {
             reentrantLock.lock();
             try {
-                commandSignalCondition.await(1, TimeUnit.SECONDS);
+                commandSignalCondition.await(timeoutInMilliseconds, TimeUnit.MILLISECONDS);
                 if (!stopped.get()) {
                     return botInputHandler.getLastReceivedCommand();
                 }
@@ -119,9 +125,7 @@ public class CommandHandler implements ExecuteStreamHandler {
                 botInputStream.write(System.lineSeparator().getBytes());
                 botInputStream.flush();
             }
-        }
-
-        catch (IOException e) {
+        } catch (IOException e) {
             log.error("Failed to notify bot of new round", e);
         }
 
