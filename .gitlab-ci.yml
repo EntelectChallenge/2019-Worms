@@ -1,0 +1,12 @@
+image: maven:latest
+
+build:
+  stage: build
+  only:
+    - master
+    - develop
+    - /^release\/v.+$
+    - /^hotfix\/v.+$
+    - /^feature\/.+$/
+  script:
+    - mvn clean compile
