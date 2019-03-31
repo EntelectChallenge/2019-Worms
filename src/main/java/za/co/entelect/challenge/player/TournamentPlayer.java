@@ -90,7 +90,15 @@ public class TournamentPlayer extends BasePlayer {
     }
 
     @Override
-    public void startGame(GameMap gameMap) {
+    public void gameEnded(GameMap gameMap) {
+        super.gameEnded(gameMap);
 
+        LOGGER.info(String.format("Signaling bot runner to shutdown - Player id: %s", getPlayerId()));
+        try {
+            botServices.killBot().execute();
+        }
+        catch (IOException e) {
+            LOGGER.warn(String.format("Request to runner failed due to the shutdown signal - Player id: %s", getPlayerId()));
+        }
     }
 }
