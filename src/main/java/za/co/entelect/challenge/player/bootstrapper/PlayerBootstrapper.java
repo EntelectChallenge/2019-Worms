@@ -68,16 +68,18 @@ public class PlayerBootstrapper {
         if (playerConfig.equals("console")) {
             player = new ConsolePlayer(String.format("BotPlayer %s", playerNumber));
         } else {
+            LOGGER.info(playerConfig);
             BotMetaData botConfig = BotMetaData.load(playerConfig);
             BotRunner botRunner = BotRunnerFactory.createBotRunner(botConfig, gameRunnerConfig.maximumBotRuntimeMilliSeconds);
 
+            LOGGER.info(botConfig.getBotLocation());
             File botFile = new File(botConfig.getBotDirectory());
             if (!botFile.exists()) {
                 throw new FileNotFoundException(String.format("Could not find %s bot file for %s(%s)", botConfig.getBotLanguage(), botConfig.getAuthor(), botConfig.getNickName()));
             }
 
             if (gameRunnerConfig.isTournamentMode)
-                player = new TournamentPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), apiPort, botZip);
+                player = new TournamentPlayer(gameRunnerConfig, String.format("%s - %s", playerNumber, botConfig.getNickName()), apiPort, botZip);
             else
                 player = new BotPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner);
         }

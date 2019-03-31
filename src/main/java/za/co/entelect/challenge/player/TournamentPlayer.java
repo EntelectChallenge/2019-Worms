@@ -9,32 +9,35 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import za.co.entelect.challenge.config.GameRunnerConfig;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.network.BotServices;
 import za.co.entelect.challenge.network.Dto.RunBotResponseDto;
+import za.co.entelect.challenge.network.RetryableCall;
 import za.co.entelect.challenge.player.entity.BasePlayer;
 import za.co.entelect.challenge.player.entity.BotExecutionContext;
-import za.co.entelect.challenge.utils.NetworkUtil;
 
 import java.io.File;
 import java.io.IOException;
 
 public class TournamentPlayer extends BasePlayer {
 
-    private final int apiPort;
-    private final File botZip;
-
+    private int apiPort;
+    private File botZip;
     private BotServices botServices;
+    private int maxRequestRetries;
+    private int retryTimeout;
 
     private static final Logger LOGGER = LogManager.getLogger(TournamentPlayer.class);
 
-    public TournamentPlayer(String name, int apiPort, File botZip) throws Exception {
+    public TournamentPlayer(GameRunnerConfig gameRunnerConfig, String name, int apiPort, File botZip) throws Exception {
         super(name);
         this.apiPort = apiPort;
         this.botZip = botZip;
+        this.maxRequestRetries = gameRunnerConfig.maxRequestRetries;
+        this.retryTimeout = gameRunnerConfig.requestTimeout;
 
-//        String apiUrl = String.format("http://host.docker.internal:%d", apiPort);
-        String apiUrl = String.format("http://localhost:%d", apiPort);
+        String apiUrl = String.format("%s:%d", gameRunnerConfig.tournamentConfig.apiEndpoint, apiPort);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(apiUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -50,7 +53,11 @@ public class TournamentPlayer extends BasePlayer {
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", botZip.getName(), requestBody);
 
         Call<Void> instantiateBotCall = botServices.instantiateBot(fileToUpload);
-        Response<Void> response = NetworkUtil.executeWithRetry(instantiateBotCall);
+
+        //Decorate the standard call with retry capability
+        instantiateBotCall = new RetryableCall<>(instantiateBotCall, maxRequestRetries, retryTimeout);
+
+        Response<Void> response = instantiateBotCall.execute();
         if (!response.isSuccessful()) {
             String errorMessage = String.format("Failed to instantiate bot: %s on api port %d", getName(), apiPort);
 

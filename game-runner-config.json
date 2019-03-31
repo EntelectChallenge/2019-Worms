@@ -8,6 +8,8 @@
   "player-b": "../reference-bot/java",
   "player-a-id": "3c808a7b-36c5-48ff-a42e-cae141664f2c",
   "player-b-id": "5dd201a1-b8d4-41b1-ab3c-0e0172fad343",
+  "max-request-retries": 5,
+  "request-timeout-ms": 5000,
   "is-tournament-mode": true,
   "tournament": {
     "connection-string": "",
@@ -15,6 +17,7 @@
     "match-logs-container": "match-logs-qa",
     "game-engine-container": "game-engine-container-qa",
     "match-result-queue": "match-results-qa",
-    "dead-match-queue": "dead-match-qa"
+    "dead-match-queue": "dead-match-qa",
+    "api-endpoint": "http://host.docker.internal"
   }
 }

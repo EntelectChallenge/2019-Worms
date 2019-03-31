@@ -47,17 +47,23 @@ public class GameRunnerConfig {
     @SerializedName("verbose-mode")
     public boolean isVerbose;
 
-    @SerializedName("is-tournament-mode")
-    public boolean isTournamentMode;
-
-    @SerializedName("tournament")
-    public TournamentConfig tournamentConfig;
-
     @SerializedName("match-id")
     public String matchId;
 
     @SerializedName("seed")
     public long seed;
+
+    @SerializedName("max-request-retries")
+    public int maxRequestRetries;
+
+    @SerializedName("request-timeout-ms")
+    public int requestTimeout;
+
+    @SerializedName("is-tournament-mode")
+    public boolean isTournamentMode;
+
+    @SerializedName("tournament")
+    public TournamentConfig tournamentConfig;
 
     public static GameRunnerConfig load(String configFile) throws Exception {
 
