@@ -21,4 +21,7 @@ public class TournamentConfig {
 
     @SerializedName("dead-match-queue")
     public String deadMatchQueue;
+
+    @SerializedName("api-endpoint")
+    public String apiEndpoint;
 }

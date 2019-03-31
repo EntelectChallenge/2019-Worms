@@ -47,17 +47,23 @@ public class GameRunnerConfig {
     @SerializedName("verbose-mode")
     public boolean isVerbose;
 
-    @SerializedName("is-tournament-mode")
-    public boolean isTournamentMode;
-
-    @SerializedName("tournament")
-    public TournamentConfig tournamentConfig;
-
     @SerializedName("match-id")
     public String matchId;
 
     @SerializedName("seed")
     public long seed;
+
+    @SerializedName("max-request-retries")
+    public int maxRequestRetries;
+
+    @SerializedName("request-timeout-ms")
+    public int requestTimeout;
+
+    @SerializedName("is-tournament-mode")
+    public boolean isTournamentMode;
+
+    @SerializedName("tournament")
+    public TournamentConfig tournamentConfig;
 
     public static GameRunnerConfig load(String configFile) throws Exception {
 
@@ -76,6 +82,8 @@ public class GameRunnerConfig {
                 LOGGER.info("Running in tournament mode. Loading tournament config");
                 gameRunnerConfig.matchId = System.getenv(EnvironmentVariable.MATCH_ID.name());
                 gameRunnerConfig.seed = Long.valueOf(System.getenv(EnvironmentVariable.SEED.name()));
+                gameRunnerConfig.playerAId = System.getenv(EnvironmentVariable.PLAYER_A_ID.name());
+                gameRunnerConfig.playerBId = System.getenv(EnvironmentVariable.PLAYER_B_ID.name());
             }
 
             if (gameRunnerConfig.matchId == null) {
@@ -87,6 +95,16 @@ public class GameRunnerConfig {
                 LOGGER.info("Building game name");
                 String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
                 gameRunnerConfig.gameName = FileUtils.getAbsolutePath(gameRunnerConfig.roundStateOutputLocation) + "/" + timeStamp;
+            }
+
+            if (gameRunnerConfig.playerAId == null || gameRunnerConfig.playerAId.isEmpty()) {
+                LOGGER.info("Player A id not found. Generating one");
+                gameRunnerConfig.playerAId = UUID.randomUUID().toString();
+            }
+
+            if (gameRunnerConfig.playerBId == null || gameRunnerConfig.playerBId.isEmpty()) {
+                LOGGER.info("Player B id not found. Generating one");
+                gameRunnerConfig.playerBId = UUID.randomUUID().toString();
             }
 
             return gameRunnerConfig;
