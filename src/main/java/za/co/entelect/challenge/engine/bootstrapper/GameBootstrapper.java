@@ -11,6 +11,7 @@ import za.co.entelect.challenge.engine.runner.GameEngineRunner;
 import za.co.entelect.challenge.game.contracts.bootstrapper.GameEngineBootstrapper;
 import za.co.entelect.challenge.game.contracts.game.GameResult;
 import za.co.entelect.challenge.game.contracts.player.Player;
+import za.co.entelect.challenge.network.Dto.RunnerFailedDto;
 import za.co.entelect.challenge.player.bootstrapper.PlayerBootstrapper;
 import za.co.entelect.challenge.renderer.RendererResolver;
 import za.co.entelect.challenge.storage.AzureBlobStorageService;
@@ -99,18 +100,17 @@ public class GameBootstrapper {
     }
 
     private void notifyMatchFailure(GameRunnerConfig gameRunnerConfig, Exception e) {
-//        if (gameRunnerConfig != null && gameRunnerConfig.isTournamentMode) {
-//            try {
-//                queueService.enqueueMessage(gameRunnerConfig.tournamentConfig.deadMatchQueue,
-//                        new RunnerFailedDto(gameRunnerConfig.matchId, e));
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        }
+        if (gameRunnerConfig != null && gameRunnerConfig.isTournamentMode) {
+            try {
+                queueService.enqueueMessage(gameRunnerConfig.tournamentConfig.deadMatchQueue,
+                        new RunnerFailedDto(gameRunnerConfig.matchId, e));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     private void initLogging(GameRunnerConfig gameRunnerConfig) {
-
         if (gameRunnerConfig.isVerbose) {
             Configurator.setRootLevel(Level.DEBUG);
         } else {
@@ -119,12 +119,12 @@ public class GameBootstrapper {
     }
 
     private void saveMatchLogs(TournamentConfig tournamentConfig, File matchLogs, String destinationPath) throws Exception {
-//        LOGGER.info("Saving match logs to storage");
-//        blobService.putFile(matchLogs, destinationPath);
+        LOGGER.info("Saving match logs to storage");
+        blobService.putFile(matchLogs, destinationPath, tournamentConfig.matchLogsContainer);
     }
 
     private void notifyMatchComplete(TournamentConfig tournamentConfig, GameResult gameResult) throws Exception {
-//        LOGGER.info("Notifying of match completion");
-//        queueService.enqueueMessage(tournamentConfig.matchResultQueue, gameResult);
+        LOGGER.info("Notifying of match completion");
+        queueService.enqueueMessage(tournamentConfig.matchResultQueue, gameResult);
     }
 }
