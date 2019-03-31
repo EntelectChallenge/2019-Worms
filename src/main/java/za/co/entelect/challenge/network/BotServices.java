@@ -14,6 +14,9 @@ public interface BotServices {
     @Multipart
     @POST("/bot_command")
     Call<RunBotResponseDto> runBot(@Part MultipartBody.Part jsonState, @Part MultipartBody.Part textState, @Query("round_number") int roundNumber);
+
+    @GET("/kill_bot")
+    Call<Void> killBot();
 }
 
 //http://localhost:9002/run_bot?botDirectory=/path/to/bot/in/bot.json/&botFilename=reference-bot-1.0-SNAPSHOT-jar-with-dependencies.jar&language=java
