@@ -25,7 +25,7 @@ class ShootCommand(val direction: Direction, val config: GameConfig) : WormsComm
         var position = worm.position + direction.vector
 
         while (position in gameMap
-                && position.shootingDistance(worm.position) < worm.weapon.range) {
+                && position.shootingDistance(worm.position) <= worm.weapon.range) {
             val cell = gameMap[position]
 
             if (!cell.type.open) {

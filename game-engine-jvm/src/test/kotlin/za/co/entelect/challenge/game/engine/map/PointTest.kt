@@ -14,7 +14,7 @@ class PointTest {
 
         assertEquals(pointA.euclideanDistance(pointB), 14.142135623730951)
         assertEquals(pointA.movementDistance(pointB), 10)
-        assertEquals(pointA.shootingDistance(pointB), 14.142135623730951)
+        assertEquals(pointA.shootingDistance(pointB), 14.0)
         assertEquals(pointA.manhattanDistance(pointB), 20)
 
         assertNotEquals(pointC.abs(), pointC)

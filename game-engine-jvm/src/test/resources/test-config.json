@@ -8,7 +8,7 @@
     "diggingRange": 1,
     "weapon": {
       "damage": 1,
-      "range": 4
+      "range": 3
     }
   },
   "pushbackDamage": 4,

@@ -1,9 +1,6 @@
 package za.co.entelect.challenge.game.engine.map
 
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.*
 
 data class Point(val x: Int, val y: Int) {
 
@@ -13,7 +10,7 @@ data class Point(val x: Int, val y: Int) {
      */
     fun movementDistance(other: Point): Int = maximumDimension(other)
 
-    fun shootingDistance(other: Point): Double = euclideanDistance(other)
+    fun shootingDistance(other: Point): Double = floor(euclideanDistance(other))
 
     fun manhattanDistance(other: Point) = abs(x - other.x) + abs(y - other.y)
     fun euclideanDistance(other: Point) = sqrt((x - other.x).pow(2) + (y - other.y).pow(2))
