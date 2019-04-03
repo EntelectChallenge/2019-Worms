@@ -10,6 +10,7 @@ import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
 
 class WormsMapTest {
@@ -141,5 +142,71 @@ class WormsMapTest {
     @Test(expected = IllegalArgumentException::class)
     fun test_init_tooLittleCells() {
         WormsMap(emptyList(), 2, buildMapCells(3, CellType.AIR))
+    }
+
+    @Test
+    fun test_removeDeadWorms_dead() {
+        val worm1 = CommandoWorm.build(0, config, Point(0, 0))
+        val worm2 = CommandoWorm.build(0, config, Point(1, 0))
+        val player1 = WormsPlayer.build(0, listOf(worm1, worm2), config)
+
+        worm1.health = 0
+
+        val map = buildMapWithCellType(listOf(player1), 3, CellType.AIR)
+
+        assertEquals(worm1, map[worm1.position].occupier, "Worm 1 placed correctly")
+        assertEquals(worm2, map[worm2.position].occupier, "Worm 2 placed correctly")
+
+        map.removeDeadWorms()
+
+        assertFalse(map.cells.any { it.occupier == worm1 }, "Worm 1 removed")
+        assertEquals(worm2, map[worm2.position].occupier, "Worm 2 not removed")
+    }
+
+    @Test
+    fun test_removeDeadWorms_disqualified() {
+        val worm1 = CommandoWorm.build(0, config, Point(0, 0))
+        val worm2 = CommandoWorm.build(0, config, Point(1, 0))
+
+        val player1 = WormsPlayer.build(0, listOf(worm1, worm2), config)
+        player1.consecutiveDoNothingsCount = config.maxDoNothings + 1
+
+        val map = buildMapWithCellType(listOf(player1), 3, CellType.AIR)
+
+        assertEquals(worm1, map[worm1.position].occupier, "Worm 1 placed correctly")
+        assertEquals(worm2, map[worm2.position].occupier, "Worm 2 placed correctly")
+
+        map.removeDeadWorms()
+
+        assertFalse(map.cells.any { it.occupier != null }, "Disqualified worms removed")
+    }
+
+    /**
+     * Living worms that occupy the positions of dead worms should not be removed from the map by removeDeadWorms()
+     */
+    @Test
+    fun test_removeDeadWorms_alreadyRemoved() {
+        val worm1 = CommandoWorm.build(0, config, Point(0, 0))
+        val worm2 = CommandoWorm.build(0, config, Point(1, 0))
+        val player1 = WormsPlayer.build(0, listOf(worm1, worm2), config)
+
+        worm1.health = 0
+
+        val map = buildMapWithCellType(listOf(player1), 3, CellType.AIR)
+
+        assertEquals(worm1, map[worm1.position].occupier, "Worm 1 placed correctly")
+        assertEquals(worm2, map[worm2.position].occupier, "Worm 2 placed correctly")
+
+        map.removeDeadWorms()
+
+        assertFalse(map.cells.any { it.occupier == worm1 }, "Worm 1 removed")
+        assertEquals(worm2, map[worm2.position].occupier, "Worm 2 not removed")
+
+        worm2.moveTo(map, worm1.position)
+
+        map.removeDeadWorms()
+
+        assertFalse(map.cells.any { it.occupier == worm1 }, "Worm 1 removed")
+        assertEquals(worm2, map[worm2.position].occupier, "Worm 2 not removed")
     }
 }

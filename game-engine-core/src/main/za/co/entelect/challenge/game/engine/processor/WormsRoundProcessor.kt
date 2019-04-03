@@ -22,6 +22,8 @@ class WormsRoundProcessor(val config: GameConfig) {
             player.selectNextWorm()
         }
 
+        wormsMap.removeDeadWorms()
+
         return true
     }
 

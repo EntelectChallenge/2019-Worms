@@ -115,6 +115,37 @@ class WormsRoundProcessorTest {
     }
 
     @Test
+    fun processRound_deadWormsRemoved() {
+        val attackingWorm = CommandoWorm.build(0, config, Point(0, 0))
+        val targetWorm = CommandoWorm.build(0, config, Point(0, 2))
+
+        val player1 = WormsPlayer.build(1, listOf(attackingWorm), config)
+        val player2 = WormsPlayer.build(1, listOf(targetWorm), config)
+
+        player2.currentWorm.health = attackingWorm.weapon.damage
+
+        val map = buildMapWithCellType(listOf(player1, player2), 3, CellType.AIR)
+
+        assertNotNull(map[attackingWorm.position].occupier)
+        assertNotNull(map[targetWorm.position].occupier)
+
+        assertFalse(attackingWorm.dead)
+        assertFalse(targetWorm.dead)
+
+        val shootCommand = ShootCommand(Direction.DOWN, TEST_CONFIG)
+        val doNothingCommand = DoNothingCommand(config)
+
+        val commandMap = mapOf(Pair(player1, shootCommand), Pair(player2, doNothingCommand))
+        roundProcessor.processRound(map, commandMap)
+
+        assertTrue(targetWorm.dead)
+        assertFalse(attackingWorm.dead)
+
+        assertNull(map[targetWorm.position].occupier, "Dead worm has been removed")
+        assertNotNull(map[attackingWorm.position].occupier, "Living worm has not been removed")
+    }
+
+    @Test
     fun getPlayerErrors() {
         val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
         val player2 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 2))), config)

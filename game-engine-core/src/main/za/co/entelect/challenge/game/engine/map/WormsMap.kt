@@ -23,7 +23,13 @@ interface GameMap {
     operator fun get(target: Point): MapCell
 
     operator fun get(x: Int, y: Int): MapCell
+
     fun addError(gameError: GameError)
+
+    fun startRound()
+
+    fun removeDeadWorms()
+
 }
 
 class WormsMap(override val players: List<WormsPlayer>,
@@ -107,8 +113,22 @@ class WormsMap(override val players: List<WormsPlayer>,
         errorList.add(gameError)
     }
 
-    fun startRound() {
+    override fun startRound() {
         currentRound++
         currentRoundFeedback.clear()
+    }
+
+    override fun removeDeadWorms() {
+        players.flatMap { it.worms }
+                .filter { it.dead || it.player.disqualified }
+                .forEach { removeWorm(it) }
+    }
+
+    private fun removeWorm(worm: Worm) {
+        val mapCell = get(worm.position)
+
+        if (mapCell.occupier == worm) {
+            mapCell.occupier = null
+        }
     }
 }
