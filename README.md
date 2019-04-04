@@ -1,4 +1,4 @@
-# Entelect Challange 2019 - Worms
+# Entelect Challenge 2019 - Worms
 
 The Entelect Challenge is an annual coding competition where students, professional developers, and enthusiasts develop an intelligent bot to play a game.
 
