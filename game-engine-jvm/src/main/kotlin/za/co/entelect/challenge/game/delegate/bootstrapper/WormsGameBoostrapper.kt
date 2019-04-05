@@ -18,7 +18,7 @@ import kotlin.random.Random
 class WormsGameBoostrapper : GameEngineBootstrapper {
 
     private var seed: Long = 0L
-    private var configPath: String = "config.json"
+    private var configPath: String = "default-config.json"
 
     override fun setSeed(seed: Long) {
         this.seed = seed

@@ -3,6 +3,7 @@ package za.co.entelect.challenge.game.engine.map
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
+import za.co.entelect.challenge.game.engine.powerups.Powerup
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
 import kotlin.math.*
 
@@ -65,7 +66,7 @@ class WormsMapGenerator(private val config: GameConfig, private val seed: Long) 
                 .filter { (_, _, procRandom) -> procRandom > powerupSpawnThreshold }
                 .map { (x, y, _) -> blankMap[x][y] }
                 .forEach { cell ->
-                    cell.powerup = HealthPack(50)
+                    cell.powerup = HealthPack.build(config)
                     cell.type = CellType.AIR
                 }
     }

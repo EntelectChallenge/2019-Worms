@@ -19,7 +19,7 @@
     "killShot": 10,
     "missedAttack": 2,
     "powerup": 6,
-    "dig": 4,
+    "dig": 3,
     "move": 1,
     "invalidCommand": -1,
     "doNothing": 0

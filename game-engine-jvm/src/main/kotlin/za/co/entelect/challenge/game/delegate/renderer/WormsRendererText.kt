@@ -1,18 +1,16 @@
 package za.co.entelect.challenge.game.delegate.renderer
 
+import za.co.entelect.challenge.game.delegate.renderer.printables.PrintablePlayer
+import za.co.entelect.challenge.game.delegate.renderer.printables.PrintableWorm
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.CellType
-import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.WormsMap
-import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
 
 class WormsRendererText(private val config: GameConfig) : WormsRenderer {
 
-    private val EOL = System.getProperty("line.separator")
-
-    override fun commandPrompt(wormsPlayer: WormsPlayer): String {
+    override fun commandPrompt(player: WormsPlayer): String {
         return "Not supported in Text state file"
     }
 
@@ -24,83 +22,95 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
             |Current round: ${wormGameDetails.currentRound}
             |Max rounds: ${wormGameDetails.maxRounds}
             |Map size: ${wormGameDetails.mapSize}
+            |Current worm id: ${wormGameDetails.currentWormId}
+            |Consecutive do nothing count: ${wormGameDetails.consecutiveDoNothingCount}
             |Players count: ${wormsMap.players.size}
-            |Worms count: ${wormsMap.players.first().worms.size}
+            |Worms per player: ${wormsMap.players.first().worms.size}
             """.trimMargin()
 
-        val selfPlayerWorms = wormGameDetails.selfPlayer
-                .worms
+        val myPlayerWorms = wormGameDetails.myPlayer.worms
                 .fold("") { sum, worm ->
                     sum + """
                         ${getBaseWormText(worm)}
-                        |Digging range: ${worm.diggingRange}
-                        |Movement range: ${worm.movementRange}
-                        |Weapon damage: ${worm.weapon.damage}
-                        |Weapon range: ${worm.weapon.range}
+                        |Weapon damage: ${worm.weapon?.damage}
+                        |Weapon range: ${worm.weapon?.range}
                         """.trimMargin()
                 }
 
-        val selfPlayer = """
-            |@02 Self Player
-            ${getBasePlayerText(wormGameDetails.selfPlayer)}
-            |Consecutive do nothings count: ${wormGameDetails.selfPlayer.consecutiveDoNothingsCount}
-            |Current worm id: ${wormGameDetails.currentWormId}
-            |Worms: $selfPlayerWorms
+        val myPlayer = """
+            |@02 My Player
+            ${getBasePlayerText(wormGameDetails.myPlayer)}
+            |Health: ${wormGameDetails.myPlayer.health}
+            |Worms: $myPlayerWorms
             """.trimMargin()
 
-        val enemyPlayers = wormGameDetails.enemyPlayers
-                .fold("@03 Enemy Players$EOL") { pSum, enemyPlayer ->
-                    val worms = enemyPlayer.worms.fold("") { wSum, worm ->
+        val opponentPlayers = wormGameDetails.opponents
+                .fold("@03 Opponents$EOL") { pSum, opponentPlayer ->
+                    val worms = opponentPlayer.worms.fold("") { wSum, worm ->
                         wSum + """
                             ${getBaseWormText(worm)}
                             """.trimMargin()
-                    }
+                    } + EOL
 
                     pSum + """
-                        ${getBasePlayerText(enemyPlayer)}
+                        ${getBasePlayerText(opponentPlayer)}
                         |Worms: $worms
                         |$EOL """.trimMargin()
                 }
 
+        val specialItems = """
+            |@04 Special Items
+            |HEALTH_PACK: ${HealthPack.build(config).value}
+            """.trimMargin()
+
         val legend = """
-            |@04 Legend
-            |DEEP_SPACE: ${CellType.DEEP_SPACE.printable}
-            |DIRT: ${CellType.DIRT.printable}
-            |AIR: ${CellType.AIR.printable}
-            |HEALTH_PACK: ${HealthPack.PRINTABLE}
-            |WORM_MARKERS: PlayerId WormId
+            |@05 Legend
+            |DEEP_SPACE: ${CellType.DEEP_SPACE.printable} ASCII:219
+            |DIRT: ${CellType.DIRT.printable} ASCII:178
+            |AIR: ${CellType.AIR.printable} ASCII:176
+            |HEALTH_PACK: ${HealthPack.PRINTABLE} ASCII:204, 185
+            |WORM_MARKER: 13 Example for:Player1, Worm3
             """.trimMargin()
 
         val map = """
-            |@05 World Map
-            |${WormsRendererHelper.getStringMap(wormGameDetails.map)}
+            |@06 World Map
+            |${getStringMap(wormGameDetails.map)}
             """.trimMargin()
 
         return """
-            |$matchDetails
+            |${addLinesCount(matchDetails)}
             |
-            |$selfPlayer
+            |${addLinesCount(myPlayer)}
             |
-            |$enemyPlayers
-            |$legend
+            |${addLinesCount(opponentPlayers)}
+            |${addLinesCount(specialItems)}
             |
-            |$map
+            |${addLinesCount(legend)}
+            |
+            |${addLinesCount(map)}
             """.trimMargin()
     }
 
-    private fun getBasePlayerText(enemyPlayer: WormsPlayer): String {
+    private fun addLinesCount(section: String): String {
+        val lines = section.split(EOL).toMutableList()
+        lines.add(1, "Section lines count: ${lines.size + 1}")
+
+        return lines.joinToString(EOL)
+    }
+
+    private fun getBasePlayerText(enemyPlayer: PrintablePlayer): String {
         return """|Player id: ${enemyPlayer.id}
-                  |Health: ${enemyPlayer.health}
                   |Score: ${enemyPlayer.score}"""
     }
 
-    private fun getBaseWormText(worm: Worm): String {
+    private fun getBaseWormText(worm: PrintableWorm): String {
         return """|$EOL
                   |Worm id: ${worm.id}
-                  |Dead: ${worm.dead}
                   |Health: ${worm.health}
-                  |Position x: ${worm.position.x}
-                  |Position y: ${worm.position.y}"""
+                  |Position x: ${worm.position?.x}
+                  |Position y: ${worm.position?.y}
+                  |Digging range: ${worm.diggingRange}
+                  |Movement range: ${worm.movementRange}"""
     }
 
 }

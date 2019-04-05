@@ -11,4 +11,7 @@ interface Powerup : Printable {
     fun applyTo(worm: Worm)
 
     val type: String
+
+    val value: Int
+
 }

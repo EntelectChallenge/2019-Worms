@@ -7,15 +7,15 @@ import kotlin.jvm.Transient
 /**
  * Increases a worm's health when applied
  */
-class HealthPack(private val health: Int) : Powerup {
+class HealthPack(override val value: Int) : Powerup {
 
     @Transient
     override val printable = PRINTABLE
 
-    override val type: String = "healthpack"
+    override val type: String = "HEALTHPACK"
 
     override fun applyTo(worm: Worm) {
-        worm.health += health
+        worm.health += value
     }
 
     companion object {

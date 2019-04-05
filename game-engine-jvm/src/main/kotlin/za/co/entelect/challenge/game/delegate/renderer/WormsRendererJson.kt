@@ -16,7 +16,7 @@ class WormsRendererJson(private val config: GameConfig) : WormsRenderer {
 
     private val gson = Gson()
 
-    override fun commandPrompt(wormsPlayer: WormsPlayer): String {
+    override fun commandPrompt(player: WormsPlayer): String {
         return "Not supported in JSON state file"
     }
 

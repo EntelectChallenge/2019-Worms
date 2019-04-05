@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.player
 
 import za.co.entelect.challenge.game.engine.config.GameConfig
+import kotlin.js.JsName
 import kotlin.jvm.Transient
 
 class WormsPlayer private constructor(val id: Int,
@@ -56,6 +57,7 @@ class WormsPlayer private constructor(val id: Int,
          * @param id A unique identifier for this player
          * @param config The game config object
          */
+        @JsName("build")
         fun build(id: Int, config: GameConfig): WormsPlayer {
             val commandoWorms = (0 until config.commandoWorms.count)
                     .map { i -> CommandoWorm.build(i, config) }
@@ -63,6 +65,7 @@ class WormsPlayer private constructor(val id: Int,
             return WormsPlayer(id, commandoWorms, config)
         }
 
+        @JsName("buildWithWorms")
         fun build(id: Int, worms: List<Worm>, config: GameConfig): WormsPlayer {
             return WormsPlayer(id, worms, config)
         }

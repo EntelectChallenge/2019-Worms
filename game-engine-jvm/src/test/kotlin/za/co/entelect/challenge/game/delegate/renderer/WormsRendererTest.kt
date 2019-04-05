@@ -1,12 +1,12 @@
 package za.co.entelect.challenge.game.delegate.renderer
 
-import za.co.entelect.challenge.game.contracts.renderer.RendererType
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.factory.TestWormsPlayerFactory.buildWormsPlayers
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
+import za.co.entelect.challenge.game.engine.map.WormsMapGenerator
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
 import kotlin.test.Test
 import kotlin.test.assertNotNull
@@ -64,17 +64,17 @@ class WormsRendererTest {
         val consoleFileString = rendererConsole.render(wormsMap, player1)
 
         val mapLines = textFileString.lines()
-        val mapHeaderLineNumber = mapLines.indexOfFirst { it.contains("@05") }
-        assertTrue(mapLines[mapHeaderLineNumber + 1].startsWith("112131" + CellType.AIR.printable)
-                && mapLines[mapHeaderLineNumber + 2].startsWith("122232" + CellType.DIRT.printable)
-                && mapLines[mapHeaderLineNumber + 3].startsWith("132333" + CellType.DEEP_SPACE.printable)
-                && mapLines[mapHeaderLineNumber + 4].contains(HealthPack.PRINTABLE),
+        val mapHeaderLineNumber = mapLines.indexOfFirst { it.contains("@06") }
+        assertTrue(mapLines[mapHeaderLineNumber + 2].startsWith("112131" + CellType.AIR.printable)
+                && mapLines[mapHeaderLineNumber + 3].startsWith("122232" + CellType.DIRT.printable)
+                && mapLines[mapHeaderLineNumber + 4].startsWith("132333" + CellType.DEEP_SPACE.printable)
+                && mapLines[mapHeaderLineNumber + 5].contains(HealthPack.PRINTABLE),
                 "Text state file has a bad map render. " +
                         "Printed map does not contain the expected worm markers, cell types and powerups")
 
         assertTrue(upSign.lines()
                 .mapIndexed { lineNumber, lineText -> Pair(lineNumber, lineText) }
-                .all { (index, text) -> mapLines[mapHeaderLineNumber + 5 + index].contains(getPixelfiedString(text, o, i)) },
+                .all { (index, text) -> mapLines[mapHeaderLineNumber + 6 + index].contains(getPixelfiedString(text, o, i)) },
                 "Text state file has a bad map render. " +
                         "The signage 'UP' was not found on the rendered map where expected. " +
                         "Check if map rotation/flip is correct, or that 'World Map' header is correct")
@@ -84,7 +84,7 @@ class WormsRendererTest {
                 "maxRounds",
                 "mapSize",
                 "currentWormId",
-                "selfPlayer",
+                "myPlayer",
                 "score",
                 "id",
                 "position",
@@ -119,6 +119,32 @@ class WormsRendererTest {
         val commandPrompt = consoleRenderer.commandPrompt(player)
 
         assertNotNull(commandPrompt, "Console command prompt is not supposed to be null")
+    }
+
+    /**
+     * Use IDE debugging at the end of this function to retrieve examples of map files
+     * This should be used to keep new starter-pack release up to date
+     */
+    @Test
+    fun test_print_example_map_files() {
+        val wormsPlayers = buildWormsPlayers(config, 2, 3)
+        val player1 = wormsPlayers.first()
+
+        val wormsMapGenerator = WormsMapGenerator(config, 0)
+        val wormsMap = wormsMapGenerator.getMap(wormsPlayers)
+
+        val rendererText = WormsRendererText(config)
+        val rendererJson = WormsRendererJson(config)
+        val rendererConsole = WormsRendererConsole(config)
+
+        val textFileString = rendererText.render(wormsMap, player1)
+        val jsonFileString = rendererJson.render(wormsMap, player1)
+        val consoleFileString = rendererConsole.render(wormsMap, player1)
+
+        assertNotNull(textFileString)
+        assertNotNull(jsonFileString)
+        assertNotNull(consoleFileString)
+
     }
 
 }
