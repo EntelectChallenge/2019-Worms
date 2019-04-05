@@ -42,6 +42,7 @@ public class RetryableCall<T> implements Call<T> {
             }
 
             LOGGER.info(String.format("Retrying request: %s", request));
+            originalCall = originalCall.clone();
         }
 
         throw new IOException(String.format("Request failed: %s", request));
