@@ -98,12 +98,12 @@ public class GameRunnerConfig {
             }
 
             if (gameRunnerConfig.playerAId == null || gameRunnerConfig.playerAId.isEmpty()) {
-                LOGGER.info("Player A id not found. Generating one");
+                LOGGER.warn("Player A id not found. Generating one");
                 gameRunnerConfig.playerAId = UUID.randomUUID().toString();
             }
 
             if (gameRunnerConfig.playerBId == null || gameRunnerConfig.playerBId.isEmpty()) {
-                LOGGER.info("Player B id not found. Generating one");
+                LOGGER.warn("Player B id not found. Generating one");
                 gameRunnerConfig.playerBId = UUID.randomUUID().toString();
             }
 
