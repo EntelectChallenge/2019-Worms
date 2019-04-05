@@ -43,7 +43,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
                 implementation("com.google.code.gson:gson:2.8.5")
-                api("za.co.entelect.challenge:game-engine-interface:2019.0.0+")
+                api("za.co.entelect.challenge:game-engine-interface:2019.0.0")
             }
         }
         val jvmTest by getting {
