@@ -2,4 +2,4 @@ default:
 	mvn clean install
 
 run:
-	java -jar target/game-runner-3.0.2-jar-with-dependencies.jar
+	java -jar target/game-runner-4.0.0-jar-with-dependencies.jar
