@@ -12,11 +12,15 @@ build:
   stage: build
   script:
     - mvn $MAVEN_CLI_OPTS compile
+  only:
+    - branches
 
 test:
   stage: test
   script:
     - mvn $MAVEN_CLI_OPTS verify
+  only:
+    - branches
 
 deploy:
   stage: deploy
