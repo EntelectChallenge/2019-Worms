@@ -94,6 +94,8 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     @Override
     public void onRoundStarting() {
+        gameMap.setCurrentRound(gameMap.getCurrentRound() + 1);
+
         StringBuilder s = new StringBuilder();
         s.append("=======================================\n");
         s.append(String.format("Starting round: %d \n", gameMap.getCurrentRound()));
@@ -143,8 +145,6 @@ public class GameEngineRunner implements LifecycleEngineRunner {
                 log.info("Failed to write round information");
             }
         }
-
-        gameMap.setCurrentRound(gameMap.getCurrentRound() + 1);
     }
 
     @Override
