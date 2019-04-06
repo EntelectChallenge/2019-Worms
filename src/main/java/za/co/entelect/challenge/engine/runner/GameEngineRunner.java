@@ -154,7 +154,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         GamePlayer winningPlayer = gameMap.getWinningPlayer();
         BasePlayer winner = players.stream()
                 .map(player -> (BasePlayer) player)
-                .filter(p -> p.getGamePlayer() == winningPlayer)
+                .filter(p -> p.getGamePlayer().equals(winningPlayer))
                 .findFirst().orElse(null);
 
         if (winner != null) {
