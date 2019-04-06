@@ -54,3 +54,4 @@ fabric.properties
 target/*
 
 tournament-tmp/*
+match-logs/*
