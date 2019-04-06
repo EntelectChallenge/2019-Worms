@@ -1,5 +1,7 @@
 package za.co.entelect.challenge.game.delegate.renderer
 
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
@@ -8,6 +10,10 @@ import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMapGenerator
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStreamWriter
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -122,6 +128,7 @@ class WormsRendererTest {
     }
 
     /**
+     * Creates example state files from each renderer when a build is triggered
      * Use IDE debugging at the end of this function to retrieve examples of map files
      * This should be used to keep new starter-pack release up to date
      */
@@ -141,10 +148,29 @@ class WormsRendererTest {
         val jsonFileString = rendererJson.render(wormsMap, player1)
         val consoleFileString = rendererConsole.render(wormsMap, player1)
 
-        assertNotNull(textFileString)
-        assertNotNull(jsonFileString)
-        assertNotNull(consoleFileString)
+        val PATH = "assets/example-state"
+        try {
+            File(PATH).mkdirs()
 
+            writeFile(PATH, "state.txt", textFileString)
+
+            val prettyJson = GsonBuilder().setPrettyPrinting().create().toJson(JsonParser().parse(jsonFileString).asJsonObject)
+            writeFile(PATH, "state.json", prettyJson)
+
+            writeFile(PATH, "console.txt", consoleFileString)
+
+        } catch (e: IOException) {
+            throw e
+        }
+    }
+
+    private fun writeFile(path: String, fileName: String, content: String) {
+        val fileOutputStream = FileOutputStream(File(path, fileName))
+        val outputStreamWriter = OutputStreamWriter(fileOutputStream, Charsets.UTF_8)
+
+        outputStreamWriter.use {
+            it.write(content)
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package za.co.entelect.challenge.game.delegate.renderer
 
+import za.co.entelect.challenge.game.engine.command.implementation.Direction
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
@@ -8,7 +9,8 @@ import za.co.entelect.challenge.game.engine.player.WormsPlayer
 class WormsRendererConsole(private val config: GameConfig) : WormsRenderer {
 
     override fun commandPrompt(player: WormsPlayer): String {
-        return "Player ${player.id}, enter a command (move x y)/(dig x y)/(shoot U/UR/R/DR/D/DL/L/UL)/(nothing)"
+        val directionsString = Direction.values().joinToString(", ") { it.shortCardinal }
+        return """Player ${player.id}, enter a command (move x y)/(dig x y)/(shoot $directionsString)/(nothing)"""
     }
 
     override fun render(wormsMap: WormsMap, player: WormsPlayer): String {
