@@ -5,7 +5,7 @@ import za.co.entelect.challenge.game.engine.player.WormsPlayer
 class PrintablePlayer(player: WormsPlayer) {
 
     var id: Int = player.id
-    var score: Int = player.score
+    var score: Int = player.totalScore
     var health: Int? = null
     var worms: List<PrintableWorm> = emptyList()
     @Transient

@@ -6,7 +6,7 @@
   "consecutiveDoNothingCount": 0,
   "myPlayer": {
     "id": 1,
-    "score": 0,
+    "score": 100,
     "health": 300,
     "worms": [
       {
@@ -56,7 +56,7 @@
   "opponents": [
     {
       "id": 2,
-      "score": 0,
+      "score": 100,
       "worms": [
         {
           "id": 1,

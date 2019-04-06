@@ -57,14 +57,14 @@ class WormsMapTest {
     }
 
     @Test
-    fun test_getWinningPlayer_score() {
+    fun test_getWinningPlayer_commandScore() {
         val worm = CommandoWorm.build(0, config, Point(0, 0))
         val player1 = WormsPlayer.build(0, listOf(worm), config)
-        player1.score = 4
+        player1.commandScore = 4
 
         val worm2 = CommandoWorm.build(0, config, Point(1, 1))
         val player2 = WormsPlayer.build(1, listOf(worm2), config)
-        player2.score = 10
+        player2.commandScore = 10
 
         val map = buildMapWithCellType(listOf(player1, player2), 2, CellType.AIR)
         assertEquals(2, map.livingPlayers.size)
@@ -76,14 +76,35 @@ class WormsMapTest {
     }
 
     @Test
-    fun test_winningPlayer_tie() {
+    fun test_getWinningPlayer_healthScore() {
         val worm = CommandoWorm.build(0, config, Point(0, 0))
         val player1 = WormsPlayer.build(0, listOf(worm), config)
-        player1.score = 10
+        player1.commandScore = 4
 
         val worm2 = CommandoWorm.build(0, config, Point(1, 1))
         val player2 = WormsPlayer.build(1, listOf(worm2), config)
-        player2.score = 10
+
+        worm2.health = 5
+        player2.commandScore = 10
+
+        val map = buildMapWithCellType(listOf(player1, player2), 2, CellType.AIR)
+        assertEquals(2, map.livingPlayers.size)
+
+
+        val winningPlayer = map.winningPlayer
+
+        assertEquals(player1, winningPlayer)
+    }
+
+    @Test
+    fun test_winningPlayer_tie() {
+        val worm = CommandoWorm.build(0, config, Point(0, 0))
+        val player1 = WormsPlayer.build(0, listOf(worm), config)
+        player1.commandScore = 10
+
+        val worm2 = CommandoWorm.build(0, config, Point(1, 1))
+        val player2 = WormsPlayer.build(1, listOf(worm2), config)
+        player2.commandScore = 10
 
         val worm3 = CommandoWorm.build(0, config, Point(2, 2))
         val player3 = WormsPlayer.build(1, listOf(worm3), config)

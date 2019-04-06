@@ -52,6 +52,7 @@ class WormsPlayerTest {
         assertEquals(player.worms[0], player.currentWorm)
         player.selectNextWorm()
         assertEquals(player.worms[0], player.currentWorm)
+        assertEquals(0, player.totalScore)
     }
 
 }

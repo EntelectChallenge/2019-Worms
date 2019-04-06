@@ -63,7 +63,7 @@ class WormsMap(override val players: List<WormsPlayer>,
         }
 
     private fun maxByScore(players: List<WormsPlayer>): WormsPlayer? {
-        val highestScoringPlayers = players.groupBy { it.score }.maxBy { it.key }?.value
+        val highestScoringPlayers = players.groupBy { it.totalScore }.maxBy { it.key }?.value
 
         if (highestScoringPlayers == null || highestScoringPlayers.size != 1) {
             return null
@@ -114,7 +114,6 @@ class WormsMap(override val players: List<WormsPlayer>,
     }
 
     override fun startRound() {
-        currentRound++
         currentRoundFeedback.clear()
     }
 

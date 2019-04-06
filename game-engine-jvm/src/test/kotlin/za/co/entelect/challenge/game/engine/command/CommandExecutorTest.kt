@@ -29,11 +29,11 @@ class CommandExecutorTest {
 
         executor.execute()
         assertEquals(1, player.consecutiveDoNothingsCount)
-        assertEquals(config.scores.invalidCommand, player.score)
+        assertEquals(config.scores.invalidCommand, player.commandScore)
 
         executor.execute()
         assertEquals(2, player.consecutiveDoNothingsCount)
-        assertEquals(config.scores.invalidCommand * 2, player.score)
+        assertEquals(config.scores.invalidCommand * 2, player.commandScore)
 
         verify(command, times(0)).execute(any(), any())
     }
@@ -49,11 +49,11 @@ class CommandExecutorTest {
 
         executor.execute()
         assertEquals(0, player.consecutiveDoNothingsCount)
-        assertEquals(10, player.score)
+        assertEquals(10, player.commandScore)
 
         executor.execute()
         assertEquals(0, player.consecutiveDoNothingsCount)
-        assertEquals(20, player.score)
+        assertEquals(20, player.commandScore)
 
         verify(validCommand, times(2)).execute(any(), any())
     }

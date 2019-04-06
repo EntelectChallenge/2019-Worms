@@ -20,14 +20,14 @@ class TeleportCommand(val target: Point, val random: Random, val config: GameCon
             return CommandValidation.invalidMove("$target out of map bounds")
         }
 
+        if (target.movementDistance(worm.position) > worm.movementRange) {
+            return CommandValidation.invalidMove("Target too far away")
+        }
+
         val targetCell = gameMap[target]
 
         if (!targetCell.type.open) {
             return CommandValidation.invalidMove("Cannot move to ${targetCell.type}")
-        }
-
-        if (target.movementDistance(worm.position) > worm.movementRange) {
-            return CommandValidation.invalidMove("Target too far away")
         }
 
         val occupier = targetCell.occupier

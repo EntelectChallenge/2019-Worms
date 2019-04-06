@@ -107,7 +107,6 @@ This file is encoded using UTF-8
 
 ### Console [*example*](assets/example-state/console.txt "An example of the console file")
 
-##### A file called "console.txt", containing the following game details:
 * My Player → *The attributes of your player*
   * H → *The sum of all your worms' hitpoints*
   * S → *Your score points currently acquired*

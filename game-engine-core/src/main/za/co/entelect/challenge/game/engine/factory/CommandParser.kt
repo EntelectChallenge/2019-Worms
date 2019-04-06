@@ -50,21 +50,6 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
 
     private fun digCommand(splitCommand: List<String>): WormsCommand {
         if (splitCommand.size != 3) {
-            return InvalidCommand("Cannot parse move command: Invalid length ${splitCommand.size}, expected 3")
-        }
-
-        val x = splitCommand[1].toIntOrNull()
-        val y = splitCommand[2].toIntOrNull()
-
-        if (x == null || y == null) {
-            return InvalidCommand("Cannot parse move coordinates as numbers: ${splitCommand.subList(1, 2)}")
-        }
-
-        return DigCommand(x, y, config)
-    }
-
-    private fun teleportCommand(splitCommand: List<String>): WormsCommand {
-        if (splitCommand.size != 3) {
             return InvalidCommand("Cannot parse dig command: Invalid length ${splitCommand.size}, expected 3")
         }
 
@@ -73,6 +58,21 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
 
         if (x == null || y == null) {
             return InvalidCommand("Cannot parse dig coordinates as numbers: ${splitCommand.subList(1, 2)}")
+        }
+
+        return DigCommand(x, y, config)
+    }
+
+    private fun teleportCommand(splitCommand: List<String>): WormsCommand {
+        if (splitCommand.size != 3) {
+            return InvalidCommand("Cannot parse move command: Invalid length ${splitCommand.size}, expected 3")
+        }
+
+        val x = splitCommand[1].toIntOrNull()
+        val y = splitCommand[2].toIntOrNull()
+
+        if (x == null || y == null) {
+            return InvalidCommand("Cannot parse move coordinates as numbers: ${splitCommand.subList(1, 2)}")
         }
 
         return TeleportCommand(x, y, commandRandom, config)

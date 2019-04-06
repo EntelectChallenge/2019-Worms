@@ -35,7 +35,7 @@ class WormsGameBoostrapper : GameEngineBootstrapper {
 
     override fun getMapGenerator(): GameMapGenerator {
         val config = GameConfigFactory.getConfig(configPath)
-        return DelegateMapGenerator(config, seed)
+        return DelegateMapGenerator(config, seed.toInt())
     }
 
     override fun getRenderer(rendererType: RendererType): GameMapRenderer {

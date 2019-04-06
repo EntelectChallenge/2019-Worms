@@ -19,7 +19,7 @@ class WormsRoundProcessorTest {
     @Test
     fun processRound_digSameHole() {
         val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
-        val player2 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(2, 2))), config)
+        val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(2, 2))), config)
         val map = buildMapWithCellType(listOf(player1, player2), 3, CellType.DIRT)
         val command = DigCommand(1, 1, TEST_CONFIG)
 
@@ -32,7 +32,7 @@ class WormsRoundProcessorTest {
     @Test
     fun processRound_moveSameLocation() {
         val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
-        val player2 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(2, 2))), config)
+        val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(2, 2))), config)
         val map = buildMapWithCellType(listOf(player1, player2), 3, CellType.AIR)
         val command = TeleportCommand(Point(1, 1), random, TEST_CONFIG)
 
@@ -66,7 +66,7 @@ class WormsRoundProcessorTest {
     @Test
     fun processRound_shootDigOpen() {
         val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
-        val player2 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(2, 2))), config)
+        val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(2, 2))), config)
         val map = buildMapWithCellType(listOf(player1, player2), 3, CellType.DIRT)
         map[0, 0].type = CellType.AIR
 
@@ -85,7 +85,7 @@ class WormsRoundProcessorTest {
     @Test
     fun processRound_moveIntoShot() {
         val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
-        val player2 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(1, 1))), config)
+        val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(1, 1))), config)
         val map = buildMapWithCellType(listOf(player1, player2), 3, CellType.AIR)
 
         val shootCommand = ShootCommand(Direction.DOWN, TEST_CONFIG)
@@ -101,7 +101,7 @@ class WormsRoundProcessorTest {
     @Test
     fun processRound_moveOutOfShot() {
         val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
-        val player2 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 2))), config)
+        val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(0, 2))), config)
         val map = buildMapWithCellType(listOf(player1, player2), 3, CellType.AIR)
 
         val shootCommand = ShootCommand(Direction.DOWN, TEST_CONFIG)
@@ -120,7 +120,7 @@ class WormsRoundProcessorTest {
         val targetWorm = CommandoWorm.build(0, config, Point(0, 2))
 
         val player1 = WormsPlayer.build(1, listOf(attackingWorm), config)
-        val player2 = WormsPlayer.build(1, listOf(targetWorm), config)
+        val player2 = WormsPlayer.build(2, listOf(targetWorm), config)
 
         player2.currentWorm.health = attackingWorm.weapon.damage
 
@@ -148,7 +148,7 @@ class WormsRoundProcessorTest {
     @Test
     fun getPlayerErrors() {
         val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
-        val player2 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 2))), config)
+        val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(0, 2))), config)
         val map = buildMapWithCellType(listOf(player1, player2), 3, CellType.AIR)
 
         assertEquals(0, roundProcessor.getErrorList(map).size)
@@ -156,6 +156,8 @@ class WormsRoundProcessorTest {
         val invalidCommand = InvalidCommand("Test")
         val commandMap = mapOf(Pair(player1, invalidCommand))
 
+        //The game runner is responsible for updating the round number
+        map.currentRound = 1
         roundProcessor.processRound(map, commandMap)
 
         assertEquals(1, roundProcessor.getErrorList(map).size)
@@ -163,8 +165,10 @@ class WormsRoundProcessorTest {
         assertEquals(1, roundProcessor.getErrorList(map, player1).size)
         assertEquals(0, roundProcessor.getErrorList(map, player2).size)
 
-
+        //The game runner is responsible for updating the round number
+        map.currentRound = 2
         roundProcessor.processRound(map, commandMap)
+
         //Errors from previous rounds must not be returned
         assertEquals(1, roundProcessor.getErrorList(map).size)
         assertEquals(1, roundProcessor.getErrorList(map, player1).size)

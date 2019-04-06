@@ -11,7 +11,7 @@ Worms per player: 3
 @02 My Player
 Section lines count: 33
 Player id: 1
-Score: 0
+Score: 100
 Health: 300
 Worms: 
 
@@ -45,7 +45,7 @@ Weapon range: 3
 @03 Opponents
 Section lines count: 28
 Player id: 2
-Score: 0
+Score: 100
 Worms: 
 
 Worm id: 1

@@ -1,0 +1,14 @@
+{
+  "name": "ec-2019-game-engine",
+  "version": "1.0.0",
+  "description": "Test",
+  "main": "ec-2019-game-engine.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "kotlin": "^1.3.21"
+  }
+}

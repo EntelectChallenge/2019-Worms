@@ -23,12 +23,20 @@ class CommandExecutor(val player: WormsPlayer,
 
         if (moveValidation.isValid) {
             val commandFeedback = command.execute(map, worm)
-            player.score += commandFeedback.score
+            player.commandScore += commandFeedback.score
             map.currentRoundFeedback.add(commandFeedback)
+
+            if (!commandFeedback.success) {
+                addErrorToMap(commandFeedback.message)
+            }
         } else {
-            map.addError(GameError(moveValidation.reason, player, worm, map.currentRound))
-            player.score += config.scores.invalidCommand
+            addErrorToMap(moveValidation.reason)
+            player.commandScore += config.scores.invalidCommand
         }
+    }
+
+    private fun addErrorToMap(message: String) {
+        map.addError(GameError(message, player, worm, map.currentRound))
     }
 
 }

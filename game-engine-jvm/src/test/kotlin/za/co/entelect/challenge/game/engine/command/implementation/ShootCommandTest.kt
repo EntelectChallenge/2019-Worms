@@ -132,6 +132,7 @@ class ShootCommandTest {
             assertEquals(testMap.currentRound, targetWorm.roundHit, "Hit round for worm in direction $direction")
             assertEquals(expectedHp, targetWorm.health, "Health for worm in direction $direction")
             assertEquals(ShootResult.HIT, feedback.result, "Result correct for attack in direction $direction")
+            assertEquals(config.scores.friendlyFire, feedback.score)
             assertEquals(targetWorm.position, feedback.target, "Target correct for attack in direction $direction")
         }
 

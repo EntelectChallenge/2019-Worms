@@ -6,7 +6,7 @@ import za.co.entelect.challenge.game.engine.player.WormsPlayer
 
 interface WormsRenderer {
 
-    fun commandPrompt(player: WormsPlayer): String
+    fun commandPrompt(wormsPlayer: WormsPlayer): String
 
     fun render(wormsMap: WormsMap, player: WormsPlayer): String
 

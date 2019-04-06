@@ -1,4 +1,3 @@
-
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.dsl.KotlinCommonOptions
@@ -58,6 +57,7 @@ kotlin {
 
         val jsMain by getting {
             kotlin.srcDir("game-engine-web/src/main/kotlin")
+            resources.srcDir("game-engine-web/src/main/resources")
             dependencies {
                 implementation(kotlin("stdlib-js"))
             }
@@ -69,6 +69,10 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
+    }
+
+    kotlin.js().compilation("main").kotlinOptions {
+        moduleKind = "commonjs"
     }
 }
 
@@ -153,6 +157,28 @@ task<ShadowJar>("shadowJarJs") {
     shouldRunAfter("check")
 }
 
+task<Sync>("jsPackage") {
+    group = "build"
+    val output = kotlin.js().compilation("main").output
+
+    //node_modules is preserved for local npm folder installs
+    preserve {
+        include("node_modules")
+    }
+
+    output.classesDirs.forEach {
+        from(it) {
+            include("*.js")
+            exclude("*.meta.js")
+        }
+    }
+    from(output.resourcesDir)
+
+    into("$buildDir/package")
+
+    mustRunAfter("jsMainClasses")
+}
+
 fun <T : KotlinCompilation<KotlinCommonOptions>> KotlinOnlyTarget<T>.compilation(name: String): T {
     return compilations.getByName(name)
 }
@@ -175,4 +201,8 @@ tasks.named("assemble") {
 
 tasks.named("check") {
     dependsOn("testCoverageReport", "testCoverageVerification")
+}
+
+tasks.named("build") {
+    dependsOn("jsPackage")
 }

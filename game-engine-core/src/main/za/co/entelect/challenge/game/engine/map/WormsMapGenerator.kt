@@ -7,9 +7,9 @@ import za.co.entelect.challenge.game.engine.powerups.Powerup
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
 import kotlin.math.*
 
-class WormsMapGenerator(private val config: GameConfig, private val seed: Long) {
+class WormsMapGenerator(private val config: GameConfig, private val seed: Int) {
 
-    private val noise = SimplexNoise(seed.toInt())
+    private val noise = SimplexNoise(seed)
     private val mapZoom = 0.3
     private val amountOfSoil = 0.50
     private var mapCenter: Pair<Double, Double> = Pair(0.0, 0.0)

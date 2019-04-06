@@ -13,7 +13,7 @@ class DelegateMapGeneratorTest {
      */
     @Test
     fun test_generator() {
-        val delegateMapGenerator = DelegateMapGenerator(TEST_CONFIG, 0L)
+        val delegateMapGenerator = DelegateMapGenerator(TEST_CONFIG, 0)
 
         val mockPlayer1: Player = mock {
             on{name} doReturn "Player 1"

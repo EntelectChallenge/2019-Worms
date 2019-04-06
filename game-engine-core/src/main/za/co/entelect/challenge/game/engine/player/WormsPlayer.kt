@@ -16,10 +16,8 @@ class WormsPlayer private constructor(val id: Int,
         this.worms.forEach { it.player = this }
     }
 
-
     val health: Int
         get() = livingWorms.sumBy { it.health }
-
 
     val dead
         get() = worms.all { it.dead }
@@ -28,7 +26,10 @@ class WormsPlayer private constructor(val id: Int,
     private val livingWorms
         get() = worms.filter { !it.dead }
 
-    var score: Int = 0
+    var commandScore: Int = 0
+
+    val totalScore: Int
+        get() = commandScore + health / worms.size
 
     /**
      * Amount of consecutive rounds the player has done nothing
@@ -49,6 +50,23 @@ class WormsPlayer private constructor(val id: Int,
         }
     }
 
+    override fun toString(): String {
+        return "WormsPlayer $id"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is WormsPlayer) return false
+
+        if (id != other.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id
+    }
+
 
     companion object {
 
@@ -60,7 +78,7 @@ class WormsPlayer private constructor(val id: Int,
         @JsName("build")
         fun build(id: Int, config: GameConfig): WormsPlayer {
             val commandoWorms = (0 until config.commandoWorms.count)
-                    .map { i -> CommandoWorm.build(i, config) }
+                    .map { i -> CommandoWorm.build(i + 1, config) }
 
             return WormsPlayer(id, commandoWorms, config)
         }

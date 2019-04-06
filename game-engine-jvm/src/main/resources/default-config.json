@@ -1,5 +1,5 @@
 {
-  "maxRounds": 200,
+  "maxRounds": 400,
   "maxDoNothings": 10,
   "commandoWorms": {
     "count": 3,
@@ -13,14 +13,15 @@
   },
   "pushbackDamage": 4,
   "mapSize": 32,
-  "healthPackHp": 5,
+  "healthPackHp": 20,
   "scores": {
-    "attack": 5,
+    "attack": 6,
     "killShot": 10,
-    "missedAttack": 2,
-    "powerup": 6,
-    "dig": 3,
-    "move": 1,
+    "friendlyFire": 3,
+    "missedAttack": 1,
+    "powerup": 5,
+    "dig": 4,
+    "move": 2,
     "invalidCommand": -1,
     "doNothing": 0
   }
