@@ -121,13 +121,7 @@
 
     <repositories>
         <repository>
-            <id>bintray-entelect-challenge-game-engine-interfaces</id>
-            <name>bintray</name>
-            <url>https://dl.bintray.com/entelect-challenge/game-engine-interfaces</url>
-        </repository>
-        <repository>
-            <id>bintray-entelect-challenge-game-engine</id>
-            <name>bintray</name>
+            <id>bintray</id>
             <url>https://dl.bintray.com/entelect-challenge/game-engine</url>
         </repository>
     </repositories>
