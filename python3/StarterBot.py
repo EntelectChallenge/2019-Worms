@@ -15,12 +15,12 @@ from scipy.spatial import distance
 logging.basicConfig(filename='sample_python_bot.log', filemode='w', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+
 class StarterBot:
     
     def __init__(self, ):
         '''
-        Initialize Bot.
-        Load all game state information.
+        Initialize Bot .
         '''
 
         self.valid_directions = ['N','S','E','W','SE','SW','NE','NW']
@@ -43,10 +43,12 @@ class StarterBot:
 
         self.augmented_map = None
 
-        #self.get_current_round_details()
         return None
 
     def get_current_round_details(self):
+        """
+        Reads in all relevant information required for the round.
+        """
 
         state_location = os.path.join('rounds',str(self.current_round),'state.json')
         self.game_state = self.load_state_json(state_location)
@@ -74,12 +76,19 @@ class StarterBot:
         return None
 
     def get_worm_player_info(self, worm_id):
+        """
+        Retrieve info for requested worm id
+        """
         for worm in self.worms:
             if worm['id'] == worm_id:
                 break
         return worm
 
     def get_flattened_map(self):
+        """
+        Generates a flattened game map, and creates a pandas Dataframe.
+        This is used to easily filter cells without iteration.
+        """
         flattened_map = []
         for row in self.full_map:
             flattened_map.extend(row)
@@ -87,35 +96,16 @@ class StarterBot:
 
         return dataframe
 
-    def wait_for_round_start(self):
-        next_round = int(input())
-        return next_round
-
-    def get_command(self):
-        return self.command
-
-    def run_bot(self):
-        logger.info("Bot has started Running")
-        while True:
-            logger.info('Waiting for next round.')
-            next_round_number = self.wait_for_round_start()
-            logger.info('Starting Round : ' + str(next_round_number))
-            self.current_round = next_round_number
-            self.get_current_round_details()
-
-            self.starter_bot_logic()
-            self.write_action()
-
-        return None
-
     def starter_bot_logic(self):
         '''
-        If one of the opponent's worms is within range fire at it
-        Otherwise choose a block in a random direction and do one of the following things
+        If one of the opponent's worms is within range fire at it.
+            - Must be in range of current worm's weapon range.
+            - No obstacles can be in the path.
 
-        If the chosen block is air, move to that block
-        If the chosen block is dirt, dig out that block
-        If the chosen block is deep space, do nothing
+        Otherwise choose a block in a random direction and do one of the following things
+            - If the chosen block is air, move to that block
+            - If the chosen block is dirt, dig out that block
+            - If the chosen block is deep space, do nothing
 
         Commands in the format :
             MOVE - move <x> <y>
@@ -173,7 +163,9 @@ class StarterBot:
 
     def get_worms_in_range(self):
         """
-        returns a list of coordinates with worms in shooting range
+        Returns a list of coordinates with worms in shooting range
+        Takes into account if there are any obstacles in the way.
+        If there is an obstacle, the worm is seen as not in range.
         """
         max_range = self.current_worm_info['weapon']['range']
         current_x = self.current_worm_info['position']['x']
@@ -187,7 +179,7 @@ class StarterBot:
                 if dist <= max_range:
                     direction = self.get_cardinal_direction([current_x, current_y], [worm['x'], worm['y']])
                     obstacles = self.check_for_obstacles_in_path([current_x, current_y], [worm['x'], worm['y']], direction)
-                    if (direction is None ) or (obstacles is True):
+                    if (direction is None) or (obstacles is True):
                         continue
                     else:
                         cells_in_range.append([worm['x'], worm['y'], direction])
@@ -252,12 +244,16 @@ class StarterBot:
 
         return direction
 
-    def check_for_obstacles_in_path(self, myself, opponent, direction):
+    def check_for_obstacles_in_path(self, reference, target, direction):
+        """
+        Takes in coordinates for a reference cell [x,y] ,target cell [x,y], and the direction.
+        Checks if there are any DIRT cells within the path from reference and target in the specified direction.
+        """
         if direction is not None:
-            x_diff = opponent[0] - myself[0]
-            y_diff = opponent[1] - myself[1]
+            x_diff = target[0] - reference[0]
+            y_diff = target[1] - reference[1]
 
-            line_points = self.get_straight_line(x_diff,y_diff, myself, opponent, direction)
+            line_points = self.get_straight_line(reference, target, direction)
 
             obstacle_in_path = False
 
@@ -273,7 +269,7 @@ class StarterBot:
         return obstacle_in_path
 
 
-    def get_straight_line(self, x_diff, y_diff, start_point, end_point, direction):
+    def get_straight_line(self, start_point, end_point, direction):
         """
         This function returns all cells in a straight line from start to end point.
         Should only be used in one of the cardinal directions.
@@ -295,22 +291,28 @@ class StarterBot:
         return np.array(cell_set)
 
     def get_shift(self, direction):
+        '''
+        Each cardinal direction, has a unique gradient and direction.
+        These shift values, helps to generate a list of valid cells between two cells, in a specific cardinal direction.
+        Since actions cannot be applied to cells not in a cardinal direction with reference to the selected worm.
+        with reference to
+        '''
         if direction == 'N':
-            return [0,-1]
+            return [0, -1]
         elif direction == 'S':
-            return [0,1]
+            return [0, 1]
         elif direction == 'E':
-            return [1,0]
+            return [1, 0]
         elif direction == 'W':
-            return [-1,0]
+            return [-1, 0]
         elif direction == 'NE':
-            return [1,-1]
+            return [1, -1]
         elif direction == 'SE':
-            return [1,1]
+            return [1, 1]
         elif direction == 'SW':
-            return [-1,1]
+            return [-1, 1]
         elif direction == 'NW':
-            return [-1,-1]
+            return [-1, -1]
         else:
             return None
 
@@ -318,6 +320,7 @@ class StarterBot:
         """
         1. Calculates the distance to every cell from current cell.
         2. Checks the cardinal direction for cell with reference to current cell.
+        3. Removes all cells that are 'DEEP_SPACE', since these cannot be interacted with.
         Returns a dataframe of self.flattened_map with additional columns ['x','y','type',''Distance', 'Direction']
         """
         augmented_map = self.flattened_map[['x','y','type']]
@@ -334,8 +337,6 @@ class StarterBot:
     def write_action(self):
         '''
         command in form : C;<round number>;<command>
-
-        DO NOT CHANGE
         '''
 
         print(f'C;{self.current_round};{self.command}')
@@ -352,6 +353,25 @@ class StarterBot:
         except IOError:
             logger.error("Cannot load Game State")
         return json_map
+
+    def wait_for_round_start(self):
+        next_round = int(input())
+        return next_round
+
+    def run_bot(self):
+        logger.info("Bot has started Running")
+        while True:
+            logger.info('Waiting for next round.')
+            next_round_number = self.wait_for_round_start()
+            logger.info('Starting Round : ' + str(next_round_number))
+            self.current_round = next_round_number
+            self.get_current_round_details()
+            logger.info('Beginning StarterBot Logic Sequence')
+            self.starter_bot_logic()
+            self.write_action()
+
+        return None
+
 
 if __name__ == '__main__':
 
