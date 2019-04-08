@@ -32,7 +32,7 @@
     * playerId → *The Id number of the player in control of this worm* 
     * *If this is your worm, you will also see the extra worm details here*
   * powerup → *The powerup placed in this cell (if any)*
-    * type → *The type of powerup (HEALTHPACK)*
+    * type → *The type of powerup (HEALTH_PACK)*
     * value → *The strength of this powerup*
 
 ##### Default worm properties 

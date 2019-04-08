@@ -12,7 +12,7 @@ class HealthPack(override val value: Int) : Powerup {
     @Transient
     override val printable = PRINTABLE
 
-    override val type: String = "HEALTHPACK"
+    override val type: String = "HEALTH_PACK"
 
     override fun applyTo(worm: Worm) {
         worm.health += value

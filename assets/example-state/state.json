@@ -2462,7 +2462,7 @@
         "y": 14,
         "type": "AIR",
         "powerup": {
-          "type": "HEALTHPACK",
+          "type": "HEALTH_PACK",
           "value": 5
         }
       },
@@ -2486,7 +2486,7 @@
         "y": 14,
         "type": "AIR",
         "powerup": {
-          "type": "HEALTHPACK",
+          "type": "HEALTH_PACK",
           "value": 5
         }
       },
@@ -2637,7 +2637,7 @@
         "y": 15,
         "type": "AIR",
         "powerup": {
-          "type": "HEALTHPACK",
+          "type": "HEALTH_PACK",
           "value": 5
         }
       },
@@ -3325,7 +3325,7 @@
         "y": 19,
         "type": "AIR",
         "powerup": {
-          "type": "HEALTHPACK",
+          "type": "HEALTH_PACK",
           "value": 5
         }
       },
