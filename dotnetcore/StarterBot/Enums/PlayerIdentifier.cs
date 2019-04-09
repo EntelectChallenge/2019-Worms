@@ -1,6 +1,6 @@
 ﻿namespace StarterBot.Enums
 {
-    public enum PlayerType
+    public enum PlayerIdentifier
     {
         A,
         B

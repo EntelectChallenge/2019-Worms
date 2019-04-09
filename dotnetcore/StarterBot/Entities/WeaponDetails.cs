@@ -1,8 +1,8 @@
 ﻿namespace StarterBot.Entities
 {
-    public class Missile : Cell
+    public class WeaponDetails
     {
         public int Damage { get; set; }
-        public int Speed { get; set; }
+        public int Range { get; set; }
     }
 }
