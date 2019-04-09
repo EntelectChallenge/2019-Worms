@@ -3,6 +3,6 @@
 	"email": "john.doe@example.com",
 	"nickName": "gVanRossum",
 	"botLocation": "/",
-	"botFileName": "StarterBot.py",
+	"botFileName": "PythonStarterBot.py",
 	"botLanguage": "python3"
 }

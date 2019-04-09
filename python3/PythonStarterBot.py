@@ -2,28 +2,26 @@
 '''
 Entelect StarterBot for Python3
 '''
-from time import sleep
 import json
 import os
-import random
-import sys
 import logging
 import numpy as np
-import pandas as pd
 from scipy.spatial import distance
+
+from cell import Cell, AugmentedCell
 
 logging.basicConfig(filename='sample_python_bot.log', filemode='w', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
 class StarterBot:
-    
+
     def __init__(self, ):
         '''
         Initialize Bot .
         '''
 
-        self.valid_directions = ['N','S','E','W','SE','SW','NE','NW']
+        self.valid_directions = ['N', 'S', 'E', 'W', 'SE', 'SW', 'NE', 'NW']
 
         self.current_round = None
         self.command = ''
@@ -43,8 +41,6 @@ class StarterBot:
 
         self.augmented_map = None
 
-        return None
-
     def get_current_round_details(self):
         """
         Reads in all relevant information required for the round.
@@ -55,10 +51,11 @@ class StarterBot:
 
         self.command = ''
 
-        self.full_map = self.game_state['map']
-        self.flattened_map = self.get_flattened_map()
         self.rows = self.game_state['mapSize']
         self.columns = self.game_state['mapSize']
+
+        self.full_map = self.game_state['map']
+        self.flattened_map = self.get_map()
 
         self.max_rounds = self.game_state['maxRounds']
         self.current_worm_id = self.game_state['currentWormId']
@@ -75,91 +72,24 @@ class StarterBot:
 
         return None
 
+    def get_map(self):
+        map = []
+        for row in self.full_map:
+            for cell in row:
+                if 'occupied' in cell.keys():
+                    map.append(Cell(cell['x'], cell['y'], cell['type'], cell['occupied']))
+                else:
+                    map.append(Cell(cell['x'], cell['y'], cell['type'], None))
+        return map
+
     def get_worm_player_info(self, worm_id):
         """
-        Retrieve info for requested worm id
+        Retrieve info for player's requested worm id
         """
         for worm in self.worms:
             if worm['id'] == worm_id:
                 break
         return worm
-
-    def get_flattened_map(self):
-        """
-        Generates a flattened game map, and creates a pandas Dataframe.
-        This is used to easily filter cells without iteration.
-        """
-        flattened_map = []
-        for row in self.full_map:
-            flattened_map.extend(row)
-        dataframe = pd.DataFrame.from_dict(flattened_map)
-
-        return dataframe
-
-    def starter_bot_logic(self):
-        '''
-        If one of the opponent's worms is within range fire at it.
-            - Must be in range of current worm's weapon range.
-            - No obstacles can be in the path.
-
-        Otherwise choose a block in a random direction and do one of the following things
-            - If the chosen block is air, move to that block
-            - If the chosen block is dirt, dig out that block
-            - If the chosen block is deep space, do nothing
-
-        Commands in the format :
-            MOVE - move <x> <y>
-            DIG - dig <x> <y>
-            SHOOT - shoot <direction { N, NE, E, SE, S, SW, W, NW }>
-            DO NOTHING - nothing
-        '''
-
-        worms_in_range = self.get_worms_in_range()
-
-        if len(worms_in_range) > 0:
-            number_worms = len(worms_in_range)
-            choice = np.random.randint(number_worms)
-            attack_x = worms_in_range[choice][0]
-            attack_y = worms_in_range[choice][1]
-            direction = worms_in_range[choice][2]
-            self.command = f'shoot {direction}'
-
-        else:
-            current_x = self.current_worm_info['position']['x']
-            current_y = self.current_worm_info['position']['y']
-            move_options = ['move','dig','nothing']
-            choice = np.random.randint(len(move_options))
-            selected_move = move_options[choice]
-            if selected_move == 'nothing':
-                self.command = selected_move
-            elif selected_move == 'dig':
-                valid_cells = self.augmented_map.dropna(axis = 'rows', subset=['Direction'])
-                available_cells = self.augmented_map.loc[(self.augmented_map['Distance'] <= self.current_worm_info['diggingRange'])
-                                                         & (self.augmented_map['type'] == 'DIRT')].reset_index(drop=False)
-                number_avail_cells = len(available_cells)
-                if number_avail_cells == 0:
-                    self.command = f'nothing'
-                else:
-                    choice = np.random.randint(len(available_cells))
-                    selected_cell = available_cells.iloc[choice]
-                    self.command = f"dig {selected_cell['x']} {selected_cell['y']}"
-            elif selected_move == 'move':
-                valid_cells = self.augmented_map.dropna(axis = 'rows', subset=['Direction'])
-                available_cells = self.augmented_map.loc[(self.augmented_map['Distance'] <= self.current_worm_info['movementRange'])
-                                                         & (self.augmented_map['type'] == 'AIR')].reset_index(drop=False)
-                number_avail_cells = len(available_cells)
-                if number_avail_cells == 0:
-                    self.command = f'nothing'
-                else:
-                    choice = np.random.randint(len(available_cells))
-                    selected_cell = available_cells.iloc[choice]
-                    self.command = f"move {selected_cell['x']} {selected_cell['y']}"
-            else:
-                self.command = f'nothing'
-
-
-        return None
-
 
     def get_worms_in_range(self):
         """
@@ -178,13 +108,100 @@ class StarterBot:
                 dist = np.floor(distance.euclidean([worm['x'], worm['y']], [current_x, current_y]))
                 if dist <= max_range:
                     direction = self.get_cardinal_direction([current_x, current_y], [worm['x'], worm['y']])
-                    obstacles = self.check_for_obstacles_in_path([current_x, current_y], [worm['x'], worm['y']], direction)
+                    obstacles = self.check_for_obstacles_in_path([current_x, current_y], [worm['x'], worm['y']],
+                                                                 direction)
                     if (direction is None) or (obstacles is True):
                         continue
                     else:
                         cells_in_range.append([worm['x'], worm['y'], direction])
 
         return cells_in_range
+
+    def check_for_obstacles_in_path(self, reference, target, direction):
+        """
+        Takes in coordinates for a reference cell [x,y] ,target cell [x,y], and the direction.
+        Checks if there are any DIRT cells within the path from reference and target in the specified direction.
+        """
+        if direction is not None:
+            x_diff = target[0] - reference[0]
+            y_diff = target[1] - reference[1]
+
+            line_points = self.get_straight_line(reference, target, direction)
+
+            obstacle_in_path = False
+
+            for cell in line_points:
+                type = self.get_cell_type(cell[0],cell[1])
+                if len(type) is None:
+                    continue
+                elif type == 1:
+                    obstacle_in_path = True
+                    break
+        else:
+            obstacle_in_path = True
+
+        return obstacle_in_path
+
+    def get_cell_type(self,x,y):
+        cell_type = None
+        for cell in self.flattened_map:
+            if (cell.x == x) and (cell.y == y):
+                cell_type = cell.type
+        return cell_type
+
+
+    def get_straight_line(self, start_point, end_point, direction):
+        """
+        This function returns all cells in a straight line from start to end point.
+        Should only be used in one of the cardinal directions.
+        """
+
+        shift = np.array(self.get_shift(direction))
+        start_point = np.array(start_point)
+        end_point = np.array(end_point)
+
+        cell_set = []
+        done = False
+        i = 0
+        while not done:
+            next_cell = start_point + (i*shift)
+            if (next_cell[0] == end_point[0]) and (next_cell[1] == end_point[1]):
+                done = True
+            cell_set.append(next_cell)
+            i = i + 1
+        return np.array(cell_set)
+
+    def get_augmented_map(self):
+        """
+        1. Calculates the distance to every cell from current cell.
+        2. Checks the cardinal direction for cell with reference to current cell.
+        3. Removes all cells that are 'DEEP_SPACE', since these cannot be interacted with.
+        Returns a dataframe of self.flattened_map with additional columns ['x','y','type',''Distance', 'Direction']
+        """
+        augmented_map = []
+
+        current_x = self.current_worm_info['position']['x']
+        current_y = self.current_worm_info['position']['y']
+
+        for cell in self.flattened_map:
+            cell_distance = int(np.floor(distance.euclidean([cell.x, cell.y], [current_x, current_y])))
+            direction = self.get_cardinal_direction([current_x, current_y], [cell.x, cell.y])
+            augmented_map.append(AugmentedCell(cell.x, cell.y, cell.type, cell_distance, direction))
+        return augmented_map
+
+    def get_available_cells(self, objective):
+        available_cells = []
+        if objective == 'dig':
+            digging_range =  self.current_worm_info['diggingRange']
+            for cell in self.augmented_map:
+                if (cell.distance <= digging_range) and (cell.type == 'DIRT'):
+                    available_cells.append(cell)
+        elif objective == 'move':
+            movement_range = self.current_worm_info['movementRange']
+            for cell in self.augmented_map:
+                if (cell.distance <= movement_range) and (cell.type == 'AIR'):
+                    available_cells.append(cell)
+        return available_cells
 
     def get_cardinal_direction(self, myself, opponent):
         '''
@@ -244,51 +261,65 @@ class StarterBot:
 
         return direction
 
-    def check_for_obstacles_in_path(self, reference, target, direction):
-        """
-        Takes in coordinates for a reference cell [x,y] ,target cell [x,y], and the direction.
-        Checks if there are any DIRT cells within the path from reference and target in the specified direction.
-        """
-        if direction is not None:
-            x_diff = target[0] - reference[0]
-            y_diff = target[1] - reference[1]
+    def starter_bot_logic(self):
+        '''
+        If one of the opponent's worms is within range fire at it.
+            - Must be in range of current worm's weapon range.
+            - No obstacles can be in the path.
 
-            line_points = self.get_straight_line(reference, target, direction)
+        Otherwise choose a block in a random direction and do one of the following things
+            - If the chosen block is air, move to that block
+            - If the chosen block is dirt, dig out that block
+            - If the chosen block is deep space, do nothing
 
-            obstacle_in_path = False
+        Commands in the format :
+            MOVE - move <x> <y>
+            DIG - dig <x> <y>
+            SHOOT - shoot <direction { N, NE, E, SE, S, SW, W, NW }>
+            DO NOTHING - nothing
+        '''
 
-            for cell in line_points:
-                type = self.flattened_map.loc[ (self.flattened_map['x'] == cell[0]) & (self.flattened_map['y'] == cell[1]), 'type']
-                if len(type) == 0:
-                    continue
-                elif type.iloc[0] == "DIRT":
-                    obstacle_in_path = True
-                    break
+        worms_in_range = self.get_worms_in_range()
+
+        if len(worms_in_range) > 0:
+            number_worms = len(worms_in_range)
+            choice = np.random.randint(number_worms)
+            attack_x = worms_in_range[choice][0]
+            attack_y = worms_in_range[choice][1]
+            direction = worms_in_range[choice][2]
+            self.command = f'shoot {direction}'
+
         else:
-            obstacle_in_path = True
-        return obstacle_in_path
+            move_options = ['move', 'dig', 'nothing']
+            choice = np.random.randint(len(move_options))
+            selected_move = move_options[choice]
 
+            if selected_move == 'nothing':
+                self.command = selected_move
 
-    def get_straight_line(self, start_point, end_point, direction):
-        """
-        This function returns all cells in a straight line from start to end point.
-        Should only be used in one of the cardinal directions.
-        """
+            elif selected_move == 'dig':
+                available_cells = self.get_available_cells('dig')
+                number_avail_cells = len(available_cells)
+                if number_avail_cells == 0:
+                    self.command = f'nothing'
+                else:
+                    choice = np.random.randint(len(available_cells))
+                    selected_cell = available_cells[choice]
+                    self.command = f"dig {selected_cell.x} {selected_cell.y}"
 
-        shift = np.array(self.get_shift(direction))
-        start_point = np.array(start_point)
-        end_point = np.array(end_point)
+            elif selected_move == 'move':
+                available_cells = self.get_available_cells('move')
+                number_avail_cells = len(available_cells)
+                if number_avail_cells == 0:
+                    self.command = f'nothing'
+                else:
+                    choice = np.random.randint(len(available_cells))
+                    selected_cell = available_cells[choice]
+                    self.command = f"move {selected_cell.x} {selected_cell.y}"
+            else:
+                self.command = f'nothing'
 
-        cell_set = []
-        done = False
-        i = 0
-        while not done:
-            next_cell = start_point + (i*shift)
-            if (next_cell[0] == end_point[0]) and (next_cell[1] == end_point[1]):
-                done = True
-            cell_set.append(next_cell)
-            i = i + 1
-        return np.array(cell_set)
+        return None
 
     def get_shift(self, direction):
         '''
@@ -316,24 +347,6 @@ class StarterBot:
         else:
             return None
 
-    def get_augmented_map(self):
-        """
-        1. Calculates the distance to every cell from current cell.
-        2. Checks the cardinal direction for cell with reference to current cell.
-        3. Removes all cells that are 'DEEP_SPACE', since these cannot be interacted with.
-        Returns a dataframe of self.flattened_map with additional columns ['x','y','type',''Distance', 'Direction']
-        """
-        augmented_map = self.flattened_map[['x','y','type']]
-
-        current_x = self.current_worm_info['position']['x']
-        current_y = self.current_worm_info['position']['y']
-
-        augmented_map['Distance'] = augmented_map.apply(lambda row : np.floor(distance.euclidean([row['x'], row['y']], [current_x, current_y])), axis=1)
-        augmented_map['Direction'] = augmented_map.apply(lambda row: self.get_cardinal_direction([current_x, current_y], [row['x'], row['y']]), axis=1)
-        augmented_map = augmented_map.loc[~ (augmented_map['type'] == 'DEEP_SPACE')]
-
-        return augmented_map
-
     def write_action(self):
         '''
         command in form : C;<round number>;<command>
@@ -348,6 +361,7 @@ class StarterBot:
         '''
         Gets the current Game State json file.
         '''
+        json_map = ''
         try:
             json_map = json.load(open(state_location, 'r'))
         except IOError:
@@ -368,10 +382,10 @@ class StarterBot:
             self.get_current_round_details()
             logger.info('Beginning StarterBot Logic Sequence')
             self.starter_bot_logic()
+
             self.write_action()
 
         return None
-
 
 if __name__ == '__main__':
 
