@@ -143,6 +143,9 @@ class StarterBot:
         return obstacle_in_path
 
     def get_cell_type(self,x,y):
+        """
+        return the type of a cell at a specified set of coordinates
+        """
         cell_type = None
         for cell in self.flattened_map:
             if (cell.x == x) and (cell.y == y):
@@ -190,6 +193,9 @@ class StarterBot:
         return augmented_map
 
     def get_available_cells(self, objective):
+        """
+        Gets a list of valid cells for a specific objective.
+        """
         available_cells = []
         if objective == 'dig':
             digging_range =  self.current_worm_info['diggingRange']
@@ -277,6 +283,9 @@ class StarterBot:
             DIG - dig <x> <y>
             SHOOT - shoot <direction { N, NE, E, SE, S, SW, W, NW }>
             DO NOTHING - nothing
+
+
+        ****THIS IS WHERE YOU CAN ADD OR CHANGE THE LOGIC OF THE BOT****
         '''
 
         worms_in_range = self.get_worms_in_range()
