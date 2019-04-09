@@ -4,9 +4,9 @@ import za.co.entelect.challenge.config.BotMetaData;
 
 import java.io.IOException;
 
-public class CSharpCoreBotRunner extends BotRunner {
+public class DotNetCoreBotRunner extends BotRunner {
 
-    public CSharpCoreBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
+    public DotNetCoreBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
         super(botMetaData, timeoutInMilliseconds);
     }
 
