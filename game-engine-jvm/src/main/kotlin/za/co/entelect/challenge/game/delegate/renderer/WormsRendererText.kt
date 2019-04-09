@@ -10,7 +10,7 @@ import za.co.entelect.challenge.game.engine.powerups.HealthPack
 
 class WormsRendererText(private val config: GameConfig) : WormsRenderer {
 
-    override fun commandPrompt(player: WormsPlayer): String {
+    override fun commandPrompt(wormsPlayer: WormsPlayer): String {
         return "Not supported in Text state file"
     }
 

@@ -8,9 +8,9 @@ import za.co.entelect.challenge.game.engine.player.WormsPlayer
 
 class WormsRendererConsole(private val config: GameConfig) : WormsRenderer {
 
-    override fun commandPrompt(player: WormsPlayer): String {
+    override fun commandPrompt(wormsPlayer: WormsPlayer): String {
         val directionsString = Direction.values().joinToString(", ") { it.shortCardinal }
-        return """Player ${player.id}, enter a command (move x y)/(dig x y)/(shoot $directionsString)/(nothing)"""
+        return """Player ${wormsPlayer.id}, enter a command (move x y)/(dig x y)/(shoot $directionsString)/(nothing)"""
     }
 
     override fun render(wormsMap: WormsMap, player: WormsPlayer): String {

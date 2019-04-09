@@ -3,7 +3,6 @@ package za.co.entelect.challenge.game.engine.map
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
-import za.co.entelect.challenge.game.engine.powerups.Powerup
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
 import kotlin.math.*
 
@@ -86,39 +85,25 @@ class WormsMapGenerator(private val config: GameConfig, private val seed: Int) {
 
     private fun createWormWalledSpawnLocations(wormsPlayers: List<WormsPlayer>,
                                                blankMap: List<List<MapCell>>) {
-        // 5x5 square cell room around the worm. The border is made of DIRT,
-        // everything inside is made of AIR
-        val spawnRoom = listOf(
-                Pair(Point(-1, -1), CellType.AIR),
-                Pair(Point(-1, 0), CellType.AIR),
-                Pair(Point(-1, 1), CellType.AIR),
-                Pair(Point(0, -1), CellType.AIR),
-                Pair(Point(0, 0), CellType.AIR),
-                Pair(Point(0, 1), CellType.AIR),
-                Pair(Point(1, -1), CellType.AIR),
-                Pair(Point(1, 0), CellType.AIR),
-                Pair(Point(1, 1), CellType.AIR),
-
-                Pair(Point(-2, -2), CellType.DIRT),
-                Pair(Point(-2, -1), CellType.DIRT),
-                Pair(Point(-2, 0), CellType.DIRT),
-                Pair(Point(-2, 1), CellType.DIRT),
-                Pair(Point(-2, 2), CellType.DIRT),
-
-                Pair(Point(-1, -2), CellType.DIRT),
-                Pair(Point(0, -2), CellType.DIRT),
-                Pair(Point(1, -2), CellType.DIRT),
-
-                Pair(Point(2, -2), CellType.DIRT),
-                Pair(Point(2, -1), CellType.DIRT),
-                Pair(Point(2, 0), CellType.DIRT),
-                Pair(Point(2, 1), CellType.DIRT),
-                Pair(Point(2, 2), CellType.DIRT),
-
-                Pair(Point(-1, 2), CellType.DIRT),
-                Pair(Point(0, 2), CellType.DIRT),
-                Pair(Point(1, 2), CellType.DIRT)
-        )
+        // Draw the spawnroom here. Only odd numbered widths can be centered
+        val dirtChar = '#'.toString()
+        val spawnRoom = """
+            |#####
+            |#...#
+            |#...#
+            |#...#
+            |#####
+            """.trimMargin()
+                .lines()
+                .mapIndexed { y, line ->
+                    val offset = line.length / 2
+                    line.trim().split("")
+                            .filter { it.isNotEmpty() }
+                            .mapIndexed { x, char ->
+                                val cellType = if (char == dirtChar) CellType.DIRT else CellType.AIR
+                                Pair(Point(x - offset, y - offset), cellType)
+                            }
+                }.flatten()
 
         joinLists(wormsPlayers.flatMap { it.worms }, spawnRoom)
                 .map { Triple(it.first, it.second.first, it.second.second) }
