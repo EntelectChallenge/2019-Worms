@@ -131,10 +131,10 @@ class StarterBot:
             obstacle_in_path = False
 
             for cell in line_points:
-                type = self.get_cell_type(cell[0],cell[1])
-                if len(type) is None:
+                type = self.get_cell_type(cell.x, cell.y)
+                if type is None:
                     continue
-                elif type == 1:
+                elif (type == 'DIRT') or (type == 'DEEP_SPACE'):
                     obstacle_in_path = True
                     break
         else:
@@ -395,6 +395,9 @@ class StarterBot:
             self.write_action()
 
         return None
+
+
+
 
 if __name__ == '__main__':
 
