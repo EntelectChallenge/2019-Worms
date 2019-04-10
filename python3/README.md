@@ -34,4 +34,4 @@
 
 	Run the following:
 		
-		python StarterBot.py
+		python PythonStarterBot.py
