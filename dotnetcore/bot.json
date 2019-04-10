@@ -4,5 +4,5 @@
 	"nickName": "Bill",
 	"botLocation": "/StarterBot/bin/Debug/netcoreapp2.0",
 	"botFileName": "StarterBot.dll",
-	"botLanguage": "c#core"
+	"botLanguage": "dotnetcore"
 }

@@ -31,3 +31,4 @@ msbuild.wrn
 
 # Visual Studio 2017
 .vs/
+.idea/
