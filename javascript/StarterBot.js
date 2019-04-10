@@ -2,19 +2,32 @@
 
 let fs = require('fs');
 let readline = require('readline');
-
-let commandFileName = "command.txt";
 let stateFileName = "state.json";
 
 let stateFile = "";
-let myself = "";
+let myPlayer = "";
 let opponent = "";
 let gameMap = "";
 let mapSize = "";
 let cells = "";
-let buildings = "";
-let missiles = "";
-let buildingStats = [];
+let myCurrentWorm = "";
+
+let directions = [
+    {name: 'E', x: 1, y: 0},
+    {name: 'NE', x: 1, y: -1},
+    {name: 'N', x: 0, y: -1},
+    {name: 'NW', x: -1, y: -1},
+    {name: 'W', x: -1, y: 0},
+    {name: 'SW', x: -1, y: 1},
+    {name: 'S', x: 0, y: 1},
+    {name: 'SE', x: 1, y: 1}
+];
+let surfaceTypes = {
+    DEEP_SPACE: 'DEEP_SPACE',
+    AIR: 'AIR',
+    DIRT: 'DIRT'
+};
+
 
 let consoleReader = readline.createInterface({
     input: process.stdin,
@@ -22,30 +35,14 @@ let consoleReader = readline.createInterface({
 });
 
 consoleReader.on("line", (roundNumber) => {
-    // Read in the current round number
-    executeRound(roundNumber);
-})
+    executeRound(roundNumber); // Read in the current round number
+});
 
 function executeRound(roundNumber) {
-
     // Read the current state and choose an action
-    // stateFile = require(`./round/${roundNumber}/${stateFileName}`);
     stateFile = fs.readFileSync(`./rounds/${roundNumber}/${stateFileName}`);
     stateFile = JSON.parse(stateFile);
 
-    myself = stateFile.players.filter(p => p.playerType === 'A')[0];
-    opponent = stateFile.players.filter(p => p.playerType === 'B')[0];
-    mapSize = {
-        x: stateFile.gameDetails.mapWidth,
-        y: stateFile.gameDetails.mapHeight
-    };
-
-    let stats = stateFile.gameDetails.buildingsStats;
-	buildingStats[0]= stats.DEFENSE;
-	buildingStats[1]= stats.ATTACK;
-	buildingStats[2]= stats.ENERGY;
-
-    gameMap = stateFile.gameMap;
     initEntities();
 
     let command = runStrategy();
@@ -53,87 +50,113 @@ function executeRound(roundNumber) {
 }
 
 function initEntities() {
-    cells = flatMap(gameMap); // all cells on the entire map
-
-    buildings = cells.filter(cell => cell.buildings.length > 0).map(cell => cell.buildings);
-    buildings = flatMap(buildings); // flat array of everyone's buildings
-
-    missiles = cells.filter(cell => cell.missiles.length > 0).map(cell => cell.missiles);
-    missiles = flatMap(missiles); // flat array of everyone's missiles
+    myPlayer = stateFile.myPlayer;
+    opponent = stateFile.opponents[0];
+    mapSize = stateFile.mapSize;
+    gameMap = stateFile.map;
+    cells = flatMap(gameMap);
+    myCurrentWorm = myPlayer.worms.find(worm => worm.id === stateFile.currentWormId);
 }
 
 function runStrategy() {
     let command = doNothingCommand();
-    if (isUnderAttack()) {
-        command = defendRow();
-    } else if (hasEnoughEnergyForMostExpensiveBuilding()) {
-        command = buildRandom();
+
+    let cellAndTarget = getShootableOpponent();
+    if (cellAndTarget) {
+        return command = `shoot ${cellAndTarget.target}`;
+    }
+
+    let cellToMoveDigInto = getRandomMoveCell();
+    if (cellToMoveDigInto) {
+        if (cellToMoveDigInto.type === surfaceTypes.DIRT) {
+            return command = `dig ${cellToMoveDigInto.x} ${cellToMoveDigInto.y}`;
+        } else if (cellToMoveDigInto.type === surfaceTypes.AIR) {
+            return command = `move ${cellToMoveDigInto.x} ${cellToMoveDigInto.y}`;
+        }
     }
 
     return command;
 }
 
-function isUnderAttack() {
-    // is there a row under attack? and have enough energy to build defence?
-	let myDefenders = buildings.filter(b => b.playerType == 'A' && b.buildingType == 'DEFENSE');
-    let opponentAttackers = buildings.filter(b => b.playerType == 'B' && b.buildingType == 'ATTACK')
-									 .filter(b => !myDefenders.some(d => d.y == b.y));
-    
-    return (opponentAttackers.length > 0) && (myself.energy >= buildingStats[0].price);
-}
-
-function defendRow() {
-    // is there a row under attack? and have enough energy to build defence?
-	let myDefenders = buildings.filter(b => b.playerType == 'A' && b.buildingType == 'DEFENSE');
-    let opponentAttackers = buildings.filter(b => b.playerType == 'B' && b.buildingType == 'ATTACK')
-									 .filter(b => !myDefenders.some(d => d.y == b.y));
-	if (opponentAttackers.length == 0) {
-		buildRandom();
-        return
-	}
-    // choose the first row with an opponent attacker
-    let rowNumber = opponentAttackers[0].y;
-    // get all the x-coordinates for this row, that are empty
-    let emptyCells = cells.filter(c => c.buildings.length == 0 && c.x <= (mapSize.x / 2) - 1 && c.y == rowNumber);
-    if (emptyCells.length == 0) {
-        // cannot build there, try to build somewhere else
-        buildRandom();
-        return
+function getRandomMoveCell() {
+    let center = getPositionOf(myCurrentWorm);
+    let randomCellCoordinate = {
+        x: center.x + Math.floor(Math.random() * 3) - 1,
+        y: center.y + Math.floor(Math.random() * 3) - 1
+    };
+    if (coordinateIsOutOfBounds(randomCellCoordinate)
+        || (randomCellCoordinate.x === center.x
+            && randomCellCoordinate.y === center.y)) {
+        return null;
     }
 
-    let command = {x: '', y: '', bt: ''};
-    command.x = getRandomFromArray(emptyCells).x;
-    command.y = rowNumber;
-    command.bt = 0; // defence building
-    return buildCommand(command.x, command.y, command.bt);
+    return gameMap[randomCellCoordinate.y][randomCellCoordinate.x];
 }
 
-function hasEnoughEnergyForMostExpensiveBuilding() {
-    return (myself.energy >= Math.max(...(buildingStats.map(stat => stat.price))));
+function coordinateIsOutOfBounds(coordinateToCheck) {
+    return coordinateToCheck.x < 0
+        || coordinateToCheck.x >= mapSize
+        || coordinateToCheck.y < 0
+        || coordinateToCheck.y >= mapSize;
 }
 
-function buildRandom() {
-    // cells without buildings on them, and on my half of the map
-    let emptyCells = cells.filter(c => c.buildings.length == 0 && c.x <= (mapSize.x / 2) - 1);
-	if (emptyCells.length == 0) {
-		doNothingCommand();
-        return;
-	}
-    let randomCell = getRandomFromArray(emptyCells);
-
-    let command = {x: '', y: '', bt: ''};
-    command.x = randomCell.x;
-    command.y = randomCell.y;
-    command.bt = getRandomInteger(2);
-    return buildCommand(command.x, command.y, command.bt);
+function getPositionOf(entity) {
+    return {x: entity.position.x, y: entity.position.y};
 }
 
-function buildCommand(x, y, bt) {
-    return `${x},${y},${bt}`;
+function getCoordinateAddition(coordinateA, coordinateB) {
+    return {
+        x: coordinateA.x + coordinateB.x,
+        y: coordinateA.y + coordinateB.y
+    };
+}
+
+function getShootableOpponent() {
+    let center = getPositionOf(myCurrentWorm);
+    let shootTemplates = getShootTemplates();
+
+    for (let template of shootTemplates) {
+        for (let deltaCoordinate of template.coordinates) {
+            let coordinateToCheck = getCoordinateAddition(center, deltaCoordinate);
+            if (coordinateIsOutOfBounds(coordinateToCheck)
+                || euclideanDistance(coordinateToCheck, center) > myCurrentWorm.weapon.range) {
+                break;
+            }
+            let cellToInspect = gameMap[coordinateToCheck.y][coordinateToCheck.x];
+            if (cellToInspect.type === surfaceTypes.DIRT || cellToInspect.type === surfaceTypes.DEEP_SPACE) {
+                break;
+            }
+
+            let isOccupiedByOpponentWorm = (cellToInspect.occupier && cellToInspect.occupier.playerId !== myPlayer.id);
+            if (isOccupiedByOpponentWorm) {
+                return {cell: cellToInspect, target: template.name};
+            }
+        }
+    }
+
+    return null;
+}
+
+function getShootTemplates() {
+    let shootTemplates = [];
+
+    for (let direction of directions) {
+        let currentDirectionLine = [];
+        for (let i = 1; i <= myCurrentWorm.weapon.range; i++) {
+            let cellOfLine = {x: i * direction.x, y: i * direction.y};
+            currentDirectionLine.push(cellOfLine);
+        }
+        shootTemplates.push({name: direction.name, coordinates: currentDirectionLine});
+    }
+    return shootTemplates;
 }
 
 function doNothingCommand() {
-    return ``;
+    return `nothing`;
+}
+
+function euclideanDistance(positionA, positionB) {
+    return Math.sqrt(Math.pow(positionA.x - positionB.x, 2) + Math.pow(positionA.y - positionB.y, 2));
 }
 
 /***
@@ -143,31 +166,4 @@ function doNothingCommand() {
  */
 function flatMap(array) {
     return array.reduce((acc, x) => acc.concat(x), []);
-}
-
-/***
- * Returns a random integer between 0(inclusive) and max(inclusive)
- * @param max
- * @returns {number}
- */
-function getRandomInteger(max) {
-    return Math.round(Math.random() * max);
-}
-
-/**
- * Returns an array that is filled with integers from 0(inclusive) to count(inclusive)
- * @param count
- * @returns {number[]}
- */
-function getArrayRange(count) {
-    return Array.from({length: count}, (v, i) => i);
-}
-
-/**
- * Return a random element from a given array
- * @param array
- * @returns {*}
- */
-function getRandomFromArray(array) {
-    return array[Math.floor((Math.random() * array.length))];
 }
