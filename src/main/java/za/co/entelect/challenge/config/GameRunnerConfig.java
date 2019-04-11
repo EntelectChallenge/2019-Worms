@@ -107,6 +107,12 @@ public class GameRunnerConfig {
                 gameRunnerConfig.playerBId = UUID.randomUUID().toString();
             }
 
+            // If the seed is 0 then it's not initialized
+            if (gameRunnerConfig.seed == 0) {
+                gameRunnerConfig.seed = System.nanoTime();
+            }
+            LOGGER.info(String.format("Match will be running with a seed of: %d", gameRunnerConfig.seed));
+
             return gameRunnerConfig;
         }
     }
