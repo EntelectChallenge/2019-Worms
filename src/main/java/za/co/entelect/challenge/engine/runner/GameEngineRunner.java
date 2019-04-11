@@ -217,6 +217,8 @@ public class GameEngineRunner implements LifecycleEngineRunner {
                 winnerStringBuilder.insert(0, "The winner is: " + winner.getName() + "\n\n");
             }
 
+            winnerStringBuilder.insert(0, "Match seed: " + gameRunnerConfig.seed + "\n\n");
+
 //            if (!matchSuccessful) {
 //                winnerStringBuilder.insert(0, "Bot did nothing too many consecutive rounds" + "\n\n");
 //            }
