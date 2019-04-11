@@ -1,32 +1,42 @@
 package za.co.entelect.challenge.botrunners;
 
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.ExecuteWatchdog;
-import org.apache.commons.exec.PumpStreamHandler;
-import za.co.entelect.challenge.entities.BotMetaData;
-import za.co.entelect.challenge.entities.BotArguments;
-import za.co.entelect.challenge.game.contracts.exceptions.TimeoutException;
+import org.apache.commons.exec.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import za.co.entelect.challenge.config.BotMetaData;
+import za.co.entelect.challenge.config.BotArguments;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-public abstract class BotRunner {
+public abstract class BotRunner implements ProcessDestroyer {
+
+    private static final Logger log = LogManager.getLogger(CommandHandler.class);
 
     protected BotMetaData botMetaData;
     protected int timeoutInMilliseconds;
 
+    private CommandHandler commandHandler;
+    private List<Process> processes;
+    private boolean stopped = false;
+
     protected BotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
         this.botMetaData = botMetaData;
         this.timeoutInMilliseconds = timeoutInMilliseconds;
+        this.commandHandler = new CommandHandler(timeoutInMilliseconds);
+        this.processes = new ArrayList<>();
     }
 
-    public String run() throws IOException, TimeoutException {
-        return this.runBot();
+    public void run() throws IOException {
+        this.runBot();
     }
 
-    protected abstract String runBot() throws IOException, TimeoutException;
+    protected abstract void runBot() throws IOException;
 
     public abstract int getDockerPort();
 
@@ -38,32 +48,69 @@ public abstract class BotRunner {
         return botMetaData.getBotFileName();
     }
 
-    public BotArguments getArguments() { return botMetaData.getArguments(); }
+    public BotArguments getArguments() {
+        return botMetaData.getArguments();
+    }
 
-    protected String RunSimpleCommandLineCommand(String line, int expectedExitValue) throws IOException, TimeoutException {
+    protected void runSimpleCommandLineCommand(String line, int expectedExitValue) throws IOException {
         CommandLine cmdLine = CommandLine.parse(line);
         DefaultExecutor executor = new DefaultExecutor();
         File bot = new File(this.getBotDirectory());
+
         executor.setWorkingDirectory(bot);
         executor.setExitValue(expectedExitValue);
-
-        ExecuteWatchdog watchdog = new ExecuteWatchdog(this.timeoutInMilliseconds);
-        executor.setWatchdog(watchdog);
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
-        executor.setStreamHandler(streamHandler);
-
-        try {
-            executor.execute(cmdLine);
-        } catch (IOException e) {
-            if (watchdog.killedProcess()) {
-                throw new TimeoutException("Bot process timed out after " + this.timeoutInMilliseconds + "ms of inactivity");
-            } else {
-                throw e;
+        executor.setStreamHandler(commandHandler);
+        executor.setProcessDestroyer(this);
+        executor.execute(cmdLine, new ExecuteResultHandler() {
+            @Override
+            public void onProcessComplete(int exitValue) {
+                if (!stopped) {
+                    log.info("Bot process completed successfully");
+                }
             }
+
+            @Override
+            public void onProcessFailed(ExecuteException e) {
+                if (!stopped) {
+                    log.error("Bot process failed", e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public boolean add(Process process) {
+        return processes.add(process);
+    }
+
+    @Override
+    public boolean remove(Process process) {
+        return processes.remove(process);
+    }
+
+    @Override
+    public int size() {
+        return processes.size();
+    }
+
+    public void newRound(int round) {
+        commandHandler.signalNewRound(round);
+    }
+
+    public String getLastCommand() {
+        return commandHandler.getBotCommand();
+    }
+
+    public void shutdown() {
+        stopped = true;
+        try {
+            commandHandler.stop();
+        } catch (IOException e) {
+            log.error("Failed to stop command handler", e);
         }
 
-        return outputStream.toString();
+        for (Process process : processes) {
+            process.destroyForcibly();
+        }
     }
 }

@@ -53,4 +53,5 @@ fabric.properties
 
 target/*
 
-tower-defence-matches/*
+tournament-tmp/*
+match-logs/*

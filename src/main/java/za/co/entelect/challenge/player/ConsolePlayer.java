@@ -2,27 +2,21 @@ package za.co.entelect.challenge.player;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import za.co.entelect.challenge.core.renderers.TowerDefenseConsoleMapRenderer;
-import za.co.entelect.challenge.engine.runner.GameEngineRunner;
-import za.co.entelect.challenge.game.contracts.command.RawCommand;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
-import za.co.entelect.challenge.game.contracts.player.Player;
-import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer;
+import za.co.entelect.challenge.player.entity.BasePlayer;
+import za.co.entelect.challenge.player.entity.BotExecutionContext;
 
 import java.util.Scanner;
 
-public class ConsolePlayer extends Player {
+public class ConsolePlayer extends BasePlayer {
 
     private static final Logger log = LogManager.getLogger(ConsolePlayer.class);
 
-    private GameMapRenderer gameMapRenderer;
     private Scanner scanner;
 
     public ConsolePlayer(String name) {
         super(name);
-
         scanner = new Scanner(System.in);
-        gameMapRenderer = new TowerDefenseConsoleMapRenderer();
     }
 
     @Override
@@ -31,18 +25,15 @@ public class ConsolePlayer extends Player {
     }
 
     @Override
-    public void newRoundStarted(GameMap gameMap) {
+    public String getCommand(BotExecutionContext botExecutionContext) {
 
-        String output = gameMapRenderer.render(gameMap, getGamePlayer());
+        String output = botExecutionContext.consoleState;
         log.info(output);
 
-        String inputPrompt = gameMapRenderer.commandPrompt(getGamePlayer());
+        String inputPrompt = consoleRenderer.commandPrompt(getGamePlayer());
         log.info(inputPrompt);
 
-        String consoleInput = scanner.nextLine();
-
-        RawCommand rawCommand = new RawCommand(consoleInput);
-        publishCommand(rawCommand);
+        return scanner.nextLine();
     }
 
     @Override

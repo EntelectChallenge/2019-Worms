@@ -4,20 +4,20 @@ import za.co.entelect.challenge.config.BotMetaData;
 
 import java.io.IOException;
 
-public class PHPBotRunner extends BotRunner {
-  
-    public PHPBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
+public class DotNetCoreBotRunner extends BotRunner {
+
+    public DotNetCoreBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
         super(botMetaData, timeoutInMilliseconds);
     }
 
     @Override
     protected void runBot() throws IOException {
-        String line = "php \"" + this.getBotFileName() + "\"";
+        String line = "dotnet " + this.getBotFileName();
         runSimpleCommandLineCommand(line, 0);
     }
 
     @Override
     public int getDockerPort() {
-        return 9007;
+        return 9001;
     }
 }

@@ -15,6 +15,7 @@ import za.co.entelect.challenge.game.contracts.player.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.List;
 
 public class RunnerRoundProcessor {
     private static final Logger log = LogManager.getLogger(RunnerRoundProcessor.class);
@@ -38,16 +39,17 @@ public class RunnerRoundProcessor {
         }
         boolean processed = gameRoundProcessor.processRound(gameMap, commandsToProcess);
 
-        ArrayList<String> errorList = gameRoundProcessor.getErrorList();
-        String errorListText = "Error List: " + Arrays.toString(errorList.toArray());
-        addToConsoleOutput.onNext(errorListText);
+        List<String> errorList = gameRoundProcessor.getErrorList(gameMap);
+        for (String error : errorList) {
+            log.error(error);
+        }
 
         roundProcessed = true;
 
         return processed;
     }
 
-    void addPlayerCommand(Player player, RawCommand command) {
+    synchronized void addPlayerCommand(Player player, RawCommand command) {
         try {
             if (commandsToProcess.containsKey(player.getGamePlayer()))
                 throw new InvalidCommandException("Player already has a command registered for this round, wait for the next round before sending a new command");
@@ -56,9 +58,5 @@ public class RunnerRoundProcessor {
         } catch (InvalidCommandException e) {
             log.error(e.getStackTrace());
         }
-    }
-
-    void resetBackToStart() {
-
     }
 }
