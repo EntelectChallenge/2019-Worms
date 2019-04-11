@@ -1,46 +1,43 @@
 package za.co.entelect.challenge;
 
 import com.google.gson.Gson;
+import za.co.entelect.challenge.command.Command;
 import za.co.entelect.challenge.entities.GameState;
 
-import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Scanner;
 
 public class Main {
-    private static final String COMMAND_FILE_NAME = "command.txt";
+
+    private static final String ROUNDS_DIRECTORY = "rounds";
     private static final String STATE_FILE_NAME = "state.json";
 
     /**
-     * Read the current state, feed it to the bot, get the output and write it to the command.
+     * Read the current state, feed it to the bot, get the output and print it to stdout
+     *
      * @param args the args
      **/
     public static void main(String[] args) {
-        String state = null;
-        try {
-            state = new String(Files.readAllBytes(Paths.get(STATE_FILE_NAME)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
+        Scanner sc = new Scanner(System.in);
         Gson gson = new Gson();
-        GameState gameState = gson.fromJson(state, GameState.class);
+        Bot bot = new Bot();
 
-        Bot bot = new Bot(gameState);
-        String command = bot.run();
+        while (true) {
+            try {
+                int roundNumber = sc.nextInt();
 
-        writeBotResponseToFile(command);
-    }
+                String statePath = String.format("./%s/%d/%s", ROUNDS_DIRECTORY, roundNumber, STATE_FILE_NAME);
+                String state = new String(Files.readAllBytes(Paths.get(statePath)));
 
-    /**
-     * Write bot response to file
-     * @param command the command
-     **/
-    private static void writeBotResponseToFile(String command) {
-        try {
-            Files.write(Paths.get(COMMAND_FILE_NAME), command.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
+                GameState gameState = gson.fromJson(state, GameState.class);
+                Command command = bot.run(gameState);
+
+                System.out.println(String.format("C;%d;%s", roundNumber, command.render()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

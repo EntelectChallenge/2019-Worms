@@ -1,30 +1,30 @@
 package za.co.entelect.challenge.entities;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
 public class GameState {
-    protected Player[] players;
-    protected CellStateContainer[][] gameMap;
-    protected GameDetails gameDetails;
-    protected Cell[] teslaHitList;
 
-    public List<Player> getPlayers() {
-        return new ArrayList<>(Arrays.asList(players));
-    }
+    @SerializedName("currentRound")
+    public int currentRound;
 
-    public List<CellStateContainer> getGameMap() {
-        ArrayList<CellStateContainer> list = new ArrayList<>();
+    @SerializedName("maxRounds")
+    public int maxRounds;
 
-        for (CellStateContainer[] aGameMap : gameMap) {
-            list.addAll(Arrays.asList(aGameMap));
-        }
+    @SerializedName("mapSize")
+    public int mapSize;
 
-        return list;
-    }
+    @SerializedName("currentWormId")
+    public int currentWormId;
 
-    public GameDetails getGameDetails() {
-        return gameDetails;
-    }
+    @SerializedName("consecutiveDoNothingCount")
+    public int consecutiveDoNothingCount;
+
+    @SerializedName("myPlayer")
+    public MyPlayer myPlayer;
+
+    @SerializedName("opponents")
+    public Opponent[] opponents;
+
+    @SerializedName("map")
+    public Cell[][] map;
 }
