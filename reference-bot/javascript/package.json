@@ -1,0 +1,10 @@
+{
+  "name": "my-super-amazing-app",
+  "version": "1.0.0",
+  "private": true,
+  "repository": {},
+  "license": "MIT",
+  "dependencies": {
+    "moment": "^2.21.0"
+  }
+}
