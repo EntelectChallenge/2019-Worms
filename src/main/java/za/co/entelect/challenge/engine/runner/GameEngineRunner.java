@@ -142,7 +142,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             try {
                 botExecutionContext.saveRoundStateData(gameRunnerConfig.gameName);
             } catch (Exception e) {
-                log.info("Failed to write round information");
+                log.error("Failed to write round information", e);
             }
         }
     }
