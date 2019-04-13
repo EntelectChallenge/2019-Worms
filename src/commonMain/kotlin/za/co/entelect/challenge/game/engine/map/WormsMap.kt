@@ -38,6 +38,7 @@ class WormsMap(override val players: List<WormsPlayer>,
 
     override val currentRoundFeedback = mutableListOf<CommandFeedback>()
 
+    override var currentRound: Int = 0
     override val cells: List<MapCell>
 
     private val errorList = mutableListOf<GameError>()
@@ -61,18 +62,6 @@ class WormsMap(override val players: List<WormsPlayer>,
                 else -> livingPlayers[0]
             }
         }
-
-    private fun maxByScore(players: List<WormsPlayer>): WormsPlayer? {
-        val highestScoringPlayers = players.groupBy { it.totalScore }.maxBy { it.key }?.value
-
-        if (highestScoringPlayers == null || highestScoringPlayers.size != 1) {
-            return null
-        }
-
-        return highestScoringPlayers[0]
-    }
-
-    override var currentRound: Int = 0
 
     init {
         val requiredSize = size * size
@@ -121,6 +110,16 @@ class WormsMap(override val players: List<WormsPlayer>,
         players.flatMap { it.worms }
                 .filter { it.dead || it.player.disqualified }
                 .forEach { removeWorm(it) }
+    }
+
+    private fun maxByScore(players: List<WormsPlayer>): WormsPlayer? {
+        val highestScoringPlayers = players.groupBy { it.totalScore }.maxBy { it.key }?.value
+
+        if (highestScoringPlayers == null || highestScoringPlayers.size != 1) {
+            return null
+        }
+
+        return highestScoringPlayers[0]
     }
 
     private fun removeWorm(worm: Worm) {

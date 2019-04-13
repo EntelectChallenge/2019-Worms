@@ -29,7 +29,7 @@ class ShootCommand(val direction: Direction, val config: GameConfig) : WormsComm
             val cell = gameMap[position]
 
             if (!cell.type.open) {
-                return ShootCommandFeedback(config.scores.missedAttack, ShootResult.BLOCKED, position)
+                return ShootCommandFeedback(this.toString(), score = config.scores.missedAttack, playerId = worm.player.id, result = ShootResult.BLOCKED, target = position)
             }
 
             if (cell.isOccupied()) {
@@ -37,16 +37,20 @@ class ShootCommand(val direction: Direction, val config: GameConfig) : WormsComm
                 occupier.takeDamage(worm.weapon.damage, gameMap.currentRound)
 
                 return when {
-                    occupier.dead -> ShootCommandFeedback(config.scores.killShot, ShootResult.HIT, position)
-                    occupier.player == worm.player -> ShootCommandFeedback(config.scores.friendlyFire, ShootResult.HIT, position)
-                    else -> ShootCommandFeedback(config.scores.attack, ShootResult.HIT, position)
+                    occupier.dead -> ShootCommandFeedback(this.toString(), score = config.scores.killShot, playerId = worm.player.id, result = ShootResult.HIT, target = position)
+                    occupier.player == worm.player -> ShootCommandFeedback(this.toString(), score = config.scores.friendlyFire, playerId = worm.player.id, result = ShootResult.HIT, target = position)
+                    else -> ShootCommandFeedback(this.toString(), score = config.scores.attack, playerId = worm.player.id, result = ShootResult.HIT, target = position)
                 }
             }
 
             position += direction.vector
         }
 
-        return ShootCommandFeedback(config.scores.missedAttack, ShootResult.OUT_OF_RANGE, position)
+        return ShootCommandFeedback(this.toString(), score = config.scores.missedAttack, playerId = worm.player.id, result = ShootResult.OUT_OF_RANGE, target = position)
+    }
+
+    override fun toString(): String {
+        return "shoot ${direction.shortCardinal}"
     }
 
 }

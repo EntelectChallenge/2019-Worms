@@ -21,4 +21,6 @@ interface WormsCommand {
      * @param worm  The issuing occupier for this command
      */
     fun execute(gameMap: WormsMap, worm: Worm): CommandFeedback
+
+    override fun toString(): String
 }

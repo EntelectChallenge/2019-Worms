@@ -1,5 +1,6 @@
 package za.co.entelect.challenge.game.engine.command
 
+import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
@@ -30,6 +31,7 @@ class CommandExecutor(val player: WormsPlayer,
                 addErrorToMap(commandFeedback.message)
             }
         } else {
+            map.currentRoundFeedback.add(CommandFeedback("invalid", config.scores.invalidCommand, player.id, false))
             addErrorToMap(moveValidation.reason)
             player.commandScore += config.scores.invalidCommand
         }

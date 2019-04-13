@@ -6,7 +6,7 @@ import za.co.entelect.challenge.game.engine.powerups.HealthPack
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
 import kotlin.math.*
 
-class WormsMapGenerator(private val config: GameConfig, seed: Int) {
+class WormsMapGenerator(private val config: GameConfig, private val seed: Int) {
 
     private val noise = SimplexNoise(seed)
     private val mapZoom = 0.3

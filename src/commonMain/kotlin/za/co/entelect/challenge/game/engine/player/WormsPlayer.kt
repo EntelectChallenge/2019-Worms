@@ -2,15 +2,15 @@ package za.co.entelect.challenge.game.engine.player
 
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import kotlin.js.JsName
-import kotlin.jvm.Transient
 
 class WormsPlayer private constructor(val id: Int,
                                       val worms: List<Worm>,
-                                      @Transient private val config: GameConfig) {
+                                      private val config: GameConfig) {
 
-    @Transient
     var currentWorm: Worm = worms[0]
         private set
+
+    var previousWorm: Worm = worms[0]
 
     init {
         this.worms.forEach { it.player = this }
@@ -34,7 +34,6 @@ class WormsPlayer private constructor(val id: Int,
     /**
      * Amount of consecutive rounds the player has done nothing
      */
-    @Transient
     var consecutiveDoNothingsCount = 0
 
     val disqualified
@@ -46,6 +45,7 @@ class WormsPlayer private constructor(val id: Int,
         val livingWorms = this.livingWorms
         if (livingWorms.isNotEmpty()) {
             val nextIndex = (livingWorms.indexOf(currentWorm) + 1) % livingWorms.size
+            previousWorm = currentWorm
             currentWorm = livingWorms[nextIndex]
         }
     }

@@ -9,7 +9,7 @@ import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
 import kotlin.random.Random
 
-class TeleportCommand(val target: Point, val random: Random, val config: GameConfig) : WormsCommand {
+class TeleportCommand(val target: Point, private val random: Random, val config: GameConfig) : WormsCommand {
 
     override val order: Int = 2
 
@@ -62,7 +62,7 @@ class TeleportCommand(val target: Point, val random: Random, val config: GameCon
             worm.moveTo(gameMap, target)
         }
 
-        return CommandFeedback(config.scores.move)
+        return CommandFeedback(this.toString(), playerId = worm.player.id, score = config.scores.move)
     }
 
     private fun pushbackWorms(worm: Worm, occupier: Worm, gameMap: WormsMap) {
@@ -80,5 +80,7 @@ class TeleportCommand(val target: Point, val random: Random, val config: GameCon
         worm.moveTo(gameMap, occupierPosition)
         occupier.moveTo(gameMap, wormPosition)
     }
+
+    override fun toString(): String = "move $target"
 
 }

@@ -8,6 +8,7 @@ import za.co.entelect.challenge.game.delegate.engine.DelegateMap
 import za.co.entelect.challenge.game.delegate.player.DelegatePlayer
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.renderer.WormsRendererConsole
+import za.co.entelect.challenge.game.engine.renderer.WormsRendererCsv
 import za.co.entelect.challenge.game.engine.renderer.WormsRendererJson
 import za.co.entelect.challenge.game.engine.renderer.WormsRendererText
 
@@ -17,6 +18,7 @@ class DelegateRenderer(config: GameConfig, rendererType: RendererType) : GameMap
         RendererType.JSON -> WormsRendererJson(config)
         RendererType.TEXT -> WormsRendererText(config)
         RendererType.CONSOLE -> WormsRendererConsole(config)
+        RendererType.CSV -> WormsRendererCsv(config)
     }
 
     override fun commandPrompt(gamePlayer: GamePlayer?): String {

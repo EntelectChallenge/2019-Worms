@@ -11,6 +11,7 @@ import za.co.entelect.challenge.game.engine.player.Worm
  * and player attributes
  */
 class InvalidCommand(val reason: String) : WormsCommand {
+
     override val order: Int = 0
 
     override fun validate(gameMap: WormsMap, worm: Worm): CommandValidation {
@@ -20,4 +21,6 @@ class InvalidCommand(val reason: String) : WormsCommand {
     override fun execute(gameMap: WormsMap, worm: Worm): CommandFeedback {
         throw NotImplementedError("Cannot execute invalid command")
     }
+
+    override fun toString(): String = "invalid command $reason"
 }

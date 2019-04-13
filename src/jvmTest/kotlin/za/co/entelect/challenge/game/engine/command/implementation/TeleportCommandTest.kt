@@ -8,7 +8,9 @@ import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
+import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
+import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.Powerup
 import kotlin.random.Random
@@ -107,9 +109,8 @@ class TeleportCommandTest {
         val testCommand = TeleportCommand(Point(1, 1), random, config)
         val wormA = CommandoWorm.build(0, config, Point(0, 0))
         val wormB = CommandoWorm.build(0, config, Point(2, 1))
-        val player = WormsPlayer.build(0, listOf(wormA), config)
+        val player = WormsPlayer.build(0, listOf(wormA, wormB), config)
         val testMap = buildMapWithCellType(listOf(player), 4, CellType.AIR)
-
 
         assertTrue(testCommand.validate(testMap, wormA).isValid, "Command A Valid")
         testCommand.execute(testMap, wormA)
@@ -136,8 +137,8 @@ class TeleportCommandTest {
 
         val wormA = CommandoWorm.build(0, config, Point(0, 0))
         val wormB = CommandoWorm.build(0, config, Point(2, 1))
-        val player = WormsPlayer.build(0, listOf(wormA), config)
-        val testMap = buildMapWithCellType(listOf(player), 3, CellType.AIR)
+        val playerA = WormsPlayer.build(0, listOf(wormA, wormB), config)
+        val testMap = buildMapWithCellType(listOf(playerA), 3, CellType.AIR)
 
         assertTrue(testCommand.validate(testMap, wormA).isValid, "Command A Valid")
         testCommand.execute(testMap, wormA)
@@ -159,10 +160,10 @@ class TeleportCommandTest {
         val testMap = buildMapWithCellType(listOf(player), 5, CellType.AIR)
 
         for (i in 0..4) {
-            assertFalse(TeleportCommand(0, i, Random, TEST_CONFIG).validate(testMap, worm).isValid, "(0, $i) out of range")
-            assertFalse(TeleportCommand(4, i, Random, TEST_CONFIG).validate(testMap, worm).isValid, "(4, $i) out of range")
-            assertFalse(TeleportCommand(i, 0, Random, TEST_CONFIG).validate(testMap, worm).isValid, "($i, 0) out of range")
-            assertFalse(TeleportCommand(i, 4, Random, TEST_CONFIG).validate(testMap, worm).isValid, "($i, 4) out of range")
+            validateOutRangeFeedback(0, i, testMap, worm)
+            validateOutRangeFeedback(4, i, testMap, worm)
+            validateOutRangeFeedback(i, 0, testMap, worm)
+            validateOutRangeFeedback(i, 4, testMap, worm)
         }
 
         for (x in 1..3) {
@@ -174,6 +175,12 @@ class TeleportCommandTest {
                 }
             }
         }
+    }
+
+    private fun validateOutRangeFeedback(x: Int, y: Int, testMap: WormsMap, worm: Worm) {
+        val command = TeleportCommand(x, y, Random, TEST_CONFIG)
+        assertFalse(command.validate(testMap, worm).isValid, "($x, $y) out of range")
+        assertEquals(command.toString(), "move ($x, $y)")
     }
 
     @Test

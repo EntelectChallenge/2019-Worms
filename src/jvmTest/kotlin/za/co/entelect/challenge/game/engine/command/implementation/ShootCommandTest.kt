@@ -55,6 +55,7 @@ class ShootCommandTest {
             assertEquals(expectedHp, targetWorms[index].health, "Health for worm in direction $direction")
             assertEquals(ShootResult.HIT, result.result, "Result correct for attack in direction $direction")
             assertEquals(config.scores.attack, result.score, "Score correct for attack in direction $direction")
+            assertEquals("shoot ${direction.shortCardinal}", testCommand.toString())
         }
 
         assertEquals(initialHp, attacker.health)

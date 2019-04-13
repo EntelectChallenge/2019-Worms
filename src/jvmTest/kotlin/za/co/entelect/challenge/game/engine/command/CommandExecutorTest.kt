@@ -42,7 +42,7 @@ class CommandExecutorTest {
     fun test_validMove() {
         val validCommand: WormsCommand = mock {
             on { validate(any(), any()) }.doReturn(CommandValidation.validMove())
-            on { execute(any(), any()) }.doReturn(CommandFeedback(10))
+            on { execute(any(), any()) }.doReturn(CommandFeedback("nothing", 10, 1))
         }
 
         val executor = CommandExecutor(player, mockMap, validCommand, config)

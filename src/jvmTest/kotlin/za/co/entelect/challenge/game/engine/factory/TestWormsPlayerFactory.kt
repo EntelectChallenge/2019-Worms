@@ -6,7 +6,7 @@ import za.co.entelect.challenge.game.engine.player.WormsPlayer
 
 object TestWormsPlayerFactory {
 
-    fun buildWormsPlayers(config: GameConfig, playersCount: Int, wormsCount: Int): List<WormsPlayer> {
+    fun buildWormsPlayers(config: GameConfig, playersCount: Int = 2, wormsCount: Int = config.commandoWorms.count): List<WormsPlayer> {
         val safePlayersCount = if (playersCount < 1) 1 else playersCount
         val safeWormsCount = if (wormsCount < 1) 1 else wormsCount
 

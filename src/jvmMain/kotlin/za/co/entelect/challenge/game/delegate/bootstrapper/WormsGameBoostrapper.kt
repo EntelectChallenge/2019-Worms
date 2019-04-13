@@ -17,10 +17,10 @@ import kotlin.random.Random
 
 class WormsGameBoostrapper : GameEngineBootstrapper {
 
-    private var seed: Long = 0L
+    private var seed: Int = 0
     private var configPath: String = "default-config.json"
 
-    override fun setSeed(seed: Long) {
+    override fun setSeed(seed: Int) {
         this.seed = seed
     }
 
@@ -35,7 +35,7 @@ class WormsGameBoostrapper : GameEngineBootstrapper {
 
     override fun getMapGenerator(): GameMapGenerator {
         val config = GameConfigFactory.getConfig(configPath)
-        return DelegateMapGenerator(config, seed.toInt())
+        return DelegateMapGenerator(config, seed)
     }
 
     override fun getRenderer(rendererType: RendererType): GameMapRenderer {

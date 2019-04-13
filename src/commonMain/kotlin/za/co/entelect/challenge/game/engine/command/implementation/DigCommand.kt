@@ -45,7 +45,9 @@ class DigCommand(val target: Point, val config: GameConfig) : WormsCommand {
         val targetCell = gameMap[target]
         targetCell.type = CellType.AIR
 
-        return CommandFeedback(config.scores.dig)
+        return CommandFeedback(this.toString(), score = config.scores.dig, playerId = worm.player.id)
     }
+
+    override fun toString(): String = "dig $target"
 
 }

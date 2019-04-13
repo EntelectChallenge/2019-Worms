@@ -24,5 +24,6 @@
     "move": 1,
     "invalidCommand": -1,
     "doNothing": 0
-  }
+  },
+  "csvSeparator": ","
 }

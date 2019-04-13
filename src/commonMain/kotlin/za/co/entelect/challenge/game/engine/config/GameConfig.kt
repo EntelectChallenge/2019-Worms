@@ -8,7 +8,8 @@ class GameConfig private constructor(val maxRounds: Int,
                                      val commandoWorms: PlayerWormDefinition,
                                      val mapSize: Int,
                                      val healthPackHp: Int,
-                                     val scores: Scores)
+                                     val scores: Scores,
+                                     val csvSeparator: String)
 
 class PlayerWormDefinition(val count: Int,
                            val initialHp: Int,

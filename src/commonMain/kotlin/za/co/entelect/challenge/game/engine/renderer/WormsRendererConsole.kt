@@ -4,6 +4,8 @@ import za.co.entelect.challenge.game.engine.command.implementation.Direction
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import za.co.entelect.challenge.game.engine.renderer.WormsRenderer.Companion.EOL
+import za.co.entelect.challenge.game.engine.renderer.printables.PrintableMapCell.Companion.getStringMap
 
 
 class WormsRendererConsole(private val config: GameConfig) : WormsRenderer {

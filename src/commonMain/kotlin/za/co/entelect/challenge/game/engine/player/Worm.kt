@@ -3,11 +3,10 @@ package za.co.entelect.challenge.game.engine.player
 import za.co.entelect.challenge.game.engine.interfaces.Printable
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
-import kotlin.jvm.Transient
 
 open class Worm(val id: Int,
                 var health: Int,
-                @Transient var weapon: Weapon,
+                var weapon: Weapon,
                 val diggingRange: Int,
                 val movementRange: Int) : Printable {
 
@@ -20,20 +19,16 @@ open class Worm(val id: Int,
     override val printable
         get() = "${player.id}$id"
 
-    @Transient
     var roundMoved: Int = -1
 
-    @Transient
     var roundHit: Int = -1
 
     lateinit var position: Point
         private set
 
-    @Transient
     lateinit var previousPosition: Point
         private set
 
-    @Transient
     lateinit var player: WormsPlayer
 
     val dead: Boolean

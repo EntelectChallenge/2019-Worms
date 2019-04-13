@@ -5,6 +5,8 @@ import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
+import za.co.entelect.challenge.game.engine.renderer.WormsRenderer.Companion.EOL
+import za.co.entelect.challenge.game.engine.renderer.printables.PrintableMapCell.Companion.getStringMap
 import za.co.entelect.challenge.game.engine.renderer.printables.PrintablePlayer
 import za.co.entelect.challenge.game.engine.renderer.printables.PrintableWorm
 

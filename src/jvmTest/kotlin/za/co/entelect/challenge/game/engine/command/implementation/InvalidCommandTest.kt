@@ -6,6 +6,7 @@ import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import kotlin.test.Test
 import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class InvalidCommandTest {
 
@@ -18,6 +19,8 @@ class InvalidCommandTest {
     fun test_validation() {
         val command = InvalidCommand("Cannot parse command")
         assertFalse(command.validate(map, worm).isValid)
+
+        assertTrue(command.toString().startsWith("invalid command"))
     }
 
     @Test(expected = NotImplementedError::class)

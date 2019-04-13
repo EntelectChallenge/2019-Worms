@@ -11,11 +11,14 @@ import za.co.entelect.challenge.game.engine.player.Worm
  * The player decides to do nothing
  */
 class DoNothingCommand(val config: GameConfig) : WormsCommand {
+
     override val order: Int = 0
 
     override fun validate(gameMap: WormsMap, worm: Worm): CommandValidation {
         return CommandValidation.validMove(true, "Player chose to do nothing")
     }
 
-    override fun execute(gameMap: WormsMap, worm: Worm): CommandFeedback = CommandFeedback(config.scores.doNothing)
+    override fun execute(gameMap: WormsMap, worm: Worm): CommandFeedback = CommandFeedback(this.toString(), score = config.scores.doNothing, playerId = worm.player.id)
+
+    override fun toString(): String = "nothing"
 }
