@@ -52,7 +52,7 @@ public class GameRunnerConfig {
     public String matchId;
 
     @SerializedName("seed")
-    public long seed;
+    public int seed;
 
     @SerializedName("max-request-retries")
     public int maxRequestRetries;
@@ -82,7 +82,7 @@ public class GameRunnerConfig {
             if (gameRunnerConfig.isTournamentMode) {
                 LOGGER.info("Running in tournament mode. Loading tournament config");
                 gameRunnerConfig.matchId = System.getenv(EnvironmentVariable.MATCH_ID.name());
-                gameRunnerConfig.seed = Long.valueOf(System.getenv(EnvironmentVariable.SEED.name()));
+                gameRunnerConfig.seed = Integer.valueOf(System.getenv(EnvironmentVariable.SEED.name()));
                 gameRunnerConfig.playerAId = System.getenv(EnvironmentVariable.PLAYER_A_ID.name());
                 gameRunnerConfig.playerBId = System.getenv(EnvironmentVariable.PLAYER_B_ID.name());
             }
