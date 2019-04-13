@@ -23,7 +23,7 @@ import za.co.entelect.challenge.game.contracts.renderer.RendererType;
  */
 public interface GameEngineBootstrapper {
 
-    void setSeed(long seed);
+    void setSeed(int seed);
 
     void setConfigPath(String path);
 
