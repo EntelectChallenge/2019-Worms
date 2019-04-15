@@ -1,0 +1,15 @@
+language: java
+
+env:
+  - TERM=dumb
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle
+    - game-engine/.gradle
+
+script:
+  - cd game-engine && ./gradlew build && cd ..
+  - cd game-runner && mvn clean install && cd ..
+  - cd game-engine-interfaces && mvn clean install && cd ..
