@@ -4,6 +4,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.WRITE;
+import static java.util.Collections.singletonList;
 
 public final class FileUtils {
 
@@ -15,6 +22,10 @@ public final class FileUtils {
         bufferedWriter.write(stringToWrite);
         bufferedWriter.flush();
         bufferedWriter.close();
+    }
+
+    public static void appendToFile(String fileLocation, String stringToWrite) throws IOException {
+        Files.write(Paths.get(fileLocation), singletonList(stringToWrite), CREATE, WRITE, APPEND);
     }
 
     public static String getAbsolutePath(String path) {
