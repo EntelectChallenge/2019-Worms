@@ -20,6 +20,9 @@ import za.co.entelect.challenge.utils.EnvironmentVariable;
 import za.co.entelect.challenge.utils.ZipUtils;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +33,8 @@ public class GameBootstrapper {
     private AzureBlobStorageService blobService;
     private AzureQueueStorageService queueService;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        setupSystemClassloader();
         new GameBootstrapper().run();
     }
 
@@ -126,5 +130,12 @@ public class GameBootstrapper {
     private void notifyMatchComplete(TournamentConfig tournamentConfig, GameResult gameResult) throws Exception {
         LOGGER.info("Notifying of match completion");
         queueService.enqueueMessage(tournamentConfig.matchResultQueue, gameResult);
+    }
+
+    private static void setupSystemClassloader() throws Exception {
+        Field scl = ClassLoader.class.getDeclaredField("scl");
+        scl.setAccessible(true);
+        scl.set(null, new URLClassLoader(new URL[0]));
+        Thread.currentThread().setContextClassLoader(new URLClassLoader(new URL[0], ClassLoader.getSystemClassLoader()));
     }
 }

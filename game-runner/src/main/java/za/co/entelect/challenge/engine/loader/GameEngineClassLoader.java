@@ -5,6 +5,7 @@ import org.reflections.Reflections;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -27,14 +28,9 @@ public class GameEngineClassLoader {
 
         File file = new File(gameEnginePath);
 
-        ClassLoader cl = ClassLoader.getSystemClassLoader();
-        Class<?> clazz = cl.getClass();
-
-        Method method = clazz.getSuperclass().getDeclaredMethod("addURL", URL.class);
-
+        Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
         method.setAccessible(true);
-        method.invoke(cl, file.toURI().toURL());
-
+        method.invoke(ClassLoader.getSystemClassLoader(), file.toURI().toURL());
     }
 
     public <T> T loadEngineObject(Class<T> cl) throws Exception {
