@@ -11,5 +11,5 @@ cache:
 
 script:
   - cd game-engine && ./gradlew build && cd ..
-  - cd game-runner && mvn clean install && cd ..
-  - cd game-engine-interfaces && mvn clean install && cd ..
+  - cd game-runner && mvn clean verify && cd ..
+  - cd game-engine-interfaces && mvn clean verify && cd ..
