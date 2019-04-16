@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def get_shift(direction):
     """
     Each cardinal direction, has a unique gradient and direction.
@@ -82,3 +85,25 @@ def get_cardinal_direction(myself, opponent):
                 direction = 'SW'
 
     return direction
+
+
+def get_straight_line(start_point, end_point, direction):
+    """
+    This function returns all cells in a straight line from start to end point.
+    Should only be used in one of the cardinal directions.
+    """
+
+    shift = np.array(get_shift(direction))
+    start_point = np.array(start_point)
+    end_point = np.array(end_point)
+
+    cell_set = []
+    done = False
+    i = 0
+    while not done:
+        next_cell = start_point + (i * shift)
+        if (next_cell[0] == end_point[0]) and (next_cell[1] == end_point[1]):
+            done = True
+        cell_set.append(next_cell)
+        i = i + 1
+    return np.array(cell_set)

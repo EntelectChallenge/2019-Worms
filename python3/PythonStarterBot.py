@@ -9,7 +9,7 @@ import numpy as np
 from scipy.spatial import distance
 
 from cell import Cell, AugmentedCell
-from direction_helper import get_cardinal_direction, get_shift
+from direction_helper import get_cardinal_direction, get_straight_line
 
 logging.basicConfig(filename='sample_python_bot.log', filemode='w', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -125,7 +125,7 @@ class StarterBot:
             x_diff = target[0] - reference[0]
             y_diff = target[1] - reference[1]
 
-            line_points = self.get_straight_line(reference, target, direction)
+            line_points = get_straight_line(reference, target, direction)
 
             obstacle_in_path = False
 
@@ -150,27 +150,6 @@ class StarterBot:
             if (cell.x == x) and (cell.y == y):
                 cell_type = cell.type
         return cell_type
-
-    def get_straight_line(self, start_point, end_point, direction):
-        """
-        This function returns all cells in a straight line from start to end point.
-        Should only be used in one of the cardinal directions.
-        """
-
-        shift = np.array(get_shift(direction))
-        start_point = np.array(start_point)
-        end_point = np.array(end_point)
-
-        cell_set = []
-        done = False
-        i = 0
-        while not done:
-            next_cell = start_point + (i * shift)
-            if (next_cell[0] == end_point[0]) and (next_cell[1] == end_point[1]):
-                done = True
-            cell_set.append(next_cell)
-            i = i + 1
-        return np.array(cell_set)
 
     def get_augmented_map(self):
         """
