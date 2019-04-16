@@ -9,6 +9,7 @@ import numpy as np
 from scipy.spatial import distance
 
 from cell import Cell, AugmentedCell
+from direction_helper import get_cardinal_direction, get_shift
 
 logging.basicConfig(filename='sample_python_bot.log', filemode='w', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -20,8 +21,6 @@ class StarterBot:
         """
         Initialize Bot .
         """
-
-        self.valid_directions = ['N', 'S', 'E', 'W', 'SE', 'SW', 'NE', 'NW']
 
         self.current_round = None
         self.command = ''
@@ -107,7 +106,7 @@ class StarterBot:
                 worm = w['position']
                 dist = np.floor(distance.euclidean([worm['x'], worm['y']], [current_x, current_y]))
                 if dist <= max_range:
-                    direction = self.get_cardinal_direction([current_x, current_y], [worm['x'], worm['y']])
+                    direction = get_cardinal_direction([current_x, current_y], [worm['x'], worm['y']])
                     obstacles = self.check_for_obstacles_in_path([current_x, current_y], [worm['x'], worm['y']],
                                                                  direction)
                     if (direction is None) or (obstacles is True):
@@ -158,7 +157,7 @@ class StarterBot:
         Should only be used in one of the cardinal directions.
         """
 
-        shift = np.array(self.get_shift(direction))
+        shift = np.array(get_shift(direction))
         start_point = np.array(start_point)
         end_point = np.array(end_point)
 
@@ -187,7 +186,7 @@ class StarterBot:
 
         for cell in self.flattened_map:
             cell_distance = int(np.floor(distance.euclidean([cell.x, cell.y], [current_x, current_y])))
-            direction = self.get_cardinal_direction([current_x, current_y], [cell.x, cell.y])
+            direction = get_cardinal_direction([current_x, current_y], [cell.x, cell.y])
             augmented_map.append(AugmentedCell(cell.x, cell.y, cell.type, cell_distance, direction))
         return augmented_map
 
@@ -207,64 +206,6 @@ class StarterBot:
                 if (cell.distance <= movement_range) and (cell.type == 'AIR'):
                     available_cells.append(cell)
         return available_cells
-
-    def get_cardinal_direction(self, myself, opponent):
-        """
-        If this function returns None, then the 'opponent' coordinates are not in a cardinal direction.
-        Else, this function will return a valid cardinal direction.
-
-        N.B. The order of the inputs are essential. This function is using 'myself' as a reference point,
-        and the opponent as the target.
-
-        This calculation is based on cartesian coordinate logic:
-        If the gradient is undefined ( i.e. x_diff == 0 )
-            - check if opponent is above ( y_diff < 0 )
-                => return North
-            - check if opponent is below ( y_diff > 0 )
-                => return South
-        Else If the gradient is 0 ( i.e. y_diff == 0 )
-            - check if opponent is on the right ( x_diff > 0 )
-                => return East
-            - check if opponent is on the left ( x_diff < 0 )
-                => return West
-
-        North West and South East have a gradient of exactly +1 ( for this coordinate system )
-            - The logic used, only checks
-                - above for North West
-                - below for South East
-        North East and South West have a gradient of exactly -1 ( for this coordinate system )
-            - The logic used, only checks
-                - above for North East
-                - below for South West
-        """
-
-        x_diff = opponent[0] - myself[0]
-        y_diff = opponent[1] - myself[1]
-        direction = None
-        if x_diff == 0:
-            if y_diff < 0:
-                direction = 'N'
-            elif y_diff > 0:
-                direction = 'S'
-        elif y_diff == 0:
-            if x_diff > 0:
-                direction = 'E'
-            elif x_diff < 0:
-                direction = 'W'
-        else:
-            gradient = (x_diff / y_diff)
-            if gradient == 1:
-                if y_diff < 0:
-                    direction = 'NW'
-                elif y_diff > 0:
-                    direction = 'SE'
-            if gradient == -1:
-                if y_diff < 0:
-                    direction = 'NE'
-                elif y_diff > 0:
-                    direction = 'SW'
-
-        return direction
 
     def starter_bot_logic(self):
         """
@@ -328,32 +269,6 @@ class StarterBot:
                 self.command = f'nothing'
 
         return None
-
-    def get_shift(self, direction):
-        """
-        Each cardinal direction, has a unique gradient and direction.
-        These shift values, helps to generate a list of valid cells between two cells, in a specific cardinal direction.
-        Since actions cannot be applied to cells not in a cardinal direction with reference to the selected worm.
-        with reference to
-        """
-        if direction == 'N':
-            return [0, -1]
-        elif direction == 'S':
-            return [0, 1]
-        elif direction == 'E':
-            return [1, 0]
-        elif direction == 'W':
-            return [-1, 0]
-        elif direction == 'NE':
-            return [1, -1]
-        elif direction == 'SE':
-            return [1, 1]
-        elif direction == 'SW':
-            return [-1, 1]
-        elif direction == 'NW':
-            return [-1, -1]
-        else:
-            return None
 
     def write_action(self):
         """
