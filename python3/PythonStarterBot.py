@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Entelect StarterBot for Python3
-'''
+"""
 import json
 import os
 import logging
@@ -16,10 +16,10 @@ logger = logging.getLogger(__name__)
 
 class StarterBot:
 
-    def __init__(self, ):
-        '''
+    def __init__(self):
+        """
         Initialize Bot .
-        '''
+        """
 
         self.valid_directions = ['N', 'S', 'E', 'W', 'SE', 'SW', 'NE', 'NW']
 
@@ -46,7 +46,7 @@ class StarterBot:
         Reads in all relevant information required for the round.
         """
 
-        state_location = os.path.join('rounds',str(self.current_round),'state.json')
+        state_location = os.path.join('rounds', str(self.current_round), 'state.json')
         self.game_state = self.load_state_json(state_location)
 
         self.command = ''
@@ -131,10 +131,10 @@ class StarterBot:
             obstacle_in_path = False
 
             for cell in line_points:
-                type = self.get_cell_type(cell.x, cell.y)
-                if type is None:
+                cell_type = self.get_cell_type(cell.x, cell.y)
+                if cell_type is None:
                     continue
-                elif (type == 'DIRT') or (type == 'DEEP_SPACE'):
+                elif (cell_type == 'DIRT') or (cell_type == 'DEEP_SPACE'):
                     obstacle_in_path = True
                     break
         else:
@@ -142,7 +142,7 @@ class StarterBot:
 
         return obstacle_in_path
 
-    def get_cell_type(self,x,y):
+    def get_cell_type(self, x, y):
         """
         return the type of a cell at a specified set of coordinates
         """
@@ -151,7 +151,6 @@ class StarterBot:
             if (cell.x == x) and (cell.y == y):
                 cell_type = cell.type
         return cell_type
-
 
     def get_straight_line(self, start_point, end_point, direction):
         """
@@ -167,7 +166,7 @@ class StarterBot:
         done = False
         i = 0
         while not done:
-            next_cell = start_point + (i*shift)
+            next_cell = start_point + (i * shift)
             if (next_cell[0] == end_point[0]) and (next_cell[1] == end_point[1]):
                 done = True
             cell_set.append(next_cell)
@@ -198,7 +197,7 @@ class StarterBot:
         """
         available_cells = []
         if objective == 'dig':
-            digging_range =  self.current_worm_info['diggingRange']
+            digging_range = self.current_worm_info['diggingRange']
             for cell in self.augmented_map:
                 if (cell.distance <= digging_range) and (cell.type == 'DIRT'):
                     available_cells.append(cell)
@@ -210,7 +209,7 @@ class StarterBot:
         return available_cells
 
     def get_cardinal_direction(self, myself, opponent):
-        '''
+        """
         If this function returns None, then the 'opponent' coordinates are not in a cardinal direction.
         Else, this function will return a valid cardinal direction.
 
@@ -237,7 +236,7 @@ class StarterBot:
             - The logic used, only checks
                 - above for North East
                 - below for South West
-        '''
+        """
 
         x_diff = opponent[0] - myself[0]
         y_diff = opponent[1] - myself[1]
@@ -253,22 +252,22 @@ class StarterBot:
             elif x_diff < 0:
                 direction = 'W'
         else:
-            gradient = ( x_diff / y_diff )
+            gradient = (x_diff / y_diff)
             if gradient == 1:
-                if y_diff < 0 :
+                if y_diff < 0:
                     direction = 'NW'
-                elif y_diff > 0 :
+                elif y_diff > 0:
                     direction = 'SE'
             if gradient == -1:
-                if y_diff < 0 :
+                if y_diff < 0:
                     direction = 'NE'
-                elif y_diff > 0 :
+                elif y_diff > 0:
                     direction = 'SW'
 
         return direction
 
     def starter_bot_logic(self):
-        '''
+        """
         If one of the opponent's worms is within range fire at it.
             - Must be in range of current worm's weapon range.
             - No obstacles can be in the path.
@@ -286,7 +285,7 @@ class StarterBot:
 
 
         ****THIS IS WHERE YOU CAN ADD OR CHANGE THE LOGIC OF THE BOT****
-        '''
+        """
 
         worms_in_range = self.get_worms_in_range()
 
@@ -331,12 +330,12 @@ class StarterBot:
         return None
 
     def get_shift(self, direction):
-        '''
+        """
         Each cardinal direction, has a unique gradient and direction.
         These shift values, helps to generate a list of valid cells between two cells, in a specific cardinal direction.
         Since actions cannot be applied to cells not in a cardinal direction with reference to the selected worm.
         with reference to
-        '''
+        """
         if direction == 'N':
             return [0, -1]
         elif direction == 'S':
@@ -357,9 +356,9 @@ class StarterBot:
             return None
 
     def write_action(self):
-        '''
+        """
         command in form : C;<round number>;<command>
-        '''
+        """
 
         print(f'C;{self.current_round};{self.command}')
         logger.info(f'Writing command : C;{self.current_round};{self.command};')
@@ -367,9 +366,9 @@ class StarterBot:
         return None
 
     def load_state_json(self, state_location):
-        '''
+        """
         Gets the current Game State json file.
-        '''
+        """
         json_map = ''
         try:
             json_map = json.load(open(state_location, 'r'))
@@ -394,12 +393,7 @@ class StarterBot:
 
             self.write_action()
 
-        return None
-
-
-
 
 if __name__ == '__main__':
-
     bot = StarterBot()
     bot.run_bot()
