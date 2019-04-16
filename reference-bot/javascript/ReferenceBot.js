@@ -134,7 +134,7 @@ function attackStrategy() {
     return {
         name: 'attack',
         shouldExecute: () => true,
-        execute: function applyAttackStrategy() {
+        execute: function () {
             let nearTarget = getApproachableOpponent();
             return digAndMoveTo(nearTarget.worm.position);
         }
@@ -177,7 +177,7 @@ function huntStrategy(targetWormId) {
                 .filter(w => w.health > 0)
                 .find(w => w.id === targetWormId);
         },
-        execute: () => function () {
+        execute: function () {
             let preyWorm = opponent.worms.find(w => w.id === targetWormId);
             return digAndMoveTo(preyWorm.position);
         }
