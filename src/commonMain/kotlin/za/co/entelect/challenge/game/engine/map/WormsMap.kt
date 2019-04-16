@@ -129,4 +129,8 @@ class WormsMap(override val players: List<WormsPlayer>,
             mapCell.occupier = null
         }
     }
+
+    fun isOutOfBounds(target: Point): Boolean {
+        return (target.x !in xRange) || (target.y !in yRange)
+    }
 }

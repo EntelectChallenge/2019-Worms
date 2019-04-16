@@ -23,7 +23,7 @@ class GameConfigFactoryTest {
         assertEquals(3, config.commandoWorms.weapon.range)
 
         assertEquals(4, config.pushbackDamage)
-        assertEquals(32, config.mapSize)
+        assertEquals(33, config.mapSize)
         assertEquals(5, config.healthPackHp)
     }
 }

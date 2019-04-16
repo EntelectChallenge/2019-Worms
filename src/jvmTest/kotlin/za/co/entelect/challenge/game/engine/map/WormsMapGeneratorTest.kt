@@ -25,12 +25,12 @@ class WormsMapGeneratorTest {
                         "has ${wormsMap.cells.size} cells \n expected ${config.mapSize * config.mapSize} cells")
 
         val wormPositions = listOf(
-                Point(23, 29),
-                Point(0, 16),
-                Point(23, 2),
+                Point(24, 29),
+                Point(1, 16),
+                Point(24, 3),
                 Point(31, 16),
-                Point(8, 29),
-                Point(8, 2)
+                Point(9, 29),
+                Point(8, 3)
         )
 
         val mapSpawnError = "Check if MapConfig, map alignment, or spawn rules changed."
@@ -52,19 +52,17 @@ class WormsMapGeneratorTest {
     fun test_worms_have_open_spawn_area() {
         val players = listOf(WormsPlayer.build(1, listOf(CommandoWorm.build(0, config)), config))
 
-        val wormsMapGenerator = WormsMapGenerator(config, 0)
-        val wormsMap = wormsMapGenerator.getMap(players)
-
+        val wormsMap = WormsMapGenerator(config, 0).getMap(players)
         wormsMap.players
                 .flatMap { it.worms }
                 .forEach { w ->
-                    val centerCell = wormsMap[w.position]
-                    centerCell.nearCells
-                            .getAllCells()
-                            .union(listOf(centerCell))
+                    (-1..1).flatMap { i -> (-1..1).map { j -> Point(i, j) } }
+                            .map { w.position + it }
+                            .filter { !wormsMap.isOutOfBounds(it) }
+                            .map { wormsMap[it] }
                             .forEach {
                                 assertTrue(listOf(CellType.AIR, CellType.DEEP_SPACE).contains(it.type),
-                                        "Expected CellType.AIR || DEEP_SPACE at ${it.position}")
+                                        "Expected CellType AIR or DEEP_SPACE at ${it.position}")
                             }
                 }
     }

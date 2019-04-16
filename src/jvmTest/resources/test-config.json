@@ -12,8 +12,9 @@
     }
   },
   "pushbackDamage": 4,
-  "mapSize": 32,
+  "mapSize": 33,
   "healthPackHp": 5,
+  "totalHealthPacks": 2,
   "scores": {
     "attack": 5,
     "friendlyFire": 4,

@@ -10,11 +10,7 @@ class MapCell(var x: Int = -1,
     constructor(cellType: CellType = CellType.AIR) : this(type = cellType)
 
     var occupier: Worm? = null
-    val occupierId // For Renderer
-        get() = occupier?.id
     var powerup: Powerup? = null
-
-    val nearCells = NearCells()
 
     val ipInfo = ImageProcessingInfo()
 

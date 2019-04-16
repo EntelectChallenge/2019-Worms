@@ -14,6 +14,7 @@ data class Point(val x: Int, val y: Int) {
 
     fun manhattanDistance(other: Point) = abs(x - other.x) + abs(y - other.y)
     fun euclideanDistance(other: Point) = sqrt((x - other.x).pow(2) + (y - other.y).pow(2))
+    fun euclideanDistance(other: Pair<Double, Double>) = sqrt((x - other.first).pow(2) + (y - other.second).pow(2))
     fun maximumDimension(other: Point) = max(abs(x - other.x), abs(y - other.y))
 
     fun abs(): Point = Point(abs(x), abs(y))
