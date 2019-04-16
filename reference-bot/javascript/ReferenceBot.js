@@ -21,29 +21,19 @@ let cells;
 let myCurrentWorm;
 
 let strategies = {
-    powerups: {name: 'powerups', shouldExecute: () => shouldApplyPowerupStrategy, execute: applyPowerupStrategy},
-    attack: {name: 'attack', shouldExecute: () => true, execute: applyAttackStrategy},
-    follow: id => ({
-        name: 'follow',
-        data: id,
-        shouldExecute: () => shouldApplyFollowStrategy(id),
-        execute: () => applyFollowStrategy(id)
-    }),
-    hunt: id => ({
-        name: 'hunt',
-        data: id,
-        shouldExecute: () => shouldApplyHuntStrategy(id),
-        execute: () => applyHuntStrategy(id)
-    }),
+    powerups: powerupStrategy,
+    attack: attackStrategy,
+    follow: followStrategy,
+    hunt: huntStrategy,
 };
 
 /**
  * Maps worm ids to strategies
  */
 let strategyPriorities = {
-    1: [strategies.powerups, strategies.hunt(1), strategies.attack],
-    2: [strategies.powerups, strategies.hunt(1), strategies.follow(1), strategies.attack],
-    3: [strategies.powerups, strategies.hunt(1), strategies.follow(1), strategies.follow(2), strategies.attack]
+    1: [strategies.powerups(), strategies.hunt(1), strategies.attack()],
+    2: [strategies.powerups(), strategies.hunt(1), strategies.follow(1), strategies.attack()],
+    3: [strategies.powerups(), strategies.hunt(1), strategies.follow(1), strategies.follow(2), strategies.attack()]
 };
 
 let directions = [
@@ -116,49 +106,82 @@ function doNothingCommand() {
     return `nothing`;
 }
 
-function shouldApplyPowerupStrategy() {
-    return cells.some(c => c.powerup);
+/**
+ * A worm strategy that moves towards powerups
+ */
+function powerupStrategy() {
+    return {
+        name: 'powerups',
+        shouldExecute: function () {
+            return cells.some(c => c.powerup);
+        },
+        execute: function () {
+            let nearPowerup = cells.filter(c => c.powerup)
+                .map(c => ({
+                    cell: c,
+                    distance: euclideanDistance(myCurrentWorm.position, c)
+                }))
+                .sort((a, b) => a.distance - b.distance)[0];
+            return digAndMoveTo(nearPowerup.cell);
+        }
+    };
 }
 
-function applyPowerupStrategy() {
-    let nearPowerup = cells.filter(c => c.powerup)
-        .map(c => ({
-            cell: c,
-            distance: euclideanDistance(myCurrentWorm.position, c)
-        }))
-        .sort((a, b) => a.distance - b.distance)[0];
-    return digAndMoveTo(nearPowerup.cell);
-}
-
-function shouldApplyFollowStrategy(targetWormId) {
-    return myPlayer.worms
-        .filter(w => w.health > 0)
-        .find(w => w.id === targetWormId);
-}
-
-function applyFollowStrategy(targetWormId) {
-    let leaderWorm = myPlayer.worms.find(w => w.id === targetWormId);
-    if (euclideanDistance(myCurrentWorm.position, leaderWorm.position) > 3) {
-        return digAndMoveTo(leaderWorm.position);
+/**
+ * A worm strategy that moves towards the closest opponent
+ */
+function attackStrategy() {
+    return {
+        name: 'attack',
+        shouldExecute: () => true,
+        execute: function applyAttackStrategy() {
+            let nearTarget = getApproachableOpponent();
+            return digAndMoveTo(nearTarget.worm.position);
+        }
     }
-    let nearTarget = getApproachableOpponent();
-    return digAndMoveTo(nearTarget.worm.position);
 }
 
-function applyAttackStrategy() {
-    let nearTarget = getApproachableOpponent();
-    return digAndMoveTo(nearTarget.worm.position);
+/**
+ * A worm strategy that follows another of my own worms
+ */
+function followStrategy(targetWormId) {
+    return {
+        name: 'follow',
+        data: targetWormId,
+        shouldExecute: function () {
+            return myPlayer.worms
+                .filter(w => w.health > 0)
+                .find(w => w.id === targetWormId);
+        },
+        execute: function () {
+            let leaderWorm = myPlayer.worms.find(w => w.id === targetWormId);
+            if (euclideanDistance(myCurrentWorm.position, leaderWorm.position) > 3) {
+                return digAndMoveTo(leaderWorm.position);
+            }
+            let nearTarget = getApproachableOpponent();
+            return digAndMoveTo(nearTarget.worm.position);
+        }
+    };
 }
 
-function shouldApplyHuntStrategy(targetWormId) {
-    return opponent.worms
-        .filter(w => w.health > 0)
-        .find(w => w.id === targetWormId);
-}
-
-function applyHuntStrategy(targetWormId) {
-    let preyWorm = opponent.worms.find(w => w.id === targetWormId);
-    return digAndMoveTo(preyWorm.position);
+/**
+ * A worm strategy that moves towards a specific enemy worm
+ * @param targetWormId
+ */
+function huntStrategy(targetWormId) {
+    return {
+        name: 'hunt',
+        data: targetWormId,
+        shouldExecute: function () {
+            return opponent.worms
+                .filter(w => w.health > 0)
+                .find(w => w.id === targetWormId);
+        },
+        execute: () => function () {
+            let preyWorm = opponent.worms.find(w => w.id === targetWormId);
+            return digAndMoveTo(preyWorm.position);
+        }
+    }
 }
 
 
