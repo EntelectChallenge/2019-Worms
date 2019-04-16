@@ -22,13 +22,11 @@ kotlin {
 
     sourceSets {
         commonMain {
-            kotlin.srcDir("game-engine-core/src/main")
             dependencies {
                 implementation(kotlin("stdlib-common"))
             }
         }
         commonTest {
-            kotlin.srcDir("game-engine-core/src/test")
 
             dependencies {
                 implementation(kotlin("test-common"))
@@ -37,18 +35,13 @@ kotlin {
         }
 
         val jvmMain by getting {
-            kotlin.srcDir("game-engine-jvm/src/main/kotlin")
-            resources.srcDir("game-engine-jvm/src/main/resources")
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
                 implementation("com.google.code.gson:gson:2.8.5")
-                api("za.co.entelect.challenge:game-engine-interface:2019.0.0")
+                api("za.co.entelect.challenge:game-engine-interface:2019.1.0+")
             }
         }
         val jvmTest by getting {
-            kotlin.srcDir("game-engine-jvm/src/test/kotlin")
-            resources.srcDir("game-engine-jvm/src/test/resources")
-
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
@@ -56,15 +49,12 @@ kotlin {
         }
 
         val jsMain by getting {
-            kotlin.srcDir("game-engine-web/src/main/kotlin")
-            resources.srcDir("game-engine-web/src/main/resources")
             dependencies {
                 implementation(kotlin("stdlib-js"))
             }
         }
 
         val jsTest by getting {
-            kotlin.srcDir("game-engine-web/src/test/kotlin")
             dependencies {
                 implementation(kotlin("test-js"))
             }
@@ -77,7 +67,7 @@ kotlin {
 }
 
 group = "za.co.entelect.challenge"
-version = "2019.0.0"
+version = "2019.1.0-RC0"
 
 task<JacocoReport>("testCoverageReport") {
     group = "report"
@@ -117,7 +107,8 @@ task<JacocoCoverageVerification>("testCoverageVerification") {
                     "za.co.entelect.challenge.game.engine.simplexNoise.*",
                     "za.co.entelect.challenge.game.engine.config.*",
                     "za.co.entelect.challenge.game.engine.player.Weapon",
-                    "za.co.entelect.challenge.game.engine.processor.GameError"
+                    "za.co.entelect.challenge.game.engine.processor.GameError",
+                    "za.co.entelect.challenge.game.engine.renderer.WormsRenderer.Companion"
             )
             limit {
                 minimum = "0.75".toBigDecimal()

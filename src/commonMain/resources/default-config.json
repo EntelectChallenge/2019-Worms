@@ -1,0 +1,30 @@
+{
+  "maxRounds": 400,
+  "maxDoNothings": 12,
+  "commandoWorms": {
+    "count": 3,
+    "initialHp": 150,
+    "movementRage": 1,
+    "diggingRange": 1,
+    "weapon": {
+      "damage": 8,
+      "range": 4
+    }
+  },
+  "pushbackDamage": 20,
+  "mapSize": 33,
+  "healthPackHp": 10,
+  "totalHealthPacks": 2,
+  "scores": {
+    "missedAttack": 2,
+    "attack": 20,
+    "killShot": 40,
+    "friendlyFire": -20,
+    "dig": 7,
+    "move": 5,
+    "powerup": 20,
+    "doNothing": 0,
+    "invalidCommand": -4
+  },
+  "csvSeparator": ","
+}
