@@ -22,12 +22,16 @@ The game engine is built in Kotlin. It uses the Kotlin multi-platform plugin to 
  
 The project consists of 3 source sets:
 
-### game-engine-core
-This source set is shared between all platforms and cannot contain any platform specific code or dependencies.  
+### Common
+This common source set is shared between all platforms and cannot contain any platform specific code or dependencies.  
 
-All game logic lives in this module. 
+All game logic lives in this source set. 
 
-### game-engine-jvm
+*Directories*: `src/commonMain`, `src/commonTest`
+
+Many tests for classes in this source set can be found in the `jvmTest` source set instead, due to jvm-specific test dependencies.
+
+### JVM
 This source set contains all jvm-specific code. This includes implementing all interfaces that are required to integrate 
 with the game runner.
 
@@ -36,15 +40,19 @@ classes in the core source set.
 
 The main entry point for the game runner is through the `WormsGameBoostrapper` class. 
 
+*Directories*: `src/jvmMain`, `src/jvmTest`
+
 #### Output
 The jvm module builds two jars inside the `build/lib` directory: 
 * ec-2019-game-engine-jvm - Standard jar that contains all the compiled project classes
 * ec-2019-game-engine-jvm-full - A fat jar that includes the project classes as well as dependencies
   
-### game-engine-js
+### Javascript
 This source set contains all js-specific code. It is being used by the challenge team to experiment with the game engine on different platforms.
 
 This module provides the `GameRunner` class as the main entry point for javascript interop. 
+
+*Directories*: `src/jsMain`, `src/jsTest`
 
 #### Output
 The js module builds to two jars and a npm package:
