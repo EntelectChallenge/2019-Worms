@@ -3,6 +3,6 @@
 	"email":"challenge@entelect.co.za",
 	"nickName" :"Reference Bot",
 	"botLocation": "/",
-	"botFileName": "StarterBot.js",
+	"botFileName": "ReferenceBot.js",
 	"botLanguage": "javascript"
 }
