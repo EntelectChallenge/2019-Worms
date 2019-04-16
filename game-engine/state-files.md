@@ -25,8 +25,8 @@
   
    
 * map → *A list of lists of cells (2d array) describing the map world. Each cell looks like this:*
-  * x → *An x coordinate number between 0-31 (inclusive)*
-  * y → *A y coordinate number between 0-31 (inclusive)*
+  * x → *An x coordinate number between 0-32 (inclusive)*
+  * y → *A y coordinate number between 0-32 (inclusive)*
   * type → *The surface type of this cell (AIR, DIRT or DEEP_SPACE)*
   * occupier → *Any worm occupying this cell will have it's details displayed here, and looks like a **[default worm](#default-worm-properties)***, and in addition this property:
     * playerId → *The Id number of the player in control of this worm* 
@@ -39,8 +39,8 @@
 * id → *The Id number of this worm*
 * health → *The number of remaining hitpoints for this worm*
 * position → *The current position of this worm*
-  * x → *An x coordinate number between 0-31 (inclusive)*
-  * y → *A y coordinate number between 0-31 (inclusive)*
+  * x → *An x coordinate number between 0-32 (inclusive)*
+  * y → *A y coordinate number between 0-32 (inclusive)*
 * diggingRange → *A number describing the range that this worm can dig around itself*
 * movementRange → *A number describing the range that this worm can move around itself*
  
@@ -99,8 +99,8 @@ This file is encoded using UTF-8
 ##### Default text worm properties 
 * Worm id → *The Id number of this worm*
 * Health → *The number of remaining hitpoints for this worm*
-* Position x → *An x coordinate number between 0-31 (inclusive)*
-* Position y → *A y coordinate number between 0-31 (inclusive)*
+* Position x → *An x coordinate number between 0-32 (inclusive)*
+* Position y → *A y coordinate number between 0-32 (inclusive)*
 * Digging range → *A number describing the range that this worm can dig around itself*
 * Movement range → *A number describing the range that this worm can move around itself*
 

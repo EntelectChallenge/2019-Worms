@@ -1,11 +1,25 @@
 # Game Runner
 
+## Contents
+- [Game Runner](#game-runner)
+  - [Overview](#overview)
+  - [Getting started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+      - [Windows](#windows)
+      - [Linux](#linux)
+    - [Usage](#usage)
+      - [Windows](#windows-1)
+      - [Linux](#linux-1)
+  - [Additional languages](#additional-languages)
+    - [Adding a language](#adding-a-language)
+
 ## Overview
-The game runner is responsible for facilitating a match between two bots. It can be seen as a proxy that relays information between the [bots](starter_bots_link) and the [game engine](game_engine_link). The game engine produces state information which the game runner passes onto the bots. Once the bots have processed the state and produced a command, that command is then consumed by the game runner and passed back to the game engine, this process continues until the match ends.
+The game runner is responsible for facilitating a match between two bots. It can be seen as a proxy that relays information between the [bots](../starter-bots/README.md) and the [game engine](../game-engine/README.md). The game engine produces state information which the game runner passes onto the bots. Once the bots have processed the state and produced a command, that command is then consumed by the game runner and passed back to the game engine, this process continues until the match ends.
 
 The bots used in a match are started up by the game runner. These bots will run continuously throughout the match. Communication with the bots is facilitated using Standard Input (stdin), Output (stdout) and Error (stderr). 
 
-The game runner is used for both local matches as well as tournament matches. **Note**: the latest release of the game runner will be used to run the matches between contestants during each tournament.
+The game runner is used for both local matches as well as tournament matches. **Note**: the latest release of the game runner will be used to run the matches between contestants during the tournament.
 
 ## Getting started
 ### Prerequisites 
@@ -64,7 +78,7 @@ Not all of these fields need to be changed, as stated above, the starter pack wi
 
 All that needs to change for a local match are the following:
 - `player-a`
-- `player-b` (Optional)
+- `player-b`
 - `verbose-mode`
 
 Once the correct fields are set a match can be run. Once again, a Windows batch file and a makefile are provided to assist.
@@ -88,11 +102,11 @@ The game runner currently supports four languages, however, it can be easily ext
 - Javascript
 - Java
 
-The starter bots for each of these languages can be found [here](starter_bots_link).
+The starter bots for each of these languages can be found [here](../starter-bots/).
 
 When adding a new language the following steps need to be followed:
 1. Create a new bot runner for your language (Discussed in the section below)
-2. Create a starter bot with the instructions found [here](starter_bots_link)
+2. Create a starter bot with the instructions found [here](../starter-bots/README.md)
 
 Once these steps have completed, a Pull Request with the new language and starter bot can be made to this repository where it will be reviewed by the Entelect Challenge Team.
 
