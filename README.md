@@ -55,7 +55,7 @@ We included some 'run' files for various operating systems to run a match.
     On Linux:
         Open the terminal in the starter pack's root directory and run the "make run" command.
 
-You should now see some text whizz by in the console/terminal. If this is not the case, your match didn't run as it should. If the error message isn't clear, you can ask for help on our forum [https://forum.entelect.co.za].
+You should now see some text whizz by in the console/terminal. If this is not the case, your match didn't run as it should. If the error message isn't clear, you can ask for help on [our forum](https://forum.entelect.co.za).
 
 ### Step 2
 Now let's change things up a little bit. The previous match we ran, was between the Reference bot and the Java starter bot. Let's change the match to be between the Reference bot and a starter bot of your choice. To change this we need to edit the "game-runner-config.json" file.
