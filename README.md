@@ -39,7 +39,7 @@ Improvements and enhancements will be made to the game engine code over time.  T
 The game engine has been made available to the community for peer review and bug fixes, so if you find any bugs or have any concerns, please [e-mail us](mailto:challenge@entelect.co.za) or discuss it with us on the [Challenge forum](http://forum.entelect.co.za/), alternatively submit a pull request on Github and we will review it.
 
 ## Starter Pack
-The starter pack will provide you with everything that you'll need to run your first bot and compete in this year's challenge. To get the starter pack, simply download the latest release found [here](/releases/latest).
+The starter pack will provide you with everything that you'll need to run your first bot and compete in this year's challenge. To get the starter pack, simply download the latest release found [here](https://github.com/EntelectChallenge/2019-Worms/releases/latest).
 
 A more in-depth explaination of the concepts below can be found [here](./game-runner/README.md).
 
