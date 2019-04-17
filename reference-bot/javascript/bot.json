@@ -1,0 +1,8 @@
+{
+	"author":"EC2019",
+	"email":"challenge@entelect.co.za",
+	"nickName" :"Reference Bot",
+	"botLocation": "/",
+	"botFileName": "ReferenceBot.js",
+	"botLanguage": "javascript"
+}
