@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 Entelect StarterBot for Python3
-'''
+"""
 
 
 class Cell:
 
-    def __init__(self,x,y,type,occupied):
+    def __init__(self, x, y, type, occupied):
         self.x = x
         self.y = y
         self.type = type
