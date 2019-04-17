@@ -15,12 +15,21 @@ public class Bot {
     private Opponent opponent;
     private MyWorm currentWorm;
 
-    public Bot() {
-        random = new Random(System.nanoTime());
+    public Bot(Random random, GameState gameState) {
+        this.random = random;
+        this.gameState = gameState;
+        this.opponent = gameState.opponents[0];
+        this.currentWorm = getCurrentWorm(gameState);
     }
 
-    public Command run(GameState gameState) {
-        loadState(gameState);
+    private MyWorm getCurrentWorm(GameState gameState) {
+        return Arrays.stream(gameState.myPlayer.worms)
+                .filter(myWorm -> myWorm.id == gameState.currentWormId)
+                .findFirst()
+                .get();
+    }
+
+    public Command run() {
 
         Worm enemyWorm = getFirstWormInRange();
         if (enemyWorm != null) {
@@ -39,15 +48,6 @@ public class Bot {
         }
 
         return new DoNothingCommand();
-    }
-
-    private void loadState(GameState gameState) {
-        this.gameState = gameState;
-        this.opponent = gameState.opponents[0];
-        this.currentWorm = Arrays.stream(gameState.myPlayer.worms)
-                .filter(myWorm -> myWorm.id == gameState.currentWormId)
-                .findFirst()
-                .get();
     }
 
     private Worm getFirstWormInRange() {
@@ -117,16 +117,8 @@ public class Bot {
     }
 
     private boolean isValidCoordinate(int x, int y) {
-
-        if (x < 0 || x >= gameState.mapSize) {
-            return false;
-        }
-
-        if (y < 0 || y >= gameState.mapSize) {
-            return false;
-        }
-
-        return true;
+        return x >= 0 && x < gameState.mapSize
+                && y >= 0 && y < gameState.mapSize;
     }
 
     private Direction resolveDirection(Position a, Position b) {

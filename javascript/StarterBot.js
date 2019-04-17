@@ -12,22 +12,44 @@ let mapSize = "";
 let cells = "";
 let myCurrentWorm = "";
 
+// x,y represents the cartesian direction of each
 let directions = [
-    {name: 'E', x: 1, y: 0},
-    {name: 'NE', x: 1, y: -1},
-    {name: 'N', x: 0, y: -1},
-    {name: 'NW', x: -1, y: -1},
-    {name: 'W', x: -1, y: 0},
-    {name: 'SW', x: -1, y: 1},
-    {name: 'S', x: 0, y: 1},
-    {name: 'SE', x: 1, y: 1}
+    {name: 'E', dx: 1, dy: 0},
+    {name: 'NE', dx: 1, dy: -1},
+    {name: 'N', dx: 0, dy: -1},
+    {name: 'NW', dx: -1, dy: -1},
+    {name: 'W', dx: -1, dy: 0},
+    {name: 'SW', dx: -1, dy: 1},
+    {name: 'S', dx: 0, dy: 1},
+    {name: 'SE', dx: 1, dy: 1}
 ];
 let surfaceTypes = {
     DEEP_SPACE: 'DEEP_SPACE',
     AIR: 'AIR',
     DIRT: 'DIRT'
 };
+let commandNames = {
+    nothing: 'nothing',
+    shoot: 'shoot',
+    move: 'move',
+    dig: 'dig',
+};
 
+function getNothingCommand() {
+    return commandNames.nothing;
+}
+
+function getShootCommand(direction) {
+    return `${commandNames.shoot} ${direction}`;
+}
+
+function getMoveCommand(x, y) {
+    return `${commandNames.move} ${x} ${y}`;
+}
+
+function getDigCommand(x, y) {
+    return `${commandNames.dig} ${x} ${y}`;
+}
 
 let consoleReader = readline.createInterface({
     input: process.stdin,
@@ -54,28 +76,26 @@ function initEntities() {
     opponent = stateFile.opponents[0];
     mapSize = stateFile.mapSize;
     gameMap = stateFile.map;
-    cells = flatMap(gameMap);
+    cells = getFlatMapOf(gameMap);
     myCurrentWorm = myPlayer.worms.find(worm => worm.id === stateFile.currentWormId);
 }
 
 function runStrategy() {
-    let command = doNothingCommand();
-
     let cellAndTarget = getShootableOpponent();
     if (cellAndTarget) {
-        return command = `shoot ${cellAndTarget.target}`;
+        return getShootCommand(cellAndTarget.direction);
     }
 
     let cellToMoveDigInto = getRandomMoveCell();
     if (cellToMoveDigInto) {
         if (cellToMoveDigInto.type === surfaceTypes.DIRT) {
-            return command = `dig ${cellToMoveDigInto.x} ${cellToMoveDigInto.y}`;
+            return getDigCommand(cellToMoveDigInto.x, cellToMoveDigInto.y);
         } else if (cellToMoveDigInto.type === surfaceTypes.AIR) {
-            return command = `move ${cellToMoveDigInto.x} ${cellToMoveDigInto.y}`;
+            return getMoveCommand(cellToMoveDigInto.x, cellToMoveDigInto.y);
         }
     }
 
-    return command;
+    return getNothingCommand();
 }
 
 function getRandomMoveCell() {
@@ -84,20 +104,19 @@ function getRandomMoveCell() {
         x: center.x + Math.floor(Math.random() * 3) - 1,
         y: center.y + Math.floor(Math.random() * 3) - 1
     };
-    if (coordinateIsOutOfBounds(randomCellCoordinate)
-        || (randomCellCoordinate.x === center.x
-            && randomCellCoordinate.y === center.y)) {
+    if (isCoordinateOutOfBounds(randomCellCoordinate)
+        || (randomCellCoordinate.x === center.x && randomCellCoordinate.y === center.y)) {
         return null;
     }
 
     return gameMap[randomCellCoordinate.y][randomCellCoordinate.x];
 }
 
-function coordinateIsOutOfBounds(coordinateToCheck) {
-    return coordinateToCheck.x < 0
+function isCoordinateOutOfBounds(coordinateToCheck) {
+    return (coordinateToCheck.x < 0
         || coordinateToCheck.x >= mapSize
         || coordinateToCheck.y < 0
-        || coordinateToCheck.y >= mapSize;
+        || coordinateToCheck.y >= mapSize);
 }
 
 function getPositionOf(entity) {
@@ -115,13 +134,17 @@ function getShootableOpponent() {
     let center = getPositionOf(myCurrentWorm);
     let shootTemplates = getShootTemplates();
 
+    // Use templates to find the 'shooting lines' around the current worm, test each of those cells to be open
     for (let template of shootTemplates) {
+
         for (let deltaCoordinate of template.coordinates) {
+
             let coordinateToCheck = getCoordinateAddition(center, deltaCoordinate);
-            if (coordinateIsOutOfBounds(coordinateToCheck)
-                || euclideanDistance(coordinateToCheck, center) > myCurrentWorm.weapon.range) {
+            if (isCoordinateOutOfBounds(coordinateToCheck)
+                || getEuclideanDistanceOf(coordinateToCheck, center) > myCurrentWorm.weapon.range) {
                 break;
             }
+
             let cellToInspect = gameMap[coordinateToCheck.y][coordinateToCheck.x];
             if (cellToInspect.type === surfaceTypes.DIRT || cellToInspect.type === surfaceTypes.DEEP_SPACE) {
                 break;
@@ -129,7 +152,7 @@ function getShootableOpponent() {
 
             let isOccupiedByOpponentWorm = (cellToInspect.occupier && cellToInspect.occupier.playerId !== myPlayer.id);
             if (isOccupiedByOpponentWorm) {
-                return {cell: cellToInspect, target: template.name};
+                return {cell: cellToInspect, direction: template.name};
             }
         }
     }
@@ -137,13 +160,15 @@ function getShootableOpponent() {
     return null;
 }
 
+// Returns a list of templates, each containing all the coordinates from the current worm in one of the directions
 function getShootTemplates() {
     let shootTemplates = [];
 
     for (let direction of directions) {
         let currentDirectionLine = [];
+
         for (let i = 1; i <= myCurrentWorm.weapon.range; i++) {
-            let cellOfLine = {x: i * direction.x, y: i * direction.y};
+            let cellOfLine = {x: i * direction.dx, y: i * direction.dy};
             currentDirectionLine.push(cellOfLine);
         }
         shootTemplates.push({name: direction.name, coordinates: currentDirectionLine});
@@ -151,19 +176,12 @@ function getShootTemplates() {
     return shootTemplates;
 }
 
-function doNothingCommand() {
-    return `nothing`;
-}
-
-function euclideanDistance(positionA, positionB) {
+// Returns the distance between positionA and positionB. https://en.wikipedia.org/wiki/Euclidean_distance
+function getEuclideanDistanceOf(positionA, positionB) {
     return Math.sqrt(Math.pow(positionA.x - positionB.x, 2) + Math.pow(positionA.y - positionB.y, 2));
 }
 
-/***
- * Returns an array with one less level of nesting
- * @param array
- * @returns {Array}
- */
-function flatMap(array) {
+// Returns an array with one less level of nesting
+function getFlatMapOf(array) {
     return array.reduce((acc, x) => acc.concat(x), []);
 }
