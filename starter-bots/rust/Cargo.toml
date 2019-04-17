@@ -1,7 +1,6 @@
 [package]
 name = "agent-oxide"
 version = "0.1.0"
-authors = ["Your Name Here <yournamehere@example.dev>"]
 edition = "2018"
 
 [dependencies]
