@@ -59,7 +59,7 @@ The machine that the compiled binary is run on does not need to have
 the Rust toolchain installed.
 
 ```sh
-cp ./target/release/bin-name <dest>
+cp ./target/release/<bin-name> <dest>
 ```
 
 ## Running
@@ -67,7 +67,7 @@ cp ./target/release/bin-name <dest>
 The compiled binary can be executed directly.
 
 ```sh
-./target/release/bin-name
+./target/release/<bin-name>
 ```
 
 For convenience in development, you can compile and run through Cargo.
