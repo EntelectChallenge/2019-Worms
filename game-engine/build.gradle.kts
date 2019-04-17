@@ -22,7 +22,7 @@ kotlin {
 
     sourceSets {
         commonMain {
-            dependencies {R
+            dependencies {
                 implementation(kotlin("stdlib-common"))
             }
         }
