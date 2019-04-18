@@ -4,9 +4,9 @@ import za.co.entelect.challenge.config.BotMetaData;
 
 import java.io.IOException;
 
-public class CPlusPlusBotRunner extends BotRunner {
+public class PythonBotRunner extends BotRunner {
 
-    public CPlusPlusBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
+    public PythonBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
         super(botMetaData, timeoutInMilliseconds);
     }
 
@@ -15,9 +15,9 @@ public class CPlusPlusBotRunner extends BotRunner {
         String line;
 
         if(System.getProperty("os.name").contains("Windows")) {
-            line = "cmd /c \"" + this.getBotFileName() + "\"";
+            line = "py -3 \"" + this.getBotFileName() + "\"";
         } else {
-            line = "\"./" + this.getBotFileName() + "\"";
+            line = "python \"" + this.getBotFileName() + "\"";
         }
 
         runSimpleCommandLineCommand(line, 0);
@@ -25,6 +25,6 @@ public class CPlusPlusBotRunner extends BotRunner {
 
     @Override
     public int getDockerPort() {
-        return 9010;
+        return 9004;
     }
 }
