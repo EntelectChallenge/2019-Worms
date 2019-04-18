@@ -4,9 +4,9 @@ import za.co.entelect.challenge.config.BotMetaData;
 
 import java.io.IOException;
 
-public class Python3BotRunner extends BotRunner {
+public class PythonBotRunner extends BotRunner {
 
-    public Python3BotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
+    public PythonBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
         super(botMetaData, timeoutInMilliseconds);
     }
 

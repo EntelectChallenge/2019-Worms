@@ -14,6 +14,5 @@ public enum BotLanguage {
     JAVASCRIPT,
 
     @SerializedName("python")
-    PYTHON3,
-
+    PYTHON,
 }
