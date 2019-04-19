@@ -15,4 +15,7 @@ public enum BotLanguage {
 
     @SerializedName("python")
     PYTHON,
+
+    @SerializedName("haskell")
+    HASKELL
 }

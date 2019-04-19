@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -67,8 +68,10 @@ data Cell = Cell { x :: Int,
 instance FromJSON Cell
 instance ToJSON   Cell
 
+
+
 startBot :: IO ()
 startBot = do
-  roundNumber <- readLn
-  putStr roundNumber
-  putStrLn $ "Hello"
+  _ :: String <- readLn
+  putStr "nothing"
+  startBot
