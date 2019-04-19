@@ -138,6 +138,58 @@ pub struct Weapon {
     pub range: u32
 }
 
+impl State {
+    /// # Panics
+    ///
+    /// This function panics if the state's current_worm_id
+    /// does not appear in the player's worms. This should never
+    /// happen for valid state files.
+    pub fn active_worm(&self) -> &PlayerWorm {
+        self.my_player.worms.iter()
+            .find(|w| w.id == self.current_worm_id)
+            .expect("The current active worm id was not found in the player's worms")
+    }
+
+    /// # Panics
+    ///
+    /// This function panics if the provided position is out of
+    /// bounds, or the cell does not appear in the map.
+    pub fn cell_at(&self, pos: &Position) -> &Cell {
+        self.map.iter()
+            .flatten()
+            .find(|c| c.x == pos.x && c.y == pos.y)
+            .expect("The provided position is out of bounds")
+    }
+}
+
+impl Position {
+    pub fn west(&self) -> Position {
+        Position {
+            x: self.x.saturating_sub(1),
+            y: self.y
+        }
+    }
+    pub fn east(&self) -> Position {
+        Position {
+            x: self.x.saturating_add(1),
+            y: self.y
+        }
+    }
+    pub fn north(&self) -> Position {
+        Position {
+            x: self.x,
+            y: self.y.saturating_sub(1)
+        }
+    }
+    pub fn south(&self) -> Position {
+        Position {
+            x: self.x,
+            y: self.y.saturating_add(1)
+        }
+    }
+}
+
+
 #[cfg(test)]
 mod test {
     use super::*;
