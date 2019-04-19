@@ -43,8 +43,8 @@ instance FromJSON Player
 instance ToJSON   Player
 
 data Opponent = Opponent { opponentsId :: Int,
-                           opponentsScore :: Int }
-                           -- opponentsWorms :: V.Vector OpponentsWorm }
+                           opponentsScore :: Int,
+                           opponentsWorms :: V.Vector OpponentWorm }
               deriving (Show, Generic, Eq)
 
 instance ToJSON   Opponent
@@ -52,7 +52,7 @@ instance FromJSON Opponent where
   parseJSON = withObject "Opponent" $ \ v ->
     Opponent <$> v .: "id"
              <*> v .: "score"
-             -- <*> v .: "worms"
+             <*> v .: "worms"
 
 data Worm = Worm { wormId :: Int,
                    wormHealth :: Int,
