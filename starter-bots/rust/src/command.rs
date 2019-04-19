@@ -1,5 +1,6 @@
 use std::fmt;
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Command {
     Move(u32, u32),
     Dig(u32, u32),
@@ -19,7 +20,7 @@ impl fmt::Display for Command {
     }
 }
 
-
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Direction {
     North,
     NorthEast,
@@ -47,3 +48,4 @@ impl fmt::Display for Direction {
         f.write_str(s)
     }
 }
+

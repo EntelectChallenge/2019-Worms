@@ -22,55 +22,57 @@ fn main() {
 fn choose_command(state: State) -> Command {
     let worm = state.active_worm();
     
-   
-    /*
-    1. If one of the opponent's worms is within range fire at it
-     */
-
-    /*
-    2. Otherwise choose a block in a random direction and do one of the following things
-
-    2.1. If the chosen block is air, move to that block
-    2.2. If the chosen block is dirt, dig out that block
-    2.3. If the chosen block is deep space, do nothing
-     */
-
-    let choices = valid_adjacent_positions(&state, &worm.position);
-    let choice = choices.choose(&mut rand::thread_rng()).unwrap();
-    let chosen_cell = state.cell_at(&choice);
-    
-    match chosen_cell.cell_type {
-        CellType::Air => Command::Move(choice.x, choice.y),
-        CellType::Dirt => Command::Dig(choice.x, choice.y),
-        CellType::DeepSpace => Command::DoNothing
+    if let Some(direction) = find_worm_in_firing_distance(&state, worm) {
+        Command::Shoot(direction)
+    } else {
+        let choices = valid_adjacent_positions(&state, &worm.position);
+        let choice = choices.choose(&mut rand::thread_rng()).unwrap();
+        let chosen_cell = state.cell_at(&choice);
+        
+        match chosen_cell.cell_type {
+            CellType::Air => Command::Move(choice.x, choice.y),
+            CellType::Dirt => Command::Dig(choice.x, choice.y),
+            CellType::DeepSpace => Command::DoNothing
+        }
     }
 }
 
+fn find_worm_in_firing_distance(state: &State, worm: &PlayerWorm) -> Option<Direction> {
+    let directions: [(Direction, Box<dyn Fn(&Position, u32) -> Option<Position>>); 8] = [
+        (Direction::West, Box::new(|p, d| p.west(d))),
+        (Direction::NorthWest, Box::new(|p, d| p.north(d).and_then(|p| p.west(d)))),
+        (Direction::North,  Box::new(|p, d| p.north(d))),
+        (Direction::NorthEast, Box::new(|p, d| p.north(d).and_then(|p| p.east(d, state.map_size)))),
+        (Direction::East,  Box::new(|p, d| p.east(d, state.map_size))),
+        (Direction::SouthEast, Box::new(|p, d| p.south(d, state.map_size).and_then(|p| p.east(d, state.map_size)))),
+        (Direction::South,  Box::new(|p, d| p.south(d, state.map_size))),
+        (Direction::SouthWest, Box::new(|p, d| p.south(d, state.map_size).and_then(|p| p.west(d)))),
+    ];
+
+    for (dir, dir_fn) in &directions {
+        // TODO: This has a bug in that it doesn't work on euclidean distance
+        for distance in 1..=worm.weapon.range {
+            let target = dir_fn(&worm.position, distance);
+            match target.map(|t| state.cell_at(&t)) {
+                Some(Cell { occupier: Some(CellWorm::OpponentWorm{..}), ..}) => return Some(*dir),
+                Some(Cell { cell_type: CellType::Air, ..}) => continue,
+                _ => break
+            }
+        }
+    }
+    None
+}
+
 fn valid_adjacent_positions(state: &State, pos: &Position) -> Vec<Position> {
-    let mut choices = Vec::new();
-    if pos.x > 0 {
-        choices.push(pos.west());
-        if pos.y > 0 {
-            choices.push(pos.west().north());
-        }
-        if pos.y+1 < state.map_size {
-            choices.push(pos.west().south());
-        }
-    }
-    if pos.x+1 < state.map_size {
-        choices.push(pos.east());
-        if pos.y > 0 {
-            choices.push(pos.east().north());
-        }
-        if pos.y+1 < state.map_size {
-            choices.push(pos.east().south());
-        }
-    }
-    if pos.y > 0 {
-        choices.push(pos.north());
-    }
-    if pos.y+1 < state.map_size {
-        choices.push(pos.south());
-    }
-    choices
+    let choices = [
+        pos.west(1),
+        pos.west(1).and_then(|p| p.north(1)),
+        pos.north(1),
+        pos.north(1).and_then(|p| p.east(1, state.map_size)),
+        pos.east(1, state.map_size),
+        pos.east(1, state.map_size).and_then(|p| p.south(1, state.map_size)),
+        pos.south(1, state.map_size),
+        pos.south(1, state.map_size).and_then(|p| p.west(1))
+    ];
+    choices.iter().flatten().cloned().collect()
 }

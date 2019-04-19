@@ -15,7 +15,7 @@ pub fn read_state_from_json_file(filename: &str) -> Result<State, Box<Error>> {
 }
 
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct State {
     pub current_round: u32,
@@ -28,7 +28,7 @@ pub struct State {
     pub map: Vec<Vec<Cell>>
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct Player {
     pub id: u32,
@@ -37,7 +37,7 @@ pub struct Player {
     pub worms: Vec<PlayerWorm>
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct PlayerWorm {
     pub id: u32,
@@ -48,7 +48,7 @@ pub struct PlayerWorm {
     pub weapon: Weapon
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct Opponent {
     pub id: u32,
@@ -56,7 +56,7 @@ pub struct Opponent {
     pub worms: Vec<OpponentWorm>
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct OpponentWorm {
     pub id: u32,
@@ -66,7 +66,7 @@ pub struct OpponentWorm {
     pub movement_range: u32
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct Cell {
     pub x: u32,
@@ -77,7 +77,7 @@ pub struct Cell {
     pub powerup: Option<Powerup>
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum CellType {
     Air,
@@ -85,7 +85,7 @@ pub enum CellType {
     DeepSpace
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(untagged)]
 #[serde(rename_all = "camelCase")]
 pub enum CellWorm {
@@ -110,7 +110,7 @@ pub enum CellWorm {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct Powerup {
     #[serde(rename = "type")]
@@ -118,20 +118,20 @@ pub struct Powerup {
     pub value: u32
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum PowerupType {
     HealthPack
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct Position {
     pub x: u32,
     pub y: u32
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct Weapon {
     pub damage: u32,
@@ -163,29 +163,31 @@ impl State {
 }
 
 impl Position {
-    pub fn west(&self) -> Position {
-        Position {
-            x: self.x.saturating_sub(1),
-            y: self.y
-        }
+    pub fn west(&self, distance: u32) -> Option<Position> {
+        self.x.checked_sub(distance)
+            .map(|x| Position {
+                x, y: self.y
+            })
     }
-    pub fn east(&self) -> Position {
-        Position {
-            x: self.x.saturating_add(1),
-            y: self.y
-        }
+    pub fn east(&self, distance: u32, max: u32) -> Option<Position> {
+        self.x.checked_add(distance)
+            .filter(|&x| x < max)
+            .map(|x| Position {
+                x, y: self.y
+            })
     }
-    pub fn north(&self) -> Position {
-        Position {
-            x: self.x,
-            y: self.y.saturating_sub(1)
-        }
+    pub fn north(&self, distance: u32) -> Option<Position> {
+        self.y.checked_sub(distance)
+            .map(|y| Position {
+                x: self.x, y
+            })
     }
-    pub fn south(&self) -> Position {
-        Position {
-            x: self.x,
-            y: self.y.saturating_add(1)
-        }
+    pub fn south(&self, distance: u32, max: u32) -> Option<Position> {
+        self.y.checked_add(distance)
+            .filter(|&y| y < max)
+            .map(|y| Position {
+                x: self.x, y
+            })
     }
 }
 
