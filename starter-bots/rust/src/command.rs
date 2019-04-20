@@ -5,7 +5,7 @@ pub enum Command {
     Move(u32, u32),
     Dig(u32, u32),
     Shoot(Direction),
-    DoNothing
+    DoNothing,
 }
 
 impl fmt::Display for Command {
@@ -29,7 +29,7 @@ pub enum Direction {
     South,
     SouthWest,
     West,
-    NorthWest
+    NorthWest,
 }
 
 impl fmt::Display for Direction {
@@ -43,7 +43,7 @@ impl fmt::Display for Direction {
             South => "S",
             SouthWest => "SW",
             West => "W",
-            NorthWest => "NW"
+            NorthWest => "NW",
         };
         f.write_str(s)
     }
@@ -52,10 +52,10 @@ impl fmt::Display for Direction {
 impl Direction {
     pub fn is_diagonal(&self) -> bool {
         use Direction::*;
-        
+
         match self {
             NorthEast | SouthEast | SouthWest | NorthWest => true,
-            _ => false
+            _ => false,
         }
     }
 }
