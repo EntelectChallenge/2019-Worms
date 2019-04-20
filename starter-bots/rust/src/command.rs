@@ -49,3 +49,13 @@ impl fmt::Display for Direction {
     }
 }
 
+impl Direction {
+    pub fn is_diagonal(&self) -> bool {
+        use Direction::*;
+        
+        match self {
+            NorthEast | SouthEast | SouthWest | NorthWest => true,
+            _ => false
+        }
+    }
+}

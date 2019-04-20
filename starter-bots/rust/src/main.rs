@@ -50,8 +50,14 @@ fn find_worm_in_firing_distance(state: &State, worm: &PlayerWorm) -> Option<Dire
     ];
 
     for (dir, dir_fn) in &directions {
-        // TODO: This has a bug in that it doesn't work on euclidean distance
-        for distance in 1..=worm.weapon.range {
+        let straight_range = worm.weapon.range;
+        let range = if dir.is_diagonal() {
+            ((straight_range as f32 + 1.) / 2f32.sqrt()).floor() as u32
+        } else {
+            straight_range
+        };
+
+        for distance in 1..=range {
             let target = dir_fn(&worm.position, distance);
             match target.map(|t| state.cell_at(&t)) {
                 Some(Cell { occupier: Some(CellWorm::OpponentWorm{..}), ..}) => return Some(*dir),
