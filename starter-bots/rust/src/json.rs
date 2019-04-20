@@ -139,26 +139,15 @@ pub struct Weapon {
 }
 
 impl State {
-    /// # Panics
-    ///
-    /// This function panics if the state's current_worm_id
-    /// does not appear in the player's worms. This should never
-    /// happen for valid state files.
-    pub fn active_worm(&self) -> &PlayerWorm {
+    pub fn active_worm(&self) -> Option<&PlayerWorm> {
         self.my_player.worms.iter()
             .find(|w| w.id == self.current_worm_id)
-            .expect("The current active worm id was not found in the player's worms")
     }
 
-    /// # Panics
-    ///
-    /// This function panics if the provided position is out of
-    /// bounds, or the cell does not appear in the map.
-    pub fn cell_at(&self, pos: &Position) -> &Cell {
+    pub fn cell_at(&self, pos: &Position) -> Option<&Cell> {
         self.map.iter()
             .flatten()
             .find(|c| c.x == pos.x && c.y == pos.y)
-            .expect("The provided position is out of bounds")
     }
 }
 
