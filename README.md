@@ -43,9 +43,10 @@ The starter pack will provide you with everything that you'll need to run your f
 
 A more in-depth explaination of the concepts below can be found [here](./game-runner/README.md).
 
+Before you run your first match you need ensure your environment is correct. The game-runner was built in Java, therefore, please ensure you have [Java installed](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). By default, the starter-pack runs Javascript bots, please make sure you have [Nodejs installed](https://nodejs.org/en/download/).
+
 ### Step 1
 Let's start off by running your very first match:
-(Because we are going to run Java files, please make sure you have [java installed](http://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html))
 
 We included some 'run' files for various operating systems to run a match.
 
@@ -58,7 +59,7 @@ We included some 'run' files for various operating systems to run a match.
 You should now see some text whizz by in the console/terminal. If this is not the case, your match didn't run as it should. If the error message isn't clear, you can ask for help on [our forum](https://forum.entelect.co.za).
 
 ### Step 2
-Now let's change things up a little bit. The previous match we ran, was between the Reference bot and the Java starter bot. Let's change the match to be between the Reference bot and a starter bot of your choice. To change this we need to edit the "game-runner-config.json" file.
+Now let's change things up a little bit. The previous match we ran, was between the Reference bot and the Javascript starter bot. Let's change the match to be between the Reference bot and a starter bot of your choice. To change this we need to edit the "game-runner-config.json" file.
 
 The most improtant fields in the 'game-runner-config.json' for running a match locally is as follows:
 
