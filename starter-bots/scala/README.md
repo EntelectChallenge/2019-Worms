@@ -11,8 +11,8 @@ The community edition is free.
 
 ## Building
 
-Make your modifications to the starter bot using IntelliJ. Once you are happy with your changes, package your bot by opening up the "Maven Projects" tab on the right side of the screen. From here go to the  "java-sample-bot" > "Lifecycle" group and double-click "Install"
-This  will create a .jar file in the folder called "target". The file will be called "scala-sample-bot-jar-with-dependencies.jar".
+Make your modifications to the starter bot using IntelliJ. Once you are happy with your changes, package your bot by running "sbt assembly" from your terminal.
+This  will create a .jar file in the folder called "target/scala-2.12/". The file will be called "scala-sample-bot-jar-with-dependencies.jar".
 
 ## Running 
 
