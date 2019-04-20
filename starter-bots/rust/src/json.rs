@@ -21,7 +21,7 @@ pub struct State {
     pub current_round: u32,
     pub max_rounds: u32,
     pub map_size: u32,
-    pub current_worm_id: u32,
+    pub current_worm_id: i32,
     pub consecutive_do_nothing_count: u32,
     pub my_player: Player,
     pub opponents: Vec<Opponent>,
@@ -31,17 +31,17 @@ pub struct State {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct Player {
-    pub id: u32,
-    pub score: u32,
-    pub health: u32,
+    pub id: i32,
+    pub score: i32,
+    pub health: i32,
     pub worms: Vec<PlayerWorm>
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct PlayerWorm {
-    pub id: u32,
-    pub health: u32,
+    pub id: i32,
+    pub health: i32,
     pub position: Position,
     pub digging_range: u32,
     pub movement_range: u32,
@@ -51,16 +51,16 @@ pub struct PlayerWorm {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct Opponent {
-    pub id: u32,
-    pub score: u32,
+    pub id: i32,
+    pub score: i32,
     pub worms: Vec<OpponentWorm>
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct OpponentWorm {
-    pub id: u32,
-    pub health: u32,
+    pub id: i32,
+    pub health: i32,
     pub position: Position,
     pub digging_range: u32,
     pub movement_range: u32
@@ -91,9 +91,9 @@ pub enum CellType {
 pub enum CellWorm {
     #[serde(rename_all = "camelCase")]
     PlayerWorm {
-        id: u32,
-        player_id: u32,
-        health: u32,
+        id: i32,
+        player_id: i32,
+        health: i32,
         position: Position,
         digging_range: u32,
         movement_range: u32,
@@ -101,9 +101,9 @@ pub enum CellWorm {
     },
     #[serde(rename_all = "camelCase")]
     OpponentWorm {
-        id: u32,
-        player_id: u32,
-        health: u32,
+        id: i32,
+        player_id: i32,
+        health: i32,
         position: Position,
         digging_range: u32,
         movement_range: u32
@@ -115,7 +115,7 @@ pub enum CellWorm {
 pub struct Powerup {
     #[serde(rename = "type")]
     pub powerup_type: PowerupType,
-    pub value: u32
+    pub value: i32
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq)]
