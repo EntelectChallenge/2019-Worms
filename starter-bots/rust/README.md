@@ -38,9 +38,22 @@ Cargo needs to be called from the root of the bot (the folder with the
 Cargo.toml file).
 
 ```sh
-cd <root-of-bot>
 cargo build --release
 ```
+
+## Running Tests
+
+Rust has support for unit testing built into the language. Any
+functions marked with the `#[test]` annotation are considered tests.
+
+Tests can be run using Cargo:
+
+```sh
+cargo test
+```
+
+More information on how to write tests is available in
+[The Rust Programming Language](https://doc.rust-lang.org/book/ch11-00-testing.html).
 
 ## Exporting the compiled executable
 
