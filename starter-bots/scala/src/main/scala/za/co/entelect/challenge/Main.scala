@@ -8,6 +8,9 @@ import scala.io.StdIn.readInt
 import scala.util.Random
 import org.json4s._
 import org.json4s.native.JsonMethods._
+import za.co.entelect.challenge.commands.Command
+import za.co.entelect.challenge.entities.GameState
+import za.co.entelect.challenge.enums.Serializers
 
 object Main {
   private final val ROUNDS_DIRECTORY = "rounds"
@@ -29,7 +32,12 @@ object Main {
         val statePath = s"./$ROUNDS_DIRECTORY/$roundNumber/$STATE_FILE_NAME"
         val state     = Files.readAllBytes(Paths.get(statePath))
 
-        val gameState: GameState = parse(state.toString).extract[GameState]
+        val json      = parse(state.map(_.toChar).mkString)
+        val processedJson = json.transformField {
+          case ("type", x) => ("tpe", x)
+        }
+
+        val gameState: GameState = processedJson.extract[GameState]
         val command:   Command   = new Bot(random = random, gameState = gameState).run()
 
         println(s"C;$roundNumber;${command.render()}")

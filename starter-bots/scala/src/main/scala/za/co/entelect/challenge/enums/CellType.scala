@@ -4,12 +4,15 @@ import enumeratum.{Enum, EnumEntry}
 
 import scala.collection.immutable.IndexedSeq
 
-sealed trait CellType extends EnumEntry
+object CellType{
+  sealed trait CellTypes extends EnumEntry
 
-object CellTypes extends Enum[CellType] {
-  case object DEEP_SPACE extends CellType
-  case object DIRT       extends CellType
-  case object AIR        extends CellType
+  object CellTypes extends Enum[CellTypes] {
+    case object DEEP_SPACE extends CellTypes
+    case object DIRT       extends CellTypes
+    case object AIR        extends CellTypes
 
-  override def values: IndexedSeq[CellType] = findValues
+    override def values: IndexedSeq[CellTypes] = findValues
+  }
+
 }

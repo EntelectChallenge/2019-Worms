@@ -2,7 +2,8 @@ package za.co.entelect.challenge
 
 import za.co.entelect.challenge.commands.{Command, DigCommand, DoNothingCommand, MoveCommand, ShootCommand}
 import za.co.entelect.challenge.entities.{Cell, GameState, MyWorm, Opponent, Position, Worm}
-import za.co.entelect.challenge.enums.{CellTypes, Direction}
+import za.co.entelect.challenge.enums.CellType.CellTypes
+import za.co.entelect.challenge.enums.{CellType, Direction}
 import za.co.entelect.challenge.enums.Direction.{Direction, DirectionObject, Directions}
 
 import scala.collection.mutable.ListBuffer
@@ -46,8 +47,8 @@ class Bot(gameState: GameState, random: Random){
   private def getSurroundingCells(x: Int, y: Int): List[Cell] = {
     val cells: ListBuffer[Cell] = ListBuffer.empty[Cell]
 
-    for (i <- Range(x - 1, x + 1)) {
-      for (j <- Range(y - 1, y + 1)) {
+    for (i <- Range(x - 1, x + 2)) {
+      for (j <- Range(y - 1, y + 2)) {
         if(i != x && j != y && isValidCoordinate(i, j)) {
           cells += gameState.map(j)(i)
         }
@@ -64,21 +65,24 @@ class Bot(gameState: GameState, random: Random){
       val directionLine: ListBuffer[Cell] = ListBuffer.empty[Cell]
       val directionObject: DirectionObject = Direction.matchDirection(direction)
 
-      for (directionMultiplier <- Range(1, range)) {
+      for (directionMultiplier <- Range(1, range + 1)) {
         val coordinateX: Int = currentWorm.position.x + (directionMultiplier * directionObject.x)
         val coordinateY: Int = currentWorm.position.y + (directionMultiplier * directionObject.y)
-        val cell: Cell = gameState.map(coordinateY)(coordinateX)
 
-        val checkValidCoordinate = isValidCoordinate(coordinateX, coordinateY)
-        val checkOutOfRange      = !(euclideanDistance(currentWorm.position.x, currentWorm.position.y, coordinateX, coordinateY) > range)
-        val checkCellType        = cell.`type` == CellTypes.AIR
+        val checkValidCoordinate           = isValidCoordinate(coordinateX, coordinateY)
+        val checkOutOfRange                = !(euclideanDistance(currentWorm.position.x, currentWorm.position.y, coordinateX, coordinateY) > range)
+        val checkCellType: Cell => Boolean = { cell => cell.tpe == CellTypes.AIR }
 
-        if (checkValidCoordinate && checkOutOfRange && checkCellType)
-          directionLine += cell
+        if (checkValidCoordinate && checkOutOfRange) {
+          val cell: Cell = gameState.map(coordinateY)(coordinateX)
+          if (checkCellType(cell)) {
+            directionLine += gameState.map(coordinateY)(coordinateX)
+
+          }
+        }
       }
       directionLines += directionLine.toList
     }
-
     directionLines.toList
   }
 
@@ -104,10 +108,12 @@ class Bot(gameState: GameState, random: Random){
       }
       case None       => {
         val surroundingBlocks: List[Cell] = getSurroundingCells(currentWorm.position.x, currentWorm.position.y)
-        val cellIdx = random.nextInt(surroundingBlocks.size)
+        println(s"\n =========== \n ${surroundingBlocks.size} \n =========== \n")
+        val cellIdx = random.nextInt(surroundingBlocks.length)
+        println(s"\n =========== \n ${cellIdx} \n =========== \n")
 
         val block: Cell = surroundingBlocks(cellIdx)
-        block.`type` match {
+        block.tpe match {
           case CellTypes.AIR        => MoveCommand(block.x, block.y)
           case CellTypes.DIRT       => DigCommand(block.x, block.y)
           case CellTypes.DEEP_SPACE => DoNothingCommand()
