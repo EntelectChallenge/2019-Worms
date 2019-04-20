@@ -4,8 +4,8 @@ Rust is a systems programming language, giving programmers the low
 level control that they would usually associate with a programming
 langauge like C or C++, but modern high level programming features.
 
-Rust is a compiled language, which compiles to an
-architecture-specific binary.
+Rust is a compiled language, which compiles to a platform-specific
+binary.
 
 ## Environment Setup
 
@@ -14,7 +14,8 @@ website.
 
 https://www.rust-lang.org/en-US/install.html
 
-The [Dockerfile](./Dockerfile) was adapted from the Docker image provided by the Rust team. It installs:
+The [Dockerfile](./Dockerfile) was adapted from a Docker image
+provided by the Rust team. It installs the following versions:
 
 - rustup 1.17.0
 - cargo 1.34.0
@@ -59,7 +60,7 @@ The machine that the compiled binary is run on does not need to have
 the Rust toolchain installed.
 
 ```sh
-cp ./target/release/<bin-name> <dest>
+cp ./target/release/<botFileName> <dest>
 ```
 
 ## Running
@@ -67,7 +68,7 @@ cp ./target/release/<bin-name> <dest>
 The compiled binary can be executed directly.
 
 ```sh
-./target/release/<bin-name>
+./target/release/<botFileName>
 ```
 
 For convenience in development, you can compile and run through Cargo.
