@@ -5,9 +5,6 @@ import java.nio.file.{Files, Paths}
 import org.json4s.DefaultFormats
 
 import scala.io.StdIn.readInt
-import za.co.entelect.challenge.commands.Command
-import za.co.entelect.challenge.entities.GameState
-
 import scala.util.Random
 import org.json4s._
 import org.json4s.native.JsonMethods._
@@ -16,7 +13,7 @@ object Main {
   private final val ROUNDS_DIRECTORY = "rounds"
   private final val STATE_FILE_NAME  = "state.json"
 
-  implicit val formats = DefaultFormats
+  implicit val formats: Formats = DefaultFormats ++ Serializers.enumSerializers
 
   /**
     * Read the current state, feed it to the bot, get the output and print it to stdout
