@@ -2,7 +2,7 @@
 	"author": "James James",
 	"email": "James.James@example.com",
 	"nickName": "James",
-	"botLocation": "/target",
+	"botLocation": "/target/scala-2.12/",
 	"botFileName": "scala-sample-bot-jar-with-dependencies.jar",
 	"botLanguage": "scala"
 }
