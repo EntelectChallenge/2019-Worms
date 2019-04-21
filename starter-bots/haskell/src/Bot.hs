@@ -160,23 +160,48 @@ instance Show Move where
 data CoordWithDirection = CoordWithDirection Coord Direction
   deriving Eq
 
-shootTemplates :: Int -> Player -> GameMap -> Opponent -> [CoordWithDirection]
-shootTemplates wormId player map opponent = []
+hits :: Worm -> Opponent -> V.Vector Direction
+hits (Worm     { weapon = weapon', position = position' })
+     (Opponent { opponentsWorms = worms' }) =
+  V.map (directionFrom position' . opPosition) $ V.filter hits' worms'
+  where
+    range' = range weapon'
+    hits' :: OpponentWorm -> Bool
+    hits' (OpponentWorm { opPosition = opPosition' }) =
+      aligns position' opPosition' &&
+      inRange position' opPosition' range'
 
-tryToShoot :: Int -> Player -> GameMap -> Opponent -> Maybe Move
-tryToShoot wormId player map opponent =
-  let templates = shootTemplates wormId player map opponent
-      hits      = filter (hitsOponentWorm opponent) templates
-  in if hits == []
-     then Nothing
-     else Just $ coordWithDirectionToShoot $ head hits
+directionFrom :: Coord -> Coord -> Direction
+directionFrom (Coord x' y') (Coord x'' y'') =
+  case (y' == y'', x' == x'', x' > x'', y' > y'') of
+    (True,  False, True,  False) -> West
+    (True,  False, False, False) -> East
+    (False, True,  False, True)  -> North
+    (False, True,  False, False) -> South
+    (False, False, True,  True)  -> NorthWest
+    (False, False, False, True)  -> NorthEast
+    (False, False, True,  False) -> SouthWest
+    (False, False, False, False) -> SouthEast
 
-coordWithDirectionToShoot :: CoordWithDirection -> Move
-coordWithDirectionToShoot (CoordWithDirection _ direction) = Shoot direction
+aligns :: Coord -> Coord -> Bool
+aligns (Coord x' y') (Coord x'' y'') =
+  x' == x'' ||
+  y' == y'' ||
+  (abs (x' - x'')) == (abs (y' -y''))
 
-hitsOponentWorm :: Opponent -> CoordWithDirection -> Bool
-hitsOponentWorm (Opponent _ _ worms) (CoordWithDirection coord _) =
-  any (collides coord) worms
+inRange :: Coord -> Coord -> Int -> Bool
+inRange (Coord x' y') (Coord x'' y'') range' =
+  let dx = (fromIntegral (x' - x''))
+      dy = (fromIntegral (y' - y''))
+  in sqrt ((dx ** 2) + (dy ** 2)) < (fromIntegral range')
+
+tryToShoot :: Int -> Player -> Opponent -> Maybe Move
+tryToShoot currentWormId (Player { worms = worms' }) opponent = do
+  currentWorm  <- V.find ((== currentWormId) . wormId) worms'
+  let hits'     = hits currentWorm opponent
+  if V.null hits'
+    then Nothing
+    else Just $ Shoot $ V.head hits'
 
 collides :: Coord -> OpponentWorm -> Bool
 collides (Coord x y) (OpponentWorm { opPosition = coord' }) =
@@ -206,7 +231,7 @@ translateToMoveOrDig (Cell x y "DEEP_SPACE") = Nothing
 makeMove :: StdGen -> State -> Move
 makeMove g (State _ _ _ currentWormId _ myPlayer opponents map) =
   let opponent = (opponents V.!? 0)
-  in fromJust $ msum [opponent >>= (tryToShoot          currentWormId myPlayer map),
+  in fromJust $ msum [opponent >>= (tryToShoot          currentWormId myPlayer),
                       opponent >>= (tryToMoveRandomly g currentWormId myPlayer map),
                       Just DoNothing]
 
