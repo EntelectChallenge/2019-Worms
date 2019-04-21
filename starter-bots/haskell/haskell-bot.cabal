@@ -1,10 +1,8 @@
-cabal-version: 1.12
-
--- This file has been generated from package.yaml by hpack version 0.31.1.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9b66abfc0c80967e2d1b2f4b31d4401058afd2ccd39211c3ae7122953891762d
+-- hash: 124c97fafed7dfa26108d7aafeb90d105cda435eb46bc1badc73681acc120e51
 
 name:           haskell-bot
 version:        0.1.0.0
@@ -15,6 +13,7 @@ author:         Edward John Steere & Louis Lotter
 maintainer:     edward.steere@gmail.com;louis.lotter.za@gmail.com
 copyright:      2019 Edward John Steere & Louis Lotter
 build-type:     Simple
+cabal-version:  >= 1.10
 extra-source-files:
     README.md
 
@@ -33,6 +32,7 @@ library
       aeson >=1.4.2.0
     , base >=4.7 && <5
     , bytestring >=0.10.8.2
+    , utf8-string >=1.0.1.1
     , vector >=0.12.0.2
   default-language: Haskell2010
 
@@ -48,6 +48,7 @@ executable haskell-bot-exe
     , base >=4.7 && <5
     , bytestring >=0.10.8.2
     , haskell-bot
+    , utf8-string >=1.0.1.1
     , vector >=0.12.0.2
   default-language: Haskell2010
 
@@ -64,5 +65,6 @@ test-suite haskell-bot-test
     , base >=4.7 && <5
     , bytestring >=0.10.8.2
     , haskell-bot
+    , utf8-string >=1.0.1.1
     , vector >=0.12.0.2
   default-language: Haskell2010

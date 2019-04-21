@@ -9,7 +9,7 @@ module Bot
 import qualified Data.Vector as V
 import GHC.Generics (Generic)
 import qualified Data.ByteString.Lazy as B
-import qualified Data.ByteString.Lazy.Char8 as B8
+import qualified Data.ByteString.Lazy.UTF8 as UTF8
 import System.IO
 
 import Data.Aeson (decode,
@@ -122,10 +122,42 @@ readGameState r = do
   let Just state = decode stateString
   return state
 
-startBot :: IO ()
-startBot = do
+data Direction = East
+               | NorthEast
+               | North
+               | NorthWest
+               | West
+               | SouthWest
+               | South
+               | SouthEast
+
+instance Show Direction where
+  show East      = "E"
+  show NorthEast = "NE"
+  show North     = "N"
+  show NorthWest = "NW"
+  show West      = "W"
+  show SouthWest = "SW"
+  show South     = "S"
+  show SouthEast = "SE"
+
+data Move = DoNothing
+          | Shoot Direction
+          | Move Coord
+          | Dig Coord
+
+instance Show Move where
+  show DoNothing          = "nothing"
+  show (Shoot direction)  = "shoot " ++ show direction
+  show (Move (Coord x y)) = "move " ++ show x ++ " " ++ show y
+  show (Dig (Coord x y))  = "dig " ++ show x ++ " " ++ show y
+
+makeMove :: State -> Move
+makeMove = \ _ -> DoNothing
+
+startBot :: Int -> IO ()
+startBot roundNumber = do
   round :: Int <- readLn
   state <- readGameState round
-  B.hPutStr stderr $ encode state
-  B8.putStrLn "nothing"
-  startBot
+  putStrLn $ "C;" ++ show roundNumber ++ ";" ++ show (makeMove state) ++ "\n"
+  startBot (roundNumber + 1)

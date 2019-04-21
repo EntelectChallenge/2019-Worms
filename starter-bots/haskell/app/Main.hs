@@ -7,4 +7,4 @@ import System.IO
 main :: IO ()
 main = do
   hSetBuffering stdout NoBuffering
-  startBot
+  startBot 1
