@@ -10,7 +10,9 @@ import qualified Data.Vector as V
 import GHC.Generics (Generic)
 import qualified Data.ByteString.Lazy as B
 import qualified Data.ByteString.Lazy.UTF8 as UTF8
+import Data.Maybe
 import System.IO
+import Control.Monad
 
 import Data.Aeson (decode,
                    withObject,
@@ -20,6 +22,8 @@ import Data.Aeson (decode,
                    ToJSON,
                    parseJSON)
 
+type GameMap = V.Vector (V.Vector Cell)
+
 data State = State { currentRound :: Int,
                      maxRounds :: Int,
                      mapSize :: Int,
@@ -27,7 +31,7 @@ data State = State { currentRound :: Int,
                      consecutiveDoNothingCount :: Int,
                      myPlayer :: Player,
                      opponents :: V.Vector Opponent,
-                     map :: V.Vector (V.Vector Cell) }
+                     map :: GameMap }
              deriving (Show, Generic, Eq)
 
 instance FromJSON State
@@ -152,8 +156,18 @@ instance Show Move where
   show (Move (Coord x y)) = "move " ++ show x ++ " " ++ show y
   show (Dig (Coord x y))  = "dig " ++ show x ++ " " ++ show y
 
+tryToShoot :: Int -> Player -> GameMap -> Opponent -> Maybe Move
+tryToShoot _ _ _ _ = Nothing
+
+tryToMoveRandomly :: Int -> Player -> GameMap -> Opponent -> Maybe Move
+tryToMoveRandomly _ _ _ _ = Nothing
+
 makeMove :: State -> Move
-makeMove = \ _ -> DoNothing
+makeMove (State _ _ _ currentWormId _ myPlayer opponents map) =
+  let opponent = (opponents V.!? 0)
+  in fromJust $ msum [opponent >>= (tryToShoot        currentWormId myPlayer map),
+                      opponent >>= (tryToMoveRandomly currentWormId myPlayer map),
+                      Just DoNothing]
 
 startBot :: Int -> IO ()
 startBot roundNumber = do
