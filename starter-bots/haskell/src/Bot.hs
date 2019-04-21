@@ -134,6 +134,7 @@ data Direction = East
                | SouthWest
                | South
                | SouthEast
+  deriving Eq
 
 instance Show Direction where
   show East      = "E"
@@ -156,8 +157,31 @@ instance Show Move where
   show (Move (Coord x y)) = "move " ++ show x ++ " " ++ show y
   show (Dig (Coord x y))  = "dig " ++ show x ++ " " ++ show y
 
+data CoordWithDirection = CoordWithDirection Coord Direction
+  deriving Eq
+
+shootTemplates :: Int -> Player -> GameMap -> Opponent -> [CoordWithDirection]
+shootTemplates wormId player map opponent = []
+
 tryToShoot :: Int -> Player -> GameMap -> Opponent -> Maybe Move
-tryToShoot _ _ _ _ = Nothing
+tryToShoot wormId player map opponent =
+  let templates = shootTemplates wormId player map opponent
+      hits      = filter (hitsOponentWorm opponent) templates
+  in if hits == []
+     then Nothing
+     else Just $ coordWithDirectionToShoot $ head hits
+
+coordWithDirectionToShoot :: CoordWithDirection -> Move
+coordWithDirectionToShoot (CoordWithDirection _ direction) = Shoot direction
+
+hitsOponentWorm :: Opponent -> CoordWithDirection -> Bool
+hitsOponentWorm (Opponent _ _ worms) (CoordWithDirection coord _) =
+  any (collides coord) worms
+
+collides :: Coord -> OpponentWorm -> Bool
+collides (Coord x y) (OpponentWorm { opPosition = coord' }) =
+  x == xCoord coord' &&
+  y == yCoord coord'
 
 tryToMoveRandomly :: Int -> Player -> GameMap -> Opponent -> Maybe Move
 tryToMoveRandomly _ _ _ _ = Nothing
