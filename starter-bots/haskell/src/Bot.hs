@@ -13,7 +13,7 @@ import qualified Data.ByteString.Lazy.UTF8 as UTF8
 import Data.Maybe
 import System.IO
 import Control.Monad
-
+import System.Random
 import Data.Aeson (decode,
                    withObject,
                    (.:),
@@ -183,19 +183,37 @@ collides (Coord x y) (OpponentWorm { opPosition = coord' }) =
   x == xCoord coord' &&
   y == yCoord coord'
 
-tryToMoveRandomly :: Int -> Player -> GameMap -> Opponent -> Maybe Move
-tryToMoveRandomly _ _ _ _ = Nothing
+tryToMoveRandomly :: StdGen -> Int -> Player -> GameMap -> Opponent -> Maybe Move
+tryToMoveRandomly g currentWormId (Player { worms = worms' }) map opponent = do
+  currentWorm  <- V.find ((== currentWormId) . wormId) worms'
+  let wormPosition = position currentWorm
+  let (a, g')      = next g
+  let x            = (xCoord wormPosition) + (mod a 3) - 1
+  let (b, _)       = next g'
+  let y            = (yCoord wormPosition) + (mod b 3) - 1
+  let mapLength    = V.length map
+  if (x < 0 || y < 0 || x >= mapLength || y >= mapLength)
+     then Nothing
+     else if xCoord wormPosition == x && yCoord wormPosition == y
+          then Nothing
+          else translateToMoveOrDig ((map V.! y) V.! x)
 
-makeMove :: State -> Move
-makeMove (State _ _ _ currentWormId _ myPlayer opponents map) =
+translateToMoveOrDig :: Cell -> Maybe Move
+translateToMoveOrDig (Cell x y "AIR")        = Just $ Move (Coord x y)
+translateToMoveOrDig (Cell x y "DIRT")       = Just $ Dig  (Coord x y)
+translateToMoveOrDig (Cell x y "DEEP_SPACE") = Nothing
+
+makeMove :: StdGen -> State -> Move
+makeMove g (State _ _ _ currentWormId _ myPlayer opponents map) =
   let opponent = (opponents V.!? 0)
-  in fromJust $ msum [opponent >>= (tryToShoot        currentWormId myPlayer map),
-                      opponent >>= (tryToMoveRandomly currentWormId myPlayer map),
+  in fromJust $ msum [opponent >>= (tryToShoot          currentWormId myPlayer map),
+                      opponent >>= (tryToMoveRandomly g currentWormId myPlayer map),
                       Just DoNothing]
 
-startBot :: Int -> IO ()
-startBot roundNumber = do
+startBot :: StdGen -> Int -> IO ()
+startBot g roundNumber = do
   round :: Int <- readLn
   state <- readGameState round
-  putStrLn $ "C;" ++ show roundNumber ++ ";" ++ show (makeMove state) ++ "\n"
-  startBot (roundNumber + 1)
+  let (g', g'') = split g
+  putStrLn $ "C;" ++ show roundNumber ++ ";" ++ show (makeMove g' state) ++ "\n"
+  startBot g'' (roundNumber + 1)
