@@ -6,3 +6,5 @@ out/
 
 starter-bots/c++/vs/
 starter-bots/cplusplus/vs/
+starter-bots/cplusplus/cppbot.o
+starter-bots/cplusplus/bin/cppbot.out
