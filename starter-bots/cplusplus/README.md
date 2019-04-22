@@ -11,8 +11,9 @@ This container includes components required to compile and run a c++ project. Th
 
 ## Compiling c++ Project :
 
-- Supplied makefile will compile the starter bot. 
+- Supplied makefile will compile the starter bot in linux. 
   - Any additional files added to the project will also need to be added to the makefile.
+- The visual studio solution will compile a debug windows executable.
 
 
 ## Running the Bot :
