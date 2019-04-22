@@ -6,6 +6,7 @@
 #include <vector>
 #include <functional>
 #include <algorithm>
+#include <cmath>
 
 static std::string dirt = "DIRT";
 static std::string air = "AIR";

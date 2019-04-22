@@ -13,6 +13,4 @@ COPY . /cppbot
 
 RUN cd /cppbot
 
-run make
-
-RUN ls
+RUN make
