@@ -12,12 +12,20 @@ public class HaskellBotRunner extends BotRunner {
 
     @Override
     protected void runBot() throws IOException {
+        String runTimeArguments;
+        if (this.getArguments() != null) {
+            int coreCount = this.getArguments().getCoreCount();
+            runTimeArguments = " +RTS -N" + Integer.toString(coreCount) + " -RTS";
+        } else {
+            runTimeArguments = "";
+        }
+
         String line;
 
         if(System.getProperty("os.name").contains("Windows")) {
-            line = this.getBotDirectory() + "\\" + this.getBotFileName() + ".exe";
+            line = "cmd /c \"" + this.getBotFileName() + runTimeArguments + "\"";
         } else {
-            line = this.getBotDirectory() + "/" + this.getBotFileName();
+            line = "./" + this.getBotFileName() + runTimeArguments;
         }
 
         runSimpleCommandLineCommand(line, 0);
@@ -25,6 +33,6 @@ public class HaskellBotRunner extends BotRunner {
 
     @Override
     public int getDockerPort() {
-        return 9004;
+        return 9005;
     }
 }

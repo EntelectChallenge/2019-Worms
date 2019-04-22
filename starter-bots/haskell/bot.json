@@ -4,5 +4,8 @@
     "nickName": "Dave",
     "botLocation": "/bin",
     "botFileName": "haskell-bot-exe",
-    "botLanguage": "haskell"
+    "botLanguage": "haskell",
+    "arguments": {
+        "coreCount": 1
+    }
 }
