@@ -1,9 +1,0 @@
-diff a/game-runner/src/main/java/za/co/entelect/challenge/enums/BotLanguage.java b/game-runner/src/main/java/za/co/entelect/challenge/enums/BotLanguage.java	(rejected hunks)
-@@ -16,4 +16,7 @@ public enum BotLanguage {
-     @SerializedName("python")
-     PYTHON3,
- 
-+    @SerializedName("cplusplus")
-+    CPLUSPLUS,
-+
- }

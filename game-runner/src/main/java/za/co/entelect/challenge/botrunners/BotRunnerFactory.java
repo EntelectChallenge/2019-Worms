@@ -14,6 +14,8 @@ public class BotRunnerFactory {
                 return new JavaScriptBotRunner(botMetaData, timeoutInMilliseconds);
             case PYTHON:
                 return new PythonBotRunner(botMetaData, timeoutInMilliseconds);
+            case CPLUSPLUS:
+                return new CPlusPlusBotRunner(botMetaData, timeoutInMilliseconds);
             default:
                 break;
         }
