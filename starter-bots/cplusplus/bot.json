@@ -1,8 +1,8 @@
 {
-	"author": "Dion van Huyssteen",
-	"email": "dion@darkervision.com	",
-	"nickName": "Dion",
-	"botLocation": "./bin/",
-	"botFileName": "cppbot.exe",
-	"botLanguage": "cplusplus"
+    "author": "John Doe",
+    "email": "john.doe@example.com",
+    "nickName": "Bill",
+    "botLocation": "./bin/",
+    "botFileName": "cppbot.exe",
+    "botLanguage": "cplusplus"
 }
