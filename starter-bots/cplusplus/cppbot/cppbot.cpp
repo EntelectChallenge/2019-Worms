@@ -191,9 +191,9 @@ std::string executeRound(std::string& roundNumber)
   {
     std::stringstream buffer;
     buffer << dataIn.rdbuf();
-    std::string sOrderBookString = buffer.str();
+    std::string stateJson = buffer.str();
     rapidjson::Document roundJSON;
-    const bool parsed = !roundJSON.Parse(sOrderBookString.c_str()).HasParseError();
+    const bool parsed = !roundJSON.Parse(stateJson.c_str()).HasParseError();
     if (parsed)
     {
       ret = "C;" + roundNumber + ";" + runStrategy(roundJSON) + "\n";
