@@ -16,8 +16,9 @@
 			Python 3.7.2 (default, Feb 21 2019, 17:35:59) [MSC v.1900 64 bit (AMD64)] on win32
 			Type "help", "copyright", "credits" or "license" for more information.
 			>>>|
-			
-		
+
+**Note**: if you are using Anaconda you will still need to have a standalone installation of the Python 3.7. Anaconda does not expose the `python` or `py` commands required for the game-runner to start-up the python bots.
+
 ## Python Dependencies:
 
 	Dependencies will be handled using PIP ( or conda if using Anaconda ), all dependencies should be supplied in a 
