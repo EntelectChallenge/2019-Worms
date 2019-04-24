@@ -36,3 +36,8 @@
 	Run the following:
 		
 		python PythonStarterBot.py
+
+**Note**: The game runner will resolve the python command that needs to be run on the current platform. 
+For example, it will attempt to run `python3`, if that fails it will move on to trying `py -3`. 
+The list of python commands that will be tried can be found in the `PythonBotRunner` in the game runner. 
+If any python commands were not included simply contact the Entelect Challenge team or create a Pull Request for the new command. 
