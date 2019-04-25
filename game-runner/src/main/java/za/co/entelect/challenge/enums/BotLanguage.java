@@ -19,4 +19,6 @@ public enum BotLanguage {
     @SerializedName("cplusplus")
     CPLUSPLUS,
 
+    @SerializedName("rust")
+    RUST,
 }

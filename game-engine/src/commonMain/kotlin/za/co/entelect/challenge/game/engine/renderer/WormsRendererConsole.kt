@@ -16,9 +16,10 @@ class WormsRendererConsole(private val config: GameConfig) : WormsRenderer {
     }
 
     override fun render(wormsMap: WormsMap, player: WormsPlayer): String {
+        val wormPosition = player.currentWorm.position
         val wormGameDetails = WormsGameDetails(config, wormsMap, player)
         val selfPlayer = "My Player:H=${wormGameDetails.myPlayer.consoleHealth} S=${wormGameDetails.myPlayer.score} " +
-                "W=${wormGameDetails.currentWormId}"
+                "W=${wormGameDetails.currentWormId} X,Y=${wormPosition.x},${wormPosition.y}"
 
         val enemyPlayers = wormGameDetails.opponents.fold("") { sum, p ->
             sum + "Player ${p.id} :H=${p.consoleHealth} S=${p.score}" + EOL
