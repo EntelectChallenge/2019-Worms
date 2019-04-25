@@ -4,7 +4,7 @@ import za.co.entelect.challenge.engine.exceptions.InvalidRunnerState;
 import za.co.entelect.challenge.config.BotMetaData;
 
 public class BotRunnerFactory {
-    public static BotRunner createBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) throws InvalidRunnerState {
+    public static BotRunner createBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) throws Exception {
         switch (botMetaData.getBotLanguage()){
             case JAVA:
                 return new JavaBotRunner(botMetaData, timeoutInMilliseconds);
