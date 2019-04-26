@@ -47,8 +47,10 @@ class Bot(gameState: GameState, random: Random){
   private def getSurroundingCells(x: Int, y: Int): List[Cell] = {
     val cells: ListBuffer[Cell] = ListBuffer.empty[Cell]
 
-    for (i <- Range(x - 1, x + 2)) {
-      for (j <- Range(y - 1, y + 2)) {
+    for (
+      i <- Range(x - 1, x + 2);
+      j <- Range(y - 1, y + 2)
+    ) {
         if(i != x && j != y && isValidCoordinate(i, j)) {
           cells += gameState.map(j)(i)
         }

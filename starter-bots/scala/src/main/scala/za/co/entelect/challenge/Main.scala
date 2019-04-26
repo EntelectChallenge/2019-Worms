@@ -13,8 +13,8 @@ import za.co.entelect.challenge.entities.GameState
 import za.co.entelect.challenge.enums.Serializers
 
 object Main {
-  private final val ROUNDS_DIRECTORY = "rounds"
-  private final val STATE_FILE_NAME  = "state.json"
+  private val ROUNDS_DIRECTORY = "rounds"
+  private val STATE_FILE_NAME  = "state.json"
 
   implicit val formats: Formats = DefaultFormats ++ Serializers.enumSerializers
 

@@ -1,4 +1,4 @@
-# Java starter bot
+# Scala starter bot
 
 ## Environment requirements
 
