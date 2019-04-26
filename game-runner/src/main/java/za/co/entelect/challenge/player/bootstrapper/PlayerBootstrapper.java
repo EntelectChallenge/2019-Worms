@@ -68,7 +68,7 @@ public class PlayerBootstrapper {
         if (playerConfig.equals("console")) {
             player = new ConsolePlayer(String.format("BotPlayer %s", playerNumber));
         } else {
-            LOGGER.info(playerConfig);
+            LOGGER.info("Config for player {} : {}", playerNumber, playerConfig);
             BotMetaData botConfig = BotMetaData.load(playerConfig);
             BotRunner botRunner = BotRunnerFactory.createBotRunner(botConfig, gameRunnerConfig.maximumBotRuntimeMilliSeconds);
 

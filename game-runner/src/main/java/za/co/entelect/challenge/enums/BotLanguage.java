@@ -18,4 +18,7 @@ public enum BotLanguage {
 
     @SerializedName("scala")
     SCALA,
+
+    @SerializedName("rust")
+    RUST,
 }

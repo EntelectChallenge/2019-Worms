@@ -1,0 +1,8 @@
+{
+	"author": "Your Name Here",
+	"email": "yournamehere@example.dev",
+	"nickName": "Agent Oxide",
+	"botLocation": "/target/release/",
+	"botFileName": "agent-oxide",
+	"botLanguage": "rust"
+}
