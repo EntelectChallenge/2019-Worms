@@ -16,6 +16,8 @@ public class BotRunnerFactory {
                 return new PythonBotRunner(botMetaData, timeoutInMilliseconds);
             case CPLUSPLUS:
                 return new CPlusPlusBotRunner(botMetaData, timeoutInMilliseconds);
+            case SCALA:
+                return new ScalaBotRunner(botMetaData, timeoutInMilliseconds);
             case RUST:
                 return new RustBotRunner(botMetaData, timeoutInMilliseconds);
             default:
