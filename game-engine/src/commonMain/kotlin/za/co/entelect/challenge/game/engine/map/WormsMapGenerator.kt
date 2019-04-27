@@ -1,12 +1,13 @@
 package za.co.entelect.challenge.game.engine.map
 
+import mu.KotlinLogging
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
 import kotlin.math.*
 
-class WormsMapGenerator(private val config: GameConfig, seed: Int) {
+class WormsMapGenerator(private val config: GameConfig, private val seed: Int) {
 
     private val noise = SimplexNoise(seed)
     private val mapZoom = 0.3
@@ -28,17 +29,30 @@ class WormsMapGenerator(private val config: GameConfig, seed: Int) {
     private fun getMapRadiusFit(mapCenter: Pair<Double, Double>): Double = min(mapCenter.first, mapCenter.second)
 
     fun getMap(wormsPlayers: List<WormsPlayer>): WormsMap {
+        logger.info { "Generating Map: Size=${config.mapSize}, Seed=$seed" }
+
+        logger.info { "Generating blank map" }
         val blankMap = (0 until config.mapSize).map { i ->
-            (0 until config.mapSize).map { j -> MapCell(i, j) }
+            (0 until config.mapSize).map { j -> MapCell(i, j, CellType.AIR) }
         }
         val flatBlankMap = blankMap.flatten()
 
+        logger.info { "Populating cell types" }
         flatBlankMap.forEach { populateCell(it) }
+
+        logger.info { "Placing worms" }
         setWormsIntoSpawnLocations(blankMap, wormsPlayers)
+
+        logger.info { "Creating worm rooms" }
         createWormWalledSpawnLocations(wormsPlayers, blankMap)
+
+        logger.info { "Creating map boundary" }
         setBattleRoyaleMapEdges(flatBlankMap)
+
+        logger.info { "Placing powerups" }
         placePowerups(blankMap, 2.2, config.totalHealthPacks)
 
+        logger.info { "Map generation finished" }
         return WormsMap(wormsPlayers,
                 config.mapSize,
                 flatBlankMap)
@@ -116,31 +130,48 @@ class WormsMapGenerator(private val config: GameConfig, seed: Int) {
 
     private fun setWormsIntoSpawnLocations(blankMap: List<List<MapCell>>,
                                            wormsPlayers: List<WormsPlayer>) {
-        val unplacedWorms = wormsPlayers.flatMap { it.worms }
+        val allWorms = wormsPlayers
+                .flatMap { it.worms }
+        val unplacedWorms = allWorms
                 .groupBy { it.player.id }
                 .mapValues { (_, value) -> value.toMutableList() }
 
         // Put worms in seats, a different player for the next seat
         val radius = mapRadiusFit - wormSpawnDistanceFromEdge
-        val count = wormsPlayers.flatMap { it.worms }.size
+        val count = allWorms.size
+
+        logger.info { "Placing $count worms in radius $radius" }
+
         getCirclePositions(blankMap, radius, count)
                 .forEachIndexed { index, seat ->
                     val playerIndex = ((index + 1) % wormsPlayers.size)
-                    val player = wormsPlayers[playerIndex]
 
+                    logger.debug { "Placing worm: Index=$index, Player=$playerIndex" }
+                    val player = wormsPlayers[playerIndex]
                     val wormToPlace = unplacedWorms.getValue(player.id).removeAt(0)
 
                     wormToPlace.initPositions(seat.position)
                     seat.occupier = wormToPlace
+
+                    logger.debug { "Placed worm: $wormToPlace in seat=$seat" }
                 }
     }
 
     private fun populateCell(cell: MapCell) {
+        logger.debug { "Populating cell $cell" }
+
         val mapSize = config.mapSize - 1
         val x = if (cell.x > mapSize / 2) mapSize - cell.x else cell.x
 
-        cell.ipInfo.srcValue = noise.n2d(x * mapZoom, cell.y * mapZoom)
+        val noiseValue = noise.n2d(x * mapZoom, cell.y * mapZoom)
+
+        cell.ipInfo.srcValue = noiseValue
         cell.type = if (cell.ipInfo.srcValue!! > amountOfDirt) CellType.AIR else CellType.DIRT
+
+        logger.debug { "Populated cell $cell based on noise $noiseValue" }
     }
 
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
 }

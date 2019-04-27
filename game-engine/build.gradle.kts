@@ -24,6 +24,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(kotlin("stdlib-common"))
+                implementation("io.github.microutils:kotlin-logging-common:1.6.24")
             }
         }
         commonTest {
@@ -38,6 +39,8 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
                 implementation("com.google.code.gson:gson:2.8.5")
+                implementation("io.github.microutils:kotlin-logging:1.6.24")
+                runtimeOnly("org.slf4j:slf4j-api:1.7.26")
                 api("za.co.entelect.challenge:game-engine-interface:2019.1.0+")
             }
         }
@@ -45,12 +48,14 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
+                implementation("ch.qos.logback:logback-classic:1.2.3")
             }
         }
 
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
+                implementation("io.github.microutils:kotlin-logging-js:1.6.24")
             }
         }
 
@@ -67,7 +72,7 @@ kotlin {
 }
 
 group = "za.co.entelect.challenge"
-version = "2019.1.0"
+version = "2019.1.1"
 
 task<JacocoReport>("testCoverageReport") {
     group = "report"
@@ -108,7 +113,8 @@ task<JacocoCoverageVerification>("testCoverageVerification") {
                     "za.co.entelect.challenge.game.engine.config.*",
                     "za.co.entelect.challenge.game.engine.player.Weapon",
                     "za.co.entelect.challenge.game.engine.processor.GameError",
-                    "za.co.entelect.challenge.game.engine.renderer.WormsRenderer.Companion"
+                    "za.co.entelect.challenge.game.engine.renderer.WormsRenderer.Companion",
+                    "za.co.entelect.challenge.game.engine.**.logger.*"
             )
             limit {
                 minimum = "0.75".toBigDecimal()

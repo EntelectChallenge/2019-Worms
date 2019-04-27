@@ -1,6 +1,6 @@
 package za.co.entelect.challenge.game.engine.command.feedback
 
-class CommandValidation private constructor(
+data class CommandValidation constructor(
         val isValid: Boolean,
         val isNothing: Boolean,
         val reason: String

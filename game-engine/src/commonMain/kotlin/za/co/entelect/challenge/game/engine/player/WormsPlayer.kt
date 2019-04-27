@@ -51,7 +51,7 @@ class WormsPlayer private constructor(val id: Int,
     }
 
     override fun toString(): String {
-        return "WormsPlayer $id"
+        return "WormsPlayer(id=$id)"
     }
 
     override fun equals(other: Any?): Boolean {

@@ -1,7 +1,7 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
 import za.co.entelect.challenge.game.engine.command.WormsCommand
-import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
+import za.co.entelect.challenge.game.engine.command.feedback.StandardCommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.Point
@@ -45,7 +45,7 @@ class TeleportCommand(val target: Point, private val random: Random, val config:
         return occupier != movingWorm && occupier.roundMoved == gameMap.currentRound
     }
 
-    override fun execute(gameMap: WormsMap, worm: Worm): CommandFeedback {
+    override fun execute(gameMap: WormsMap, worm: Worm): StandardCommandFeedback {
         val targetCell = gameMap[target]
         val occupier = targetCell.occupier
         if (occupier != null && wormsCollide(gameMap, worm, occupier)) {
@@ -62,7 +62,7 @@ class TeleportCommand(val target: Point, private val random: Random, val config:
             worm.moveTo(gameMap, target)
         }
 
-        return CommandFeedback(this.toString(), playerId = worm.player.id, score = config.scores.move)
+        return StandardCommandFeedback(this.toString(), playerId = worm.player.id, score = config.scores.move)
     }
 
     private fun pushbackWorms(worm: Worm, occupier: Worm, gameMap: WormsMap) {

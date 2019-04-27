@@ -77,4 +77,9 @@ open class Worm(val id: Int,
         roundHit = round
     }
 
+    override fun toString(): String {
+        return "Worm(player=${player.id}, id=$id)"
+    }
+
+
 }
