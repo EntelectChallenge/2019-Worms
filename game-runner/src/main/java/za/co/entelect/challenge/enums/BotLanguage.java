@@ -15,10 +15,13 @@ public enum BotLanguage {
 
     @SerializedName("python")
     PYTHON,
-
+  
+    @SerializedName("haskell")
+    HASKELL,
+  
     @SerializedName("scala")
     SCALA,
 
     @SerializedName("rust")
-    RUST,
+    RUST
 }

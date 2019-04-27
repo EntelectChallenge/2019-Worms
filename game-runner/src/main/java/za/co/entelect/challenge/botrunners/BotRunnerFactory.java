@@ -14,6 +14,8 @@ public class BotRunnerFactory {
                 return new JavaScriptBotRunner(botMetaData, timeoutInMilliseconds);
             case PYTHON:
                 return new PythonBotRunner(botMetaData, timeoutInMilliseconds);
+            case HASKELL:
+                return new HaskellBotRunner(botMetaData, timeoutInMilliseconds);
             case SCALA:
                 return new ScalaBotRunner(botMetaData, timeoutInMilliseconds);
             case RUST:
