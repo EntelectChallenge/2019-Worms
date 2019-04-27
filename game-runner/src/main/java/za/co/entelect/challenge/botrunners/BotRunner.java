@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 public abstract class BotRunner implements ProcessDestroyer {
 
-    private static final Logger log = LogManager.getLogger(CommandHandler.class);
+    private static final Logger log = LogManager.getLogger(BotRunner.class);
 
     protected BotMetaData botMetaData;
     protected int timeoutInMilliseconds;
