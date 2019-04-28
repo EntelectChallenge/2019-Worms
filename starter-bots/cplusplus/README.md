@@ -1,6 +1,6 @@
 # C++ bot for Entelect Challenge 2019
 
-This container includes components required to compile and run a c++ project. The start bot was a c++ version of the supplies javascript reference bot
+This container includes components required to compile and run a c++ starter bot.
 
 ## Requirements :
 
