@@ -1,0 +1,11 @@
+{
+    "author": "John Doe",
+    "email": "john.doe@example.com",
+    "nickName": "Dave",
+    "botLocation": "/bin",
+    "botFileName": "haskell-bot-exe",
+    "botLanguage": "haskell",
+    "arguments": {
+        "coreCount": 1
+    }
+}
