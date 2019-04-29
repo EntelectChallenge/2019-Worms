@@ -82,8 +82,8 @@ task<JacocoReport>("testCoverageReport") {
 
     val compilation = kotlin.jvm().compilation("main")
 
-    additionalClassDirs(compilation.output.classesDirs)
-    compilation.sourceDirectories().forEach { additionalSourceDirs(it) }
+    classDirectories.setFrom(compilation.output.classesDirs)
+    sourceDirectories.setFrom(compilation.sourceDirectories())
 
     reports {
         html.isEnabled = true
@@ -101,8 +101,8 @@ task<JacocoCoverageVerification>("testCoverageVerification") {
     executionData("$buildDir/jacoco/jvmTest.exec")
     val compilation = kotlin.jvm().compilation("main")
 
-    additionalClassDirs(compilation.output.classesDirs)
-    compilation.sourceDirectories().forEach { additionalSourceDirs(it) }
+    classDirectories.setFrom(compilation.output.classesDirs)
+    sourceDirectories.setFrom(compilation.sourceDirectories())
 
     violationRules {
         rule {

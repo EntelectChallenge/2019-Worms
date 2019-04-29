@@ -66,6 +66,6 @@ class ShootCommand(val direction: Direction, val config: GameConfig) : WormsComm
     }
 
     companion object {
-        val logger = KotlinLogging.logger { }
+        private val logger = KotlinLogging.logger { }
     }
 }

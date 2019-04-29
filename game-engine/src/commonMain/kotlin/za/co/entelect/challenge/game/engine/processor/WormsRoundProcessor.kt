@@ -44,6 +44,6 @@ class WormsRoundProcessor(val config: GameConfig) {
     fun getErrorList(wormsMap: WormsMap): List<GameError> = wormsMap.currentRoundErrors
 
     companion object {
-        val logger = KotlinLogging.logger { }
+        private val logger = KotlinLogging.logger { }
     }
 }

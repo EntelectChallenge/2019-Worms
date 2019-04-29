@@ -11,6 +11,7 @@ class WormsPlayer private constructor(val id: Int,
         private set
 
     var previousWorm: Worm = worms[0]
+        private set
 
     init {
         this.worms.forEach { it.player = this }

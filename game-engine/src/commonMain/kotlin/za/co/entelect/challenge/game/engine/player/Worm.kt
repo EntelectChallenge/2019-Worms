@@ -6,7 +6,7 @@ import za.co.entelect.challenge.game.engine.map.WormsMap
 
 open class Worm(val id: Int,
                 var health: Int,
-                var weapon: Weapon,
+                val weapon: Weapon,
                 val diggingRange: Int,
                 val movementRange: Int) : Printable {
 
@@ -20,8 +20,10 @@ open class Worm(val id: Int,
         get() = "${player.id}$id"
 
     var roundMoved: Int = -1
+        private set
 
     var roundHit: Int = -1
+        private set
 
     lateinit var position: Point
         private set
