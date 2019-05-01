@@ -28,6 +28,7 @@ interface GameMap {
     fun addFeedback(feedback: CommandFeedback)
 
     fun removeDeadWorms()
+    fun applyHealthPacks()
 
 }
 
@@ -104,7 +105,7 @@ class WormsMap(override val players: List<WormsPlayer>,
     }
 
     override fun addFeedback(feedback: CommandFeedback) {
-        allFeedback.getOrPut(currentRound){mutableListOf()}.add(feedback)
+        allFeedback.getOrPut(currentRound) { mutableListOf() }.add(feedback)
     }
 
     override fun removeDeadWorms() {
@@ -134,4 +135,20 @@ class WormsMap(override val players: List<WormsPlayer>,
     fun isOutOfBounds(target: Point): Boolean {
         return (target.x !in xRange) || (target.y !in yRange)
     }
+
+    override fun applyHealthPacks() {
+        /**
+         * Right now we only have single use powerups. If that changes,
+         * we can move the clearing logic into the powerup `applyTo` method
+         */
+        players.flatMap { it.worms }
+                .forEach { worm ->
+                    val cell = this[worm.position]
+                    if (cell.occupier == worm) {
+                        cell.powerup?.applyTo(worm)
+                        cell.powerup = null
+                    }
+                }
+    }
 }
+

@@ -65,12 +65,6 @@ open class Worm(val id: Int,
 
         targetCell.occupier = this
 
-        /**
-         * Right now we only have single use powerups. If that changes,
-         * we can move the clearing logic into the powerup `applyTo` method
-         */
-        targetCell.powerup?.applyTo(this)
-        targetCell.powerup = null
     }
 
 
