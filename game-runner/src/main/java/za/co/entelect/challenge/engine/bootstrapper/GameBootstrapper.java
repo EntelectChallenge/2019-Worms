@@ -8,15 +8,13 @@ import za.co.entelect.challenge.config.GameRunnerConfig;
 import za.co.entelect.challenge.config.TournamentConfig;
 import za.co.entelect.challenge.engine.loader.GameEngineClassLoader;
 import za.co.entelect.challenge.engine.runner.GameEngineRunner;
+import za.co.entelect.challenge.enums.EnvironmentVariable;
 import za.co.entelect.challenge.game.contracts.bootstrapper.GameEngineBootstrapper;
 import za.co.entelect.challenge.game.contracts.game.GameResult;
 import za.co.entelect.challenge.game.contracts.player.Player;
-import za.co.entelect.challenge.network.Dto.RunnerFailedDto;
 import za.co.entelect.challenge.player.bootstrapper.PlayerBootstrapper;
 import za.co.entelect.challenge.renderer.RendererResolver;
 import za.co.entelect.challenge.storage.AzureBlobStorageService;
-import za.co.entelect.challenge.storage.AzureQueueStorageService;
-import za.co.entelect.challenge.utils.EnvironmentVariable;
 import za.co.entelect.challenge.utils.ZipUtils;
 
 import java.io.File;
@@ -31,7 +29,6 @@ public class GameBootstrapper {
     private static final Logger LOGGER = LogManager.getLogger(GameBootstrapper.class);
 
     private AzureBlobStorageService blobService;
-    private AzureQueueStorageService queueService;
 
     public static void main(String[] args) throws Exception {
         setupSystemClassloader();
@@ -48,7 +45,6 @@ public class GameBootstrapper {
             if (gameRunnerConfig.isTournamentMode) {
                 TournamentConfig tournamentConfig = gameRunnerConfig.tournamentConfig;
                 blobService = new AzureBlobStorageService(tournamentConfig.connectionString);
-                queueService = new AzureQueueStorageService(tournamentConfig.connectionString);
 
                 downloadGameEngine(gameRunnerConfig);
             }
@@ -103,17 +99,6 @@ public class GameBootstrapper {
         )[0].getPath();
     }
 
-    private void notifyMatchFailure(GameRunnerConfig gameRunnerConfig, Exception e) {
-        if (gameRunnerConfig != null && gameRunnerConfig.isTournamentMode) {
-            try {
-                queueService.enqueueMessage(gameRunnerConfig.tournamentConfig.deadMatchQueue,
-                        new RunnerFailedDto(gameRunnerConfig.matchId, e));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
     private void initLogging(GameRunnerConfig gameRunnerConfig) {
         if (gameRunnerConfig.isVerbose) {
             Configurator.setRootLevel(Level.DEBUG);
@@ -129,7 +114,18 @@ public class GameBootstrapper {
 
     private void notifyMatchComplete(TournamentConfig tournamentConfig, GameResult gameResult) throws Exception {
         LOGGER.info("Notifying of match completion");
-        queueService.enqueueMessage(tournamentConfig.matchResultQueue, gameResult);
+
+        //gameResult.TournamentId = tournamentConfig.tournamentId
+        //gameResult.PlayerAEntryId = System.getEnv(EnvironmentVariable.PLAYER_A_ENTRY_ID.name());
+
+        //TODO Post to function
+    }
+
+    private void notifyMatchFailure(GameRunnerConfig gameRunnerConfig, Exception e) {
+        if (gameRunnerConfig != null && gameRunnerConfig.isTournamentMode) {
+            LOGGER.info("Notifying of match failure");
+            //TODO Post to function
+        }
     }
 
     private static void setupSystemClassloader() throws Exception {
