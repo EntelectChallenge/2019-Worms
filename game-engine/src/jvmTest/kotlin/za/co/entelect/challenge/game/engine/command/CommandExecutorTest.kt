@@ -2,7 +2,7 @@ package za.co.entelect.challenge.game.engine.command
 
 import com.nhaarman.mockitokotlin2.*
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
-import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
+import za.co.entelect.challenge.game.engine.command.feedback.StandardCommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.map.CellType
@@ -42,7 +42,7 @@ class CommandExecutorTest {
     fun test_validMove() {
         val validCommand: WormsCommand = mock {
             on { validate(any(), any()) }.doReturn(CommandValidation.validMove())
-            on { execute(any(), any()) }.doReturn(CommandFeedback("nothing", 10, 1))
+            on { execute(any(), any()) }.doReturn(StandardCommandFeedback("nothing", 10, 1))
         }
 
         val executor = CommandExecutor(player, mockMap, validCommand, config)

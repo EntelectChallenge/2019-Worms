@@ -1,7 +1,7 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
 import za.co.entelect.challenge.game.engine.command.WormsCommand
-import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
+import za.co.entelect.challenge.game.engine.command.feedback.StandardCommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.WormsMap
@@ -18,7 +18,7 @@ class DoNothingCommand(val config: GameConfig) : WormsCommand {
         return CommandValidation.validMove(true, "Player chose to do nothing")
     }
 
-    override fun execute(gameMap: WormsMap, worm: Worm): CommandFeedback = CommandFeedback(this.toString(), score = config.scores.doNothing, playerId = worm.player.id)
+    override fun execute(gameMap: WormsMap, worm: Worm): StandardCommandFeedback = StandardCommandFeedback(this.toString(), score = config.scores.doNothing, playerId = worm.player.id)
 
     override fun toString(): String = "nothing"
 }
