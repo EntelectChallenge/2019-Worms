@@ -85,6 +85,10 @@ public class GameRunnerConfig {
                 gameRunnerConfig.seed = Integer.valueOf(System.getenv(EnvironmentVariable.SEED.name()));
                 gameRunnerConfig.playerAId = System.getenv(EnvironmentVariable.PLAYER_A_ID.name());
                 gameRunnerConfig.playerBId = System.getenv(EnvironmentVariable.PLAYER_B_ID.name());
+
+                gameRunnerConfig.tournamentConfig.connectionString = System.getenv(EnvironmentVariable.CONNECTION_STRING.name());
+                gameRunnerConfig.tournamentConfig.functionKey = System.getenv(EnvironmentVariable.FUNCTION_KEY.name());
+                gameRunnerConfig.tournamentConfig.tournamentId = System.getenv(EnvironmentVariable.TOURNAMENT_ID.name());
             }
 
             if (gameRunnerConfig.matchId == null) {
