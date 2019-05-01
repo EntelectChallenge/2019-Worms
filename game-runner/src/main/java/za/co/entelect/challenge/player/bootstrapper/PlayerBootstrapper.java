@@ -13,7 +13,7 @@ import za.co.entelect.challenge.player.BotPlayer;
 import za.co.entelect.challenge.player.ConsolePlayer;
 import za.co.entelect.challenge.player.TournamentPlayer;
 import za.co.entelect.challenge.storage.AzureBlobStorageService;
-import za.co.entelect.challenge.utils.EnvironmentVariable;
+import za.co.entelect.challenge.enums.EnvironmentVariable;
 import za.co.entelect.challenge.utils.ZipUtils;
 
 import java.io.File;

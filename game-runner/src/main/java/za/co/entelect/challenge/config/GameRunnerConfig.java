@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import za.co.entelect.challenge.utils.EnvironmentVariable;
+import za.co.entelect.challenge.enums.EnvironmentVariable;
 import za.co.entelect.challenge.utils.FileUtils;
 
 import java.io.FileReader;
