@@ -28,6 +28,7 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
             |Consecutive do nothing count: ${wormGameDetails.consecutiveDoNothingCount}
             |Players count: ${wormsMap.players.size}
             |Worms per player: ${wormsMap.players.first().worms.size}
+            |Pushback Damage: ${wormGameDetails.pushbackDamage}
             """.trimMargin()
 
         val myPlayerWorms = wormGameDetails.myPlayer.worms
@@ -43,6 +44,7 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
             |@02 My Player
             ${getBasePlayerText(wormGameDetails.myPlayer)}
             |Health: ${wormGameDetails.myPlayer.health}
+            |Current Worm: ${wormGameDetails.myPlayer.currentWormId}
             |Worms: $myPlayerWorms
             """.trimMargin()
 
@@ -56,6 +58,7 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
 
                     pSum + """
                         ${getBasePlayerText(opponentPlayer)}
+                        |Current Worm: ${opponentPlayer.currentWormId}
                         |Worms: $worms
                         |$EOL """.trimMargin()
                 }
