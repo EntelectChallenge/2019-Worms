@@ -2,10 +2,17 @@ package za.co.entelect.challenge.botrunners;
 
 import za.co.entelect.challenge.engine.exceptions.InvalidRunnerState;
 import za.co.entelect.challenge.config.BotMetaData;
+import za.co.entelect.challenge.enums.BotLanguage;
 
 public class BotRunnerFactory {
     public static BotRunner createBotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) throws Exception {
-        switch (botMetaData.getBotLanguage()){
+        BotLanguage botLanguage = botMetaData.getBotLanguage();
+
+        if (botLanguage == null) {
+            throw new InvalidRunnerState("Invalid bot language");
+        }
+
+        switch (botLanguage){
             case JAVA:
                 return new JavaBotRunner(botMetaData, timeoutInMilliseconds);
             case DOTNETCORE:
@@ -23,8 +30,7 @@ public class BotRunnerFactory {
             case RUST:
                 return new RustBotRunner(botMetaData, timeoutInMilliseconds);
             default:
-                break;
+                throw new InvalidRunnerState("No runner found for bot language " + botLanguage);
         }
-        throw new InvalidRunnerState("Invalid bot language");
     }
 }
