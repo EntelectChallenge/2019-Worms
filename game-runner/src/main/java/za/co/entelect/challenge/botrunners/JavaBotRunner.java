@@ -15,8 +15,4 @@ public class JavaBotRunner extends BotRunner {
         runSimpleCommandLineCommand(line, 0);
     }
 
-    @Override
-    public int getDockerPort() {
-        return 9002;
-    }
 }

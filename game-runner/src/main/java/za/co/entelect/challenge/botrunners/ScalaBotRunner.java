@@ -15,8 +15,4 @@ public class ScalaBotRunner extends BotRunner {
         runSimpleCommandLineCommand(line, 0);
     }
 
-    @Override
-    public int getDockerPort() {
-        return 8192;
-    }
 }

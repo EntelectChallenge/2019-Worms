@@ -38,8 +38,6 @@ public abstract class BotRunner implements ProcessDestroyer {
 
     protected abstract void runBot() throws IOException;
 
-    public abstract int getDockerPort();
-
     public String getBotDirectory() {
         return botMetaData.getBotDirectory();
     }
