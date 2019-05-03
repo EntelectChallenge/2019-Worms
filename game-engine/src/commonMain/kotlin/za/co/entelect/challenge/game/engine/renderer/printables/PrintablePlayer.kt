@@ -8,6 +8,7 @@ class PrintablePlayer(player: WormsPlayer) {
     var id: Int = player.id
     var score: Int = player.totalScore
     var health: Int? = null
+    val currentWormId = player.currentWorm.id
     var worms: List<PrintableWorm> = emptyList()
 
     @Transient

@@ -24,7 +24,7 @@ class WormsPlayer private constructor(val id: Int,
         get() = worms.all { it.dead }
 
 
-    private val livingWorms
+    val livingWorms
         get() = worms.filter { !it.dead }
 
     var commandScore: Int = 0

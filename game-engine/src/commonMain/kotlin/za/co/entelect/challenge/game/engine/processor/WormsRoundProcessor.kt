@@ -26,6 +26,9 @@ class WormsRoundProcessor(val config: GameConfig) {
             player.selectNextWorm()
         }
 
+        logger.info { "Applying powerups" }
+        wormsMap.applyHealthPacks()
+
         logger.info { "Removing dead worms from the map" }
         wormsMap.removeDeadWorms()
 

@@ -7,6 +7,7 @@ import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import za.co.entelect.challenge.game.engine.powerups.HealthPack
 import kotlin.random.Random
 import kotlin.test.*
 
@@ -42,6 +43,31 @@ class WormsRoundProcessorTest {
         assertNull(map[1, 1].occupier)
         assertNotNull(map[0, 0].occupier)
         assertNotNull(map[2, 2].occupier)
+
+        val expectedHealth = config.commandoWorms.initialHp - config.pushbackDamage
+        assertEquals(expectedHealth, player1.health)
+        assertEquals(expectedHealth, player2.health)
+    }
+
+    @Test
+    fun processRound_moveSameLocationWithPowerup() {
+        val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
+        val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(2, 2))), config)
+        val map = buildMapWithCellType(listOf(player1, player2), 3, CellType.AIR)
+        map[1, 1].powerup = HealthPack(config.healthPackHp)
+        val command = TeleportCommand(Point(1, 1), random, TEST_CONFIG)
+
+        val commandMap = mapOf(Pair(player1, command), Pair(player2, command))
+        roundProcessor.processRound(map, commandMap)
+
+        assertNull(map[1, 1].occupier)
+        assertNotNull(map[0, 0].occupier)
+        assertNotNull(map[2, 2].occupier)
+
+        val expectedHealth = config.commandoWorms.initialHp - config.pushbackDamage
+        assertEquals(player2.health, player1.health, "Players should have equal health")
+        assertEquals(expectedHealth, player1.health)
+        assertEquals(expectedHealth, player2.health)
     }
 
     @Test
@@ -173,5 +199,66 @@ class WormsRoundProcessorTest {
         assertEquals(1, roundProcessor.getErrorList(map).size)
         assertEquals(1, roundProcessor.getErrorList(map, player1).size)
         assertEquals(0, roundProcessor.getErrorList(map, player2).size)
+    }
+
+    @Test
+    fun processRound_applyHealthpack() {
+        val worm = CommandoWorm.build(0, config, Point(2, 2))
+        val player = WormsPlayer.build(0, listOf(worm), config)
+        val map = buildMapWithCellType(listOf(player), 5, CellType.AIR)
+
+        val target = Point(1, 2)
+        val command = TeleportCommand(target, Random, config)
+        map[target].powerup = HealthPack(config.healthPackHp)
+
+        command.execute(map, worm)
+        roundProcessor.processRound(map, mapOf(Pair(player, command)))
+
+        val expecteHealth = config.commandoWorms.initialHp + config.healthPackHp
+        assertEquals(expecteHealth, player.health)
+    }
+
+    /**
+     * A healthpack can resurrect a worm that is still on the map (i.e. it died in this round)
+     */
+    @Test
+    fun processRound_applyHealthpackResurrection() {
+        val worm = CommandoWorm.build(0, config, Point(2, 2))
+        worm.health = 0
+        val player = WormsPlayer.build(0, listOf(worm), config)
+        val map = buildMapWithCellType(listOf(player), 5, CellType.AIR)
+
+        val target = Point(1, 2)
+        val command = TeleportCommand(target, Random, config)
+        map[target].powerup = HealthPack(config.healthPackHp)
+
+        command.execute(map, worm)
+        roundProcessor.processRound(map, mapOf(Pair(player, command)))
+
+        assertEquals(config.healthPackHp, player.health)
+        assertEquals(worm, map[target].occupier)
+        assertNull(map[target].powerup)
+        assertFalse(player.dead)
+    }
+
+    /**
+     * A healthpack cannot resurrect a worm that is no longer on the map (i.e. it died in a previous round)
+     */
+    @Test
+    fun  processRound_applyHealthpackNoResurrection() {
+        val worm = CommandoWorm.build(0, config, Point(2, 2))
+        worm.health = 0
+        val player = WormsPlayer.build(0, listOf(worm), config)
+        val map = buildMapWithCellType(listOf(player), 5, CellType.AIR)
+
+        val target = Point(1, 2)
+        map[target].powerup = HealthPack(config.healthPackHp)
+
+        roundProcessor.processRound(map, emptyMap())
+
+        assertEquals(0, player.health)
+        assertNull(map[2, 2].occupier)
+        assertNotNull(map[target].powerup)
+        assertTrue(player.dead)
     }
 }
