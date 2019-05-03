@@ -3,16 +3,14 @@ package za.co.entelect.challenge.botrunners;
 import org.apache.commons.exec.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import za.co.entelect.challenge.config.BotMetaData;
 import za.co.entelect.challenge.config.BotArguments;
+import za.co.entelect.challenge.config.BotMetaData;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class BotRunner implements ProcessDestroyer {
 
@@ -23,6 +21,7 @@ public abstract class BotRunner implements ProcessDestroyer {
 
     private CommandHandler commandHandler;
     private List<Process> processes;
+    private ReentrantLock lock;
     private boolean stopped = false;
 
     protected BotRunner(BotMetaData botMetaData, int timeoutInMilliseconds) {
@@ -30,6 +29,7 @@ public abstract class BotRunner implements ProcessDestroyer {
         this.timeoutInMilliseconds = timeoutInMilliseconds;
         this.commandHandler = new CommandHandler(timeoutInMilliseconds);
         this.processes = new ArrayList<>();
+        this.lock = new ReentrantLock();
     }
 
     public void run() throws IOException {
@@ -78,12 +78,22 @@ public abstract class BotRunner implements ProcessDestroyer {
 
     @Override
     public boolean add(Process process) {
-        return processes.add(process);
+        lock.lock();
+        try {
+            return processes.add(process);
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public boolean remove(Process process) {
-        return processes.remove(process);
+        lock.lock();
+        try {
+            return processes.remove(process);
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
@@ -100,15 +110,20 @@ public abstract class BotRunner implements ProcessDestroyer {
     }
 
     public void shutdown() {
-        stopped = true;
+        lock.lock();
         try {
-            commandHandler.stop();
-        } catch (IOException e) {
-            log.error("Failed to stop command handler", e);
-        }
+            stopped = true;
+            try {
+                commandHandler.stop();
+            } catch (IOException e) {
+                log.error("Failed to stop command handler", e);
+            }
 
-        for (Process process : processes) {
-            process.destroyForcibly();
+            for (Process process : processes) {
+                process.destroyForcibly();
+            }
+        } finally {
+            lock.unlock();
         }
     }
 }
