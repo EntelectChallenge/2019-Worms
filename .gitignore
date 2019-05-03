@@ -5,6 +5,8 @@ build/
 target/
 out/
 
+starter-pack
+
 starter-bots/c++/vs/
 starter-bots/cplusplus/vs/
 starter-bots/cplusplus/cppbot.o

@@ -176,6 +176,12 @@ task<Sync>("jsPackage") {
     mustRunAfter("jsMainClasses")
 }
 
+task("fullJarName") {
+    doLast {
+        print("ec-2019-game-engine-jvm-full-${project.version}.jar")
+    }
+}
+
 fun <T : KotlinCompilation<KotlinCommonOptions>> KotlinOnlyTarget<T>.compilation(name: String): T {
     return compilations.getByName(name)
 }
