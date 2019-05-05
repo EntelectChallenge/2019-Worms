@@ -21,8 +21,4 @@ public class RustBotRunner extends BotRunner {
         runSimpleCommandLineCommand(line, 0);
     }
 
-    @Override
-    public int getDockerPort() {
-        return 9009;
-    }
 }

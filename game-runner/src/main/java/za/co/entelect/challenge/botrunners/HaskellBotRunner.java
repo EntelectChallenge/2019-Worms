@@ -31,8 +31,4 @@ public class HaskellBotRunner extends BotRunner {
         runSimpleCommandLineCommand(line, 0);
     }
 
-    @Override
-    public int getDockerPort() {
-        return 9005;
-    }
 }

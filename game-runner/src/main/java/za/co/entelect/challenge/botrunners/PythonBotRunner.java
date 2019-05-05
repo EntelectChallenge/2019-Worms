@@ -30,11 +30,6 @@ public class PythonBotRunner extends BotRunner {
         runSimpleCommandLineCommand(line, 0);
     }
 
-    @Override
-    public int getDockerPort() {
-        return 9004;
-    }
-
     private String resolvePythonCommand() throws Exception {
 
         //We don't need to worry about the output from the following commands. We can safely dispose the output.
