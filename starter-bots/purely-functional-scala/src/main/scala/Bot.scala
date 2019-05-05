@@ -195,7 +195,7 @@ object Bot {
   }
 
   def startBot(roundNumber: Int): ZIO[Console with Random with FileReader, Any, Unit] = for {
-    round  <- getStrLn map (_.toInt)
+    _      <- getStrLn map (_.toInt)
     state  <- readGameState(roundNumber)
     move   <- makeMove(state)
     _      <- console.putStrLn(show"C;$roundNumber;$move")
