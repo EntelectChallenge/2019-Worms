@@ -29,6 +29,6 @@ runner to interpret.  If you'd like to run it manually then you may do
 so with the following command:
 
 ```
-java -jar target/scala-2.12/scala-sample-bot-jar-with-dependencies.jar.
+java -jar target/scala-2.12/scala-sample-bot-jar-with-dependencies.jar
 ```
 
