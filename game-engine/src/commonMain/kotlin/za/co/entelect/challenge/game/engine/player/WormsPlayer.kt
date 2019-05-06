@@ -11,6 +11,7 @@ class WormsPlayer private constructor(val id: Int,
         private set
 
     var previousWorm: Worm = worms[0]
+        private set
 
     init {
         this.worms.forEach { it.player = this }
@@ -23,7 +24,7 @@ class WormsPlayer private constructor(val id: Int,
         get() = worms.all { it.dead }
 
 
-    private val livingWorms
+    val livingWorms
         get() = worms.filter { !it.dead }
 
     var commandScore: Int = 0
@@ -51,7 +52,7 @@ class WormsPlayer private constructor(val id: Int,
     }
 
     override fun toString(): String {
-        return "WormsPlayer $id"
+        return "WormsPlayer(id=$id)"
     }
 
     override fun equals(other: Any?): Boolean {

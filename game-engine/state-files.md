@@ -12,6 +12,7 @@
   * id → *The Id number of your player* 
   * score → *Your score points acquired*
   * health → *The sum of all your worms' hitpoints*
+  * currentWormId  → *The Id number of your worm that is currently in play. This is the same as the currentWormId above*
   * worms → *The list of all your worms. Worms in this list look like a **[default worm](#default-worm-properties)**, and in addition you can also see these extra attributes of your own worms:*
     * weapon → *The weapon that this worm is capable of using*
       * damage → *The number of hitpoints that this weapon can remove per shot*
@@ -21,6 +22,7 @@
 * opponents → *The player details of your opponents. An example of an opponent looks like the following:*
   * id → *The Id number of this player*
   * score → *This player's score points currently acquired*
+  * currentWormId  → *The Id number of the opponent player's worm that is currently in play*
   * worms → *A list of all the worms under this player's control. Worms in this list look like a **[default worm](#default-worm-properties)***
   
    
@@ -65,6 +67,7 @@ This file is encoded using UTF-8
   * Player id → *The Id number of this player*
   * Score → *This player's score points currently acquired*
   * Health → *The sum of all your worms' hitpoints*
+  * Current worm id → *The Id number of your worm that is currently in play. This is the same as the currentWormId above*
   * Worms → *The list of all your worms. Worms in this list look like a **[default worm](#default-text-worm-properties)**, except that in addition you can also see these extra attributes of your own worms:* 
     * Weapon damage → *The number of hitpoints that this weapon can remove per shot*
     * Weapon range → *The distance to which this weapon can affect opponents* 
@@ -74,6 +77,7 @@ This file is encoded using UTF-8
   * Section lines count → *The number of lines in this section*
   * Player id → *The Id number of this player*
   * Score → *This player's score points currently acquired*
+  * Current worm id → *The Id number of the opponent player's worm that is currently in play*
   * Worms → *A list of all the worms under this player's control. Worms in this list look like a **[default worm](#default-text-worm-properties)***
 
 

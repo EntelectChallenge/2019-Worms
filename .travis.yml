@@ -1,15 +1,29 @@
 language: java
 
 env:
-  - TERM=dumb
+- TERM=dumb
 
 cache:
   directories:
-    - $HOME/.m2
-    - $HOME/.gradle
-    - game-engine/.gradle
+  - "$HOME/.m2"
+  - "$HOME/.gradle"
+  - game-engine/.gradle
 
 script:
-  - cd game-engine && ./gradlew build && cd ..
-  - cd game-runner && mvn clean verify && cd ..
-  - cd game-engine-interfaces && mvn clean verify && cd ..
+- cd game-engine && ./gradlew build && cd ..
+- cd game-runner && mvn clean verify && cd ..
+- cd game-engine-interfaces && mvn clean verify && cd ..
+
+before_deploy:
+  - ./makeStarterPack.sh
+deploy:
+  provider: releases
+  api_key:
+    secure: grgF6XnMYKYLtkDd+pd6NtrPBMWQ7AnAyQFvL6br7wv+yTMkY7wWV/qGy6UaIB6irVv80ZMpAl7rGJ7+v3cTmW3LWKEt+VMlvUMYF/e2aEpjg97jVheu342D9uACDEQtVkz6AXQS8kLjPFaHxNbz8Ht5AJ9fxNwU+aTENjAVBUeQCu3aJBhaz4znoBiuLvh4pYFj1gVRYHnHv/clRSuQljGsJir/hfnep2DSkJTjbe765B1v+d/ZX0PP5VT8KOAfGUc3AULHMjD/rIJsGJfVygIFR5zagVIXUZq8mW7K+A0nSmwu5ZBVfi5foRpwJQK/wPQPIZdeqL5VGOG0CDa2Fe+BkB2xQT9uCNyriAYRA4DA7MMOfS0gHor3ldhd6psxXwGP4SE72Je5zE/3FRWwbJXv/pimzl+eyGy/Y/wZ/cNSfnSBskltmPGQY+3xSMvjDDx4+yRL9Tg/c5+aaS9yfP1WDSQf8gLtECk8Dm5Ox20RfQy7x3BA/vqOJTEAUbKS7gvZD4oaqlEhzG5+AeqAQMPlaXsdYYABnLvOqVyVEBNp29gYTwod8reO8o59rxq62NrxQ6F7F4oJPA/d/KQTiD82l6anvhWAToVivqYo26LEYvqA4meLBrZJGX6qO0nTN5m6LfPjg95zDnDUCuzR00NqwXKP+Gnw7THMFFoZvWE=
+  file: starter-pack.zip
+  skip_cleanup: true
+  draft: true
+  name: "Release $TRAVIS_TAG"
+  on:
+    repo: EntelectChallenge/2019-Worms
+    tags: true

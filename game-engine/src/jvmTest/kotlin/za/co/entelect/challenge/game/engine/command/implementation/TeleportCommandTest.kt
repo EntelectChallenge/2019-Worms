@@ -183,21 +183,4 @@ class TeleportCommandTest {
         assertEquals(command.toString(), "move ($x, $y)")
     }
 
-    @Test
-    fun test_powerup() {
-        val mockPowerup: Powerup = mock { }
-        val worm = CommandoWorm.build(0, config, Point(2, 2))
-        val player = WormsPlayer.build(0, listOf(worm), config)
-        val testMap = buildMapWithCellType(listOf(player), 5, CellType.AIR)
-
-        val target = Point(1, 2)
-        val command = TeleportCommand(target, Random, config)
-        testMap[target].powerup = mockPowerup
-
-        command.execute(testMap, worm)
-
-        verify(mockPowerup).applyTo(worm)
-    }
-
-
 }

@@ -1,5 +1,6 @@
 package za.co.entelect.challenge.game.engine.factory
 
+import mu.KotlinLogging
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.implementation.*
 import za.co.entelect.challenge.game.engine.config.GameConfig
@@ -22,6 +23,8 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
      * @return The parsed command or an [InvalidCommand] if the command could not be parsed properly
      */
     fun parseCommand(rawCommand: String): WormsCommand {
+        logger.info { "Parsing command \"$rawCommand\"" }
+
         val splitCommand = rawCommand.split(" ")
         val identifier = splitCommand[0].toLowerCase()
 
@@ -76,5 +79,9 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
         }
 
         return TeleportCommand(x, y, commandRandom, config)
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger{}
     }
 }

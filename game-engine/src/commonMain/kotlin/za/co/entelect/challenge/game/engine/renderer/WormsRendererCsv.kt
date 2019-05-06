@@ -12,7 +12,7 @@ import za.co.entelect.challenge.game.engine.renderer.WormsRenderer.Companion.EOL
  */
 class WormsRendererCsv(val config: GameConfig) : WormsRenderer {
 
-    private val standardHeaders = listOf("Round", "CommandType", "Command", "ActiveWorm", "Score", "Health")
+    private val standardHeaders = listOf("Round", "LastCommandType", "LastCommand", "ActiveWorm", "Score", "Health")
 
     override fun commandPrompt(wormsPlayer: WormsPlayer): String {
         return "Not implemented for the csv state file"

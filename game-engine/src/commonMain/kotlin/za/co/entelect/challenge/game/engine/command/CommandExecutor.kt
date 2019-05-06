@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.command
 
-import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
+import mu.KotlinLogging
+import za.co.entelect.challenge.game.engine.command.feedback.StandardCommandFeedback
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
@@ -16,6 +17,8 @@ class CommandExecutor(val player: WormsPlayer,
     private val moveValidation = command.validate(map, worm)
 
     fun execute() {
+        logger.info { "Executing command $worm Command($command) $moveValidation " }
+
         if (moveValidation.isNothing) {
             player.consecutiveDoNothingsCount++
         } else {
@@ -24,14 +27,17 @@ class CommandExecutor(val player: WormsPlayer,
 
         if (moveValidation.isValid) {
             val commandFeedback = command.execute(map, worm)
+
+            logger.info { "Executed command $worm $commandFeedback" }
+
             player.commandScore += commandFeedback.score
-            map.currentRoundFeedback.add(commandFeedback)
+            map.addFeedback(commandFeedback)
 
             if (!commandFeedback.success) {
                 addErrorToMap(commandFeedback.message)
             }
         } else {
-            map.currentRoundFeedback.add(CommandFeedback("invalid", config.scores.invalidCommand, player.id, false))
+            map.addFeedback(StandardCommandFeedback("invalid", config.scores.invalidCommand, player.id, false))
             addErrorToMap(moveValidation.reason)
             player.commandScore += config.scores.invalidCommand
         }
@@ -39,6 +45,14 @@ class CommandExecutor(val player: WormsPlayer,
 
     private fun addErrorToMap(message: String) {
         map.addError(GameError(message, player, worm, map.currentRound))
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger{}
+    }
+
+    override fun toString(): String {
+        return "CommandExecutor(worm=$worm, command=\"$command\")"
     }
 
 }

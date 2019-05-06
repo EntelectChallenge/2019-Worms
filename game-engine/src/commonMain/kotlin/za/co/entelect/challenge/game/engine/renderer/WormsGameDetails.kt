@@ -11,6 +11,7 @@ class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlay
 
     val currentRound: Int = wormsMap.currentRound
     val maxRounds: Int = config.maxRounds
+    val pushbackDamage: Int = config.pushbackDamage
 
     val mapSize: Int = wormsMap.size
     val currentWormId: Int = player.currentWorm.id

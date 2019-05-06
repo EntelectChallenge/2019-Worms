@@ -15,8 +15,4 @@ public class JavaScriptBotRunner extends BotRunner {
         runSimpleCommandLineCommand(line, 0);
     }
 
-    @Override
-    public int getDockerPort() {
-        return 9008;
-    }
 }

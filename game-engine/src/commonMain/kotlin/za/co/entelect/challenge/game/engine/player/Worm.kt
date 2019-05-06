@@ -6,7 +6,7 @@ import za.co.entelect.challenge.game.engine.map.WormsMap
 
 open class Worm(val id: Int,
                 var health: Int,
-                var weapon: Weapon,
+                val weapon: Weapon,
                 val diggingRange: Int,
                 val movementRange: Int) : Printable {
 
@@ -20,8 +20,10 @@ open class Worm(val id: Int,
         get() = "${player.id}$id"
 
     var roundMoved: Int = -1
+        private set
 
     var roundHit: Int = -1
+        private set
 
     lateinit var position: Point
         private set
@@ -63,12 +65,6 @@ open class Worm(val id: Int,
 
         targetCell.occupier = this
 
-        /**
-         * Right now we only have single use powerups. If that changes,
-         * we can move the clearing logic into the powerup `applyTo` method
-         */
-        targetCell.powerup?.applyTo(this)
-        targetCell.powerup = null
     }
 
 
@@ -76,5 +72,10 @@ open class Worm(val id: Int,
         health -= damage
         roundHit = round
     }
+
+    override fun toString(): String {
+        return "Worm(player=${player.id}, id=$id)"
+    }
+
 
 }
