@@ -61,7 +61,7 @@ You should now see some text whizz by in the console/terminal. If this is not th
 ### Step 2
 Now let's change things up a little bit. The previous match we ran, was between the Reference bot and the Javascript starter bot. Let's change the match to be between the Reference bot and a starter bot of your choice. To change this we need to edit the "game-runner-config.json" file.
 
-The most improtant fields in the 'game-runner-config.json' for running a match locally is as follows:
+The most important fields in the 'game-runner-config.json' for running a match locally is as follows:
 
     "round-state-output-location" => This is the path to where you want the match folder in which each round's folder with its respective logs will be saved.
 
