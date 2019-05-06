@@ -14,7 +14,7 @@ import za.co.entelect.challenge.game.engine.player.Worm
  */
 class DigCommand(val target: Point, val config: GameConfig) : WormsCommand {
 
-    override val order: Int = 1
+    override val order: Int = 2
 
     constructor(x: Int, y: Int, config: GameConfig) : this(Point(x, y), config)
 

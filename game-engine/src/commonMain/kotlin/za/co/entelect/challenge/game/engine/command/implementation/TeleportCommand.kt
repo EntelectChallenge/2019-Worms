@@ -11,7 +11,7 @@ import kotlin.random.Random
 
 class TeleportCommand(val target: Point, private val random: Random, val config: GameConfig) : WormsCommand {
 
-    override val order: Int = 2
+    override val order: Int = 1
 
     constructor(x: Int, y: Int, random: Random, config: GameConfig) : this(Point(x, y), random, config)
 
