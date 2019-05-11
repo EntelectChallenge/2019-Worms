@@ -28,6 +28,9 @@ public class TournamentConfig {
     @SerializedName("api-endpoint")
     public String apiEndpoint;
 
+    @SerializedName("result-endpoint")
+    public String resultEndpoint;
+
     @SerializedName("function-key")
     public String functionKey;
 }

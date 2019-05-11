@@ -161,14 +161,26 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             gameResult.winner = winner.getPlayerId();
         }
 
-        players.stream()
-                .map(player -> (BasePlayer) player)
-                .forEach(player -> gameResult.addPlayerResult(player.getPlayerId(),
-                        player.getGamePlayer().getScore()));
+//        players.stream()
+//                .map(player -> (BasePlayer) player)
+//                .forEach(player -> gameResult.addPlayerResult(player.getPlayerId(),
+//                        player.getGamePlayer().getScore()));
+
+        gameResult.playerAId = gameRunnerConfig.playerAId;
+        gameResult.playerBId = gameRunnerConfig.playerBId;
+
+        for (Player player : players) {
+            BasePlayer basePlayer = (BasePlayer) player;
+            if (basePlayer.getPlayerId().equals(gameRunnerConfig.playerAId)) {
+                gameResult.playerOnePoints = basePlayer.getGamePlayer().getScore();
+            } else if (basePlayer.getPlayerId().equals(gameRunnerConfig.playerBId)) {
+                gameResult.playerTwoPoints = basePlayer.getGamePlayer().getScore();
+            }
+        }
 
         gameResult.roundsPlayed = gameMap.getCurrentRound();
         gameResult.isComplete = true;
-        gameResult.verificationRequired = referee.isMatchValid();
+        gameResult.isSuccessful = true;
 
         writeEndGameFile(winner);
 

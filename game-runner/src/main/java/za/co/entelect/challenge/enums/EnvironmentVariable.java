@@ -10,7 +10,8 @@ public enum EnvironmentVariable {
     PLAYER_A_ID,
     PLAYER_B_ID,
     CONNECTION_STRING,
-    FUNCTION_KEY,
     PLAYER_A_ENTRY_ID,
     TOURNAMENT_ID,
+    RESULT_URL,
+    FUNCTION_KEY,
 }
