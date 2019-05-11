@@ -1,6 +1,6 @@
-FROM openjdk:8u181-jre
+FROM openjdk:8u212-jre
 
-COPY ./target/game-runner-3.0.2-jar-with-dependencies.jar game-runner.jar
+COPY ./target/game-runner-jar-with-dependencies.jar game-runner.jar
 COPY ./game-runner-config.json game-runner-config.json
 
 CMD ["/usr/bin/java", "-jar", "game-runner.jar"]
