@@ -55,7 +55,6 @@ class Bot(gameState: GameState, random: Random){
           cells += gameState.map(j)(i)
         }
       }
-    }
 
     cells.toList
   }
