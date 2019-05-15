@@ -16,7 +16,6 @@ interface GameMap {
     val cells: List<MapCell>
     var currentRound: Int
     val currentRoundErrors: List<GameError>
-    val currentRoundFeedback: List<CommandFeedback>
 
     operator fun contains(target: Point): Boolean
 
@@ -26,6 +25,7 @@ interface GameMap {
 
     fun addError(gameError: GameError)
     fun addFeedback(feedback: CommandFeedback)
+    fun getFeedback(round: Int): List<CommandFeedback>
 
     fun removeDeadWorms()
     fun applyHealthPacks()
@@ -36,9 +36,7 @@ class WormsMap(override val players: List<WormsPlayer>,
                val size: Int,
                cells: List<MapCell>) : GameMap {
 
-    val allFeedback = mutableMapOf<Int, MutableList<CommandFeedback>>()
-    override val currentRoundFeedback: List<CommandFeedback>
-        get() = allFeedback[currentRound].orEmpty()
+    private val allFeedback = mutableMapOf<Int, MutableList<CommandFeedback>>()
 
     override var currentRound: Int = 0
     override val cells: List<MapCell>
@@ -106,6 +104,10 @@ class WormsMap(override val players: List<WormsPlayer>,
 
     override fun addFeedback(feedback: CommandFeedback) {
         allFeedback.getOrPut(currentRound) { mutableListOf() }.add(feedback)
+    }
+
+    override fun getFeedback(round: Int): List<CommandFeedback> {
+        return allFeedback[round] ?: emptyList()
     }
 
     override fun removeDeadWorms() {
