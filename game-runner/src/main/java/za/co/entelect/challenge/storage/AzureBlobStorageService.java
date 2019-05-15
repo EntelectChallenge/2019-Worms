@@ -52,7 +52,7 @@ public class AzureBlobStorageService {
         CloudBlobContainer bloBContainer = serviceClient.getContainerReference(container);
 
         LOGGER.info(String.format("Uploading %s", file));
-        CloudBlockBlob blob = bloBContainer.getBlockBlobReference(String.format("%s/%s", outputLocation, file.getName()));
+        CloudBlockBlob blob = bloBContainer.getBlockBlobReference(outputLocation);
 
         FileInputStream fileInputStream = new FileInputStream(file);
         blob.upload(fileInputStream, file.length());

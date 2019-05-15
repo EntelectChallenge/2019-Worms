@@ -1,21 +1,18 @@
 {
   "round-state-output-location": "./match-logs",
-  "game-config-file-location": "game-config.json",
-  "game-engine-jar": "game-engine.jar",
+  "game-config-file-location": "../game-engine/default-config.json",
+  "game-engine-jar": "../game-engine/build/libs/ec-2019-game-engine-jvm-full-2019.1.0.jar",
   "verbose-mode": true,
   "max-runtime-ms": 1000,
-  "player-a": "./starter-bots/javascript",
-  "player-b": "./reference-bot/javascript",
+  "player-a": "../starter-bots/java",
+  "player-b": "../starter-bots/java",
   "max-request-retries": 5,
   "request-timeout-ms": 5000,
-  "is-tournament-mode": false,
+  "is-tournament-mode": true,
   "tournament": {
     "connection-string": "",
     "bots-container": "bot-source-code-container-qa",
-    "match-logs-container": "match-logs-qa",
     "game-engine-container": "game-engine-container-qa",
-    "match-result-queue": "match-results-qa",
-    "dead-match-queue": "dead-match-qa",
-    "api-endpoint": "http://host.docker.internal"
+    "api-endpoint": "http://localhost"
   }
 }

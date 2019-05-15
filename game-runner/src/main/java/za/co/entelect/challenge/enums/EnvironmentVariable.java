@@ -14,4 +14,5 @@ public enum EnvironmentVariable {
     TOURNAMENT_ID,
     RESULT_URL,
     FUNCTION_KEY,
+    MATCH_LOGS_PATH,
 }

@@ -94,7 +94,7 @@ public class GameBootstrapper {
         } finally {
             if (gameRunnerConfig != null && gameRunnerConfig.isTournamentMode) {
                 File zippedLogs = ZipUtils.createZip(gameRunnerConfig.matchId, gameRunnerConfig.roundStateOutputLocation);
-                saveMatchLogs(gameRunnerConfig.tournamentConfig, zippedLogs, ".");
+                saveMatchLogs(gameRunnerConfig.tournamentConfig, zippedLogs);
             }
         }
         System.exit(0);
@@ -122,9 +122,9 @@ public class GameBootstrapper {
         }
     }
 
-    private void saveMatchLogs(TournamentConfig tournamentConfig, File matchLogs, String destinationPath) throws Exception {
+    private void saveMatchLogs(TournamentConfig tournamentConfig, File matchLogs) throws Exception {
         LOGGER.info("Saving match logs to storage");
-        blobService.putFile(matchLogs, destinationPath, tournamentConfig.matchLogsContainer);
+        blobService.putFile(matchLogs, tournamentConfig.matchLogsPath, tournamentConfig.botsContainer);
         LOGGER.info("Done saving match logs to storage");
     }
 

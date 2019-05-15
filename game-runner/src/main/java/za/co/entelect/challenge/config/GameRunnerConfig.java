@@ -90,6 +90,7 @@ public class GameRunnerConfig {
                 gameRunnerConfig.tournamentConfig.tournamentId = System.getenv(EnvironmentVariable.TOURNAMENT_ID.name());
                 gameRunnerConfig.tournamentConfig.resultEndpoint = System.getenv(EnvironmentVariable.RESULT_URL.name());
                 gameRunnerConfig.tournamentConfig.functionKey = System.getenv(EnvironmentVariable.FUNCTION_KEY.name());
+                gameRunnerConfig.tournamentConfig.matchLogsPath = System.getenv(EnvironmentVariable.MATCH_LOGS_PATH.name());
 
                 LOGGER.info("Runner config" + gson.toJson(gameRunnerConfig));
                 LOGGER.info("Tournament config" + gson.toJson(gameRunnerConfig.tournamentConfig));
