@@ -105,8 +105,8 @@ Player scores will only be considered in the case of a tie:
 The total score value is determined by adding together the player's average worm health and the points for every single command the they played: 
 *  Attack:
     * Shooting any worm unconscious gives **40** points
-    * Shooting an enemy worm gives **20** points
-    * Shooting one of your own worms will **reduce** your points by **20**
+    * Shooting an enemy worm gives **20** points (unless it is shot unconsious, then the first rule applies)
+    * Shooting one of your own worms will **reduce** your points by **20** 
     * A missed attack gives **2** points  
 * Moving gives **5** point
 * Digging gives **7** points
