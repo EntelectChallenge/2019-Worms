@@ -12,6 +12,7 @@
   "tournament": {
     "connection-string": "",
     "bots-container": "bot-source-code-container-qa",
+    "match-logs-container": "match-logs-container-qa",
     "game-engine-container": "game-engine-container-qa",
     "api-endpoint": "http://localhost"
   }

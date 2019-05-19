@@ -124,7 +124,7 @@ public class GameBootstrapper {
 
     private void saveMatchLogs(TournamentConfig tournamentConfig, File matchLogs) throws Exception {
         LOGGER.info("Saving match logs to storage");
-        blobService.putFile(matchLogs, tournamentConfig.matchLogsPath, tournamentConfig.botsContainer);
+        blobService.putFile(matchLogs, tournamentConfig.matchLogsPath, tournamentConfig.matchLogsContainer);
         LOGGER.info("Done saving match logs to storage");
     }
 

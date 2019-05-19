@@ -13,6 +13,9 @@ public class TournamentConfig {
     @SerializedName("bots-container")
     public String botsContainer;
 
+    @SerializedName("match-logs-container")
+    public String matchLogsContainer;
+
     @SerializedName("match-logs-path")
     public String matchLogsPath;
 
