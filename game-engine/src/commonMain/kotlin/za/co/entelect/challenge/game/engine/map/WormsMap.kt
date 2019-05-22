@@ -48,6 +48,8 @@ class WormsMap(override val players: List<WormsPlayer>,
     private val xRange = 0 until size
     private val yRange = 0 until size
 
+    private val refereeIssues = mutableListOf<String>()
+
     override val livingPlayers: List<WormsPlayer>
         get() = players.filter { !it.dead && !it.disqualified }
 
@@ -151,6 +153,20 @@ class WormsMap(override val players: List<WormsPlayer>,
                         cell.powerup = null
                     }
                 }
+    }
+
+    fun detectRefereeIssues() {
+        val doNothingsCountLimit = 3
+        livingPlayers.forEach {
+            if (it.consecutiveDoNothingsCount == doNothingsCountLimit) {
+                refereeIssues.add("DoNothingsCount for @Player(${it.id}) exceeded a count of ${doNothingsCountLimit} " +
+                        "@Round(${currentRound})")
+            }
+        }
+    }
+
+    fun getRefereeIssues(): List<String> {
+        return refereeIssues
     }
 }
 

@@ -32,6 +32,8 @@ class WormsRoundProcessor(val config: GameConfig) {
         logger.info { "Removing dead worms from the map" }
         wormsMap.removeDeadWorms()
 
+        wormsMap.detectRefereeIssues()
+
         return true
     }
 

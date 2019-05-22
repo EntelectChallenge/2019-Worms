@@ -4,6 +4,7 @@ import za.co.entelect.challenge.game.contracts.game.GameEngine;
 import za.co.entelect.challenge.game.contracts.game.GameMapGenerator;
 import za.co.entelect.challenge.game.contracts.game.GameReferee;
 import za.co.entelect.challenge.game.contracts.game.GameRoundProcessor;
+import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.renderer.GameMapRenderer;
 import za.co.entelect.challenge.game.contracts.renderer.RendererType;
 
@@ -35,5 +36,5 @@ public interface GameEngineBootstrapper {
 
     GameRoundProcessor getRoundProcessor();
 
-    GameReferee getReferee();
+    GameReferee getReferee(GameMap map);
 }
