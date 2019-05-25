@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.botrunners;
+package za.co.entelect.challenge.botrunners.handlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

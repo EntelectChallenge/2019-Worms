@@ -3,6 +3,7 @@ package za.co.entelect.challenge.botrunners;
 import org.apache.commons.exec.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import za.co.entelect.challenge.botrunners.handlers.CommandHandler;
 import za.co.entelect.challenge.config.BotArguments;
 import za.co.entelect.challenge.config.BotMetaData;
 
@@ -107,6 +108,10 @@ public abstract class BotRunner implements ProcessDestroyer {
 
     public String getLastCommand() {
         return commandHandler.getBotCommand();
+    }
+
+    public String getLastError() {
+        return commandHandler.getBotError();
     }
 
     public void shutdown() {
