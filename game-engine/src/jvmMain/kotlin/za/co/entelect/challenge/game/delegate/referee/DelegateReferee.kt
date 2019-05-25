@@ -5,9 +5,9 @@ import za.co.entelect.challenge.game.contracts.game.GameReferee
 import za.co.entelect.challenge.game.contracts.map.GameMap
 import za.co.entelect.challenge.game.delegate.engine.DelegateMap
 
-class DelegateReferee(val map: GameMap) : GameReferee {
+class DelegateReferee : GameReferee {
 
-    override fun isMatchValid(): RefereeMessage {
+    override fun isMatchValid(map: GameMap): RefereeMessage {
         if (map !is DelegateMap) {
             throw IllegalArgumentException("Unknown Map Class")
         }

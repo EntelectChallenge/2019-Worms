@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import za.co.entelect.challenge.config.GameRunnerConfig;
 import za.co.entelect.challenge.engine.exceptions.InvalidRunnerState;
 import za.co.entelect.challenge.game.contracts.command.RawCommand;
+import za.co.entelect.challenge.game.contracts.common.RefereeMessage;
 import za.co.entelect.challenge.game.contracts.exceptions.TimeoutException;
 import za.co.entelect.challenge.game.contracts.game.*;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
@@ -178,9 +179,10 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         gameResult.isComplete = true;
         gameResult.isSuccessful = true;
 
-        gameResult.verificationRequired = !referee.isMatchValid();
+        RefereeMessage refereeMessage = referee.isMatchValid(gameMap);
+        gameResult.verificationRequired = !refereeMessage.isValid;
 
-        writeEndGameFile(winner);
+        writeEndGameFile(winner, refereeMessage);
 
         for (Player player : players) {
             player.gameEnded(gameMap);
@@ -191,7 +193,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         return gameEngine.isGameComplete(gameMap);
     }
 
-    private void writeEndGameFile(Player winner) {
+    private void writeEndGameFile(Player winner, RefereeMessage refereeMessage) {
         StringBuilder winnerStringBuilder = new StringBuilder();
 
         for (Player player : players) {
@@ -228,6 +230,17 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             }
 
             winnerStringBuilder.insert(0, "Match seed: " + gameRunnerConfig.seed + "\n\n");
+
+            if (!refereeMessage.isValid) {
+                winnerStringBuilder.append("=======================================\n");
+                winnerStringBuilder.append("Referee messages\n");
+                winnerStringBuilder.append("=======================================\n");
+
+                for (String reason : refereeMessage.reasons) {
+                    winnerStringBuilder.append(reason);
+                    winnerStringBuilder.append("\n");
+                }
+            }
 
             bufferedWriter.write(winnerStringBuilder.toString());
             bufferedWriter.flush();

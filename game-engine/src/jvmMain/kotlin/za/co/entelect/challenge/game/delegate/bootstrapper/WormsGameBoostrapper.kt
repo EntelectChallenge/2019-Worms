@@ -49,7 +49,7 @@ class WormsGameBoostrapper : GameEngineBootstrapper {
         return DelegateRoundProcessor(Random(seed), config)
     }
 
-    override fun getReferee(map: GameMap): GameReferee {
-        return DelegateReferee(map)
+    override fun getReferee(): GameReferee {
+        return DelegateReferee()
     }
 }

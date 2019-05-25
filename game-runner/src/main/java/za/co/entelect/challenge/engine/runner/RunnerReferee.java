@@ -4,7 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import za.co.entelect.challenge.config.GameRunnerConfig;
+import za.co.entelect.challenge.game.contracts.common.RefereeMessage;
 import za.co.entelect.challenge.game.contracts.game.GameReferee;
+import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.player.Player;
 import za.co.entelect.challenge.player.entity.BasePlayer;
 import za.co.entelect.challenge.player.entity.BotExecutionContext;
@@ -37,7 +39,7 @@ public class RunnerReferee implements GameReferee {
     }
 
     @Override
-    public boolean isMatchValid() {
+    public RefereeMessage isMatchValid(GameMap gameMap) {
 
         log.info("Check if match is valid");
         List<String> errorList = new ArrayList<>();
@@ -73,7 +75,11 @@ public class RunnerReferee implements GameReferee {
             log.info(s);
         }
 
-        return errorList.isEmpty();
+        RefereeMessage gameEngineCheck = gameEngineReferee.isMatchValid(gameMap);
+        gameEngineCheck.isValid = gameEngineCheck.isValid && errorList.isEmpty();
+        gameEngineCheck.reasons.addAll(errorList);
+
+        return gameEngineCheck;
     }
 
     void trackExecution(Player player, BotExecutionContext botExecutionContext) {

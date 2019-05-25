@@ -36,5 +36,5 @@ public interface GameEngineBootstrapper {
 
     GameRoundProcessor getRoundProcessor();
 
-    GameReferee getReferee(GameMap map);
+    GameReferee getReferee();
 }

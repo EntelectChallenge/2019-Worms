@@ -4,8 +4,8 @@ import java.util.List;
 
 public class RefereeMessage {
 
-    boolean isValid;
-    List<String> reasons;
+    public boolean isValid;
+    public List<String> reasons;
 
     public RefereeMessage(boolean isValid, List<String> reasons) {
         this.isValid = isValid;
