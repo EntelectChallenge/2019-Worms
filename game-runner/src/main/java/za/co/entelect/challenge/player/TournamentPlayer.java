@@ -78,7 +78,11 @@ public class TournamentPlayer extends BasePlayer {
             Response<RunBotResponseDto> execute = botServices.runBot(jsonPart, textPart, botExecutionContext.round).execute();
 
             RunBotResponseDto runBotResponseDto = execute.body();
-            botExecutionContext.command = runBotResponseDto.getCommand().trim();
+            botExecutionContext.command = runBotResponseDto.getCommand();
+            if (botExecutionContext.command != null) {
+                botExecutionContext.command = botExecutionContext.command.trim();
+            }
+
             botExecutionContext.exception = runBotResponseDto.getStdError();
             botExecutionContext.executionTime = runBotResponseDto.getExecutionTime();
 
