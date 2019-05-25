@@ -14,6 +14,8 @@ public class BotExecutionContext {
     public String command;
     public String name;
     public int round;
+    public long executionTime;
+    public String exception;
 
     public void saveRoundStateData(String saveStateLocation) throws IOException {
 
@@ -35,8 +37,27 @@ public class BotExecutionContext {
 
         FileUtils.writeToFile(String.format("%s/%s/%s", mainRoundDirectory, name, "JsonMap.json"), jsonState);
         FileUtils.writeToFile(String.format("%s/%s/%s", mainRoundDirectory, name, "TextMap.txt"), textState);
-        FileUtils.writeToFile(String.format("%s/%s/%s", mainRoundDirectory, name, "PlayerCommand.txt"), command);
+        FileUtils.writeToFile(String.format("%s/%s/%s", mainRoundDirectory, name, "PlayerCommand.txt"), getCommandInfo());
         FileUtils.writeToFile(String.format("%s/%s/%s/%s", mainRoundDirectory, name, "Console", "Console.txt"), consoleState);
         FileUtils.appendToFile(String.format("%s/%s.csv", saveStateLocation, name), csvState);
+    }
+
+    private String getCommandInfo() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("Command: ");
+        stringBuilder.append(command);
+        stringBuilder.append("\n");
+
+        stringBuilder.append("Execution time: ");
+        stringBuilder.append(executionTime);
+        stringBuilder.append("ms\n");
+
+        stringBuilder.append("Exception: ");
+        stringBuilder.append(exception);
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
     }
 }
