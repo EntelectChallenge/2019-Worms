@@ -6,7 +6,7 @@
   "max-runtime-ms": 1000,
   "player-a": "../starter-bots/java",
   "player-b": "../starter-bots/java",
-  "max-request-retries": 5,
+  "max-request-retries": 10,
   "request-timeout-ms": 5000,
   "is-tournament-mode": true,
   "tournament": {
