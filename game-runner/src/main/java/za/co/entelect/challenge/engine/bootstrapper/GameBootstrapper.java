@@ -5,7 +5,13 @@ import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.Layout;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.appender.FileAppender;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -120,6 +126,11 @@ public class GameBootstrapper {
         } else {
             Configurator.setRootLevel(Level.ERROR);
         }
+
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        LoggerConfig config = ctx.getConfiguration().getRootLogger();
+        Appender appender = FileAppender.newBuilder().withName("File").withFileName(String.format("%s/match.log", gameRunnerConfig.gameName)).build();
+        config.addAppender(appender, Level.ALL, config.getFilter());
     }
 
     private void saveMatchLogs(TournamentConfig tournamentConfig, File matchLogs) throws Exception {

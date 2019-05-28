@@ -112,7 +112,13 @@ public class GameEngineRunner implements LifecycleEngineRunner {
     @Override
     public void onProcessRound() throws Exception {
         GameMapRenderer renderer = rendererResolver.resolve(RendererType.CONSOLE);
-        log.info(renderer.render(gameMap, players.get(0).getGamePlayer()));
+        log.info(() -> {
+            if (!gameRunnerConfig.isTournamentMode) {
+                return renderer.render(gameMap, players.get(0).getGamePlayer());
+            }
+
+            return "";
+        });
 
         for (Player player : players) {
 
