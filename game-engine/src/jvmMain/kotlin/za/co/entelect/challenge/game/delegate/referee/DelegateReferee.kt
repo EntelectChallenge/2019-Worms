@@ -11,6 +11,6 @@ class DelegateReferee : GameReferee {
         if (map !is DelegateMap) {
             throw IllegalArgumentException("Unknown Map Class")
         }
-        return map.getRefereeIssues()
+        return map.refereeIssues
     }
 }

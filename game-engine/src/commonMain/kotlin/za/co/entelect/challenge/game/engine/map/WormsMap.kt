@@ -159,8 +159,8 @@ class WormsMap(override val players: List<WormsPlayer>,
         val doNothingsCountLimit = 3
         livingPlayers.forEach {
             if (it.consecutiveDoNothingsCount == doNothingsCountLimit) {
-                refereeIssues.add("DoNothingsCount for @Player(${it.id}) exceeded a count of ${doNothingsCountLimit} " +
-                        "@Round(${currentRound})")
+                refereeIssues.add("DoNothingsCount for @Player(${it.id}) " +
+                        "reached a count of $doNothingsCountLimit @Round($currentRound)")
             }
         }
     }
