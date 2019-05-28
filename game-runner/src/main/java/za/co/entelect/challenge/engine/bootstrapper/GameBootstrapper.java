@@ -160,7 +160,9 @@ public class GameBootstrapper {
             gameResult.isSuccessful = false;
             gameResult.matchId = gameRunnerConfig.matchId;
             gameResult.verificationRequired = true;
-            LOGGER.info(gameResult.toString());
+            gameResult.tournamentId = gameRunnerConfig.tournamentConfig.tournamentId;
+            gameResult.playerAId = gameRunnerConfig.playerAId;
+            gameResult.playerBId = gameRunnerConfig.playerBId;
 
             try {
                 TournamentApi tournamentApi = retrofit.create(TournamentApi.class);
