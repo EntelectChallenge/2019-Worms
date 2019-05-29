@@ -40,15 +40,20 @@ class WormsPlayer private constructor(val id: Int,
     val disqualified
         get() = consecutiveDoNothingsCount > config.maxDoNothings
 
+    var wormSelectionTokens = config.wormSelectTokens.count
 
     fun selectNextWorm() {
         //Assign living worms to a local variable since it is a computed property
         val livingWorms = this.livingWorms
         if (livingWorms.isNotEmpty()) {
             val nextIndex = (livingWorms.indexOf(currentWorm) + 1) % livingWorms.size
-            previousWorm = currentWorm
-            currentWorm = livingWorms[nextIndex]
+            updateCurrentWorm(livingWorms[nextIndex])
         }
+    }
+
+    fun updateCurrentWorm(newWorm: Worm) {
+        previousWorm = currentWorm
+        currentWorm = newWorm
     }
 
     override fun toString(): String {

@@ -26,7 +26,7 @@ class DelegateRoundProcessor(random: Random, config: GameConfig) : GameRoundProc
             commandParser.parseCommand(value.command)
         }
 
-        return wormsRoundProcessor.processRound(map.wormsMap, wormsCommands)
+        return wormsRoundProcessor.processRound(map.wormsMap, wormsCommands.mapValues { listOf(it.value) })
     }
 
     override fun getErrorList(map: GameMap): List<String> {

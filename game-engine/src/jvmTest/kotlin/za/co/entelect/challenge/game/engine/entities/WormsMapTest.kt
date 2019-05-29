@@ -247,7 +247,7 @@ class WormsMapTest {
         val processor = WormsRoundProcessor(config)
 
         val doNothingCommand = DoNothingCommand(config)
-        val commandMap = mapOf(Pair(player0, doNothingCommand), Pair(player1, doNothingCommand))
+        val commandMap = mapOf(Pair(player0, listOf(doNothingCommand)), Pair(player1, listOf(doNothingCommand)))
 
         val refereeIssuesPerRound = mutableListOf<List<String>>()
         repeat(4) {

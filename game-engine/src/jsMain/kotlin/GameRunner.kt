@@ -26,7 +26,7 @@ class GameRunner(val seed: Int, val config: GameConfig, val playerCount: Int = 2
 
     @JsName("processRound")
     fun processRound(wormsMap: WormsMap, wormsCommands: Map<WormsPlayer, WormsCommand>): Boolean {
-        return WormsRoundProcessor(config).processRound(wormsMap, wormsCommands)
+        return WormsRoundProcessor(config).processRound(wormsMap, wormsCommands.mapValues { listOf(it.value) })
     }
 
     @JsName("getErrorList")

@@ -10,7 +10,8 @@ class GameConfig private constructor(val maxRounds: Int,
                                      val healthPackHp: Int,
                                      val totalHealthPacks: Int,
                                      val scores: Scores,
-                                     val csvSeparator: String)
+                                     val csvSeparator: String,
+                                     val wormSelectTokens: SelectTokenConfig)
 
 class PlayerWormDefinition(val count: Int,
                            val initialHp: Int,
@@ -26,3 +27,5 @@ class Scores(val attack: Int,
              val move: Int,
              val invalidCommand: Int,
              val doNothing: Int)
+
+class SelectTokenConfig(val count: Int)

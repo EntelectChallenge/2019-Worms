@@ -63,9 +63,7 @@ class ShootCommand(val direction: Direction, val config: GameConfig) : WormsComm
     private fun shootCommandHitFeedback(score: Int, worm: Worm, position: Point) =
             ShootCommandFeedback(this.toString(), score = score, playerId = worm.player.id, result = ShootResult.HIT, target = position)
 
-    override fun toString(): String {
-        return "shoot ${direction.shortCardinal}"
-    }
+    override fun toString(): String = "shoot ${direction.shortCardinal}"
 
     companion object {
         private val logger = KotlinLogging.logger { }

@@ -25,5 +25,8 @@
     "doNothing": 0,
     "invalidCommand": -4
   },
+  "wormSelectTokens": {
+    "count": 5
+  },
   "csvSeparator": ","
 }
