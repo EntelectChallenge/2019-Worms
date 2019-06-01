@@ -20,7 +20,6 @@ class PlayerWormDefinition(val count: Int,
 
 class Scores(val attack: Int,
              val killShot: Int,
-             val friendlyFire: Int,
              val missedAttack: Int,
              val powerup: Int,
              val dig: Int,
