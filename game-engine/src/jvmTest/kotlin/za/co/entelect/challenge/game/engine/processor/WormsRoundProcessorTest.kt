@@ -266,6 +266,42 @@ class WormsRoundProcessorTest {
     }
 
     /**
+     * If a dead worm (that is no longer on the map) has the same last position as a living worm's current position, the
+     * healthpack should only be applied to living worms
+     */
+    @Test
+    fun  processRound_applyHealthpackDeadWormPosition() {
+        val originPosition = Point(2, 2)
+        val targetPosition = Point(1, 1)
+
+        val livingWorm = CommandoWorm.build(0, config, originPosition)
+        val deadWorm = CommandoWorm.build(1, config, targetPosition).apply {
+            health = 0
+        }
+
+        val player = WormsPlayer.build(0, listOf(livingWorm, deadWorm), config)
+        val map = buildMapWithCellType(listOf(player), 3, CellType.AIR)
+
+        map.removeDeadWorms()
+        assertNull(map[targetPosition].occupier)
+        assertFalse(map[targetPosition].isOccupied())
+
+        map[targetPosition].powerup = HealthPack(config.healthPackHp)
+
+        roundProcessor.processRound(map, commandMap(player, TeleportCommand(targetPosition, random, config)))
+
+        assertNull(map[originPosition].occupier)
+        assertNotNull(map[targetPosition].occupier)
+        assertNull(map[targetPosition].powerup)
+
+        assertTrue(deadWorm.dead)
+        assertEquals(0, deadWorm.health)
+
+        assertFalse(livingWorm.dead)
+        assertEquals(config.commandoWorms.initialHp + config.healthPackHp, livingWorm.health)
+    }
+
+    /**
      * When the engine receives no commands for a specific player it should execute a "do nothing" command
      */
     @Test
@@ -286,15 +322,19 @@ class WormsRoundProcessorTest {
      */
     @Test
     fun  processRound_selectAndMove() {
-        val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0)), CommandoWorm.build(1, config, Point(1, 1))), config)
-        val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(0, 2))), config)
+        val player = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0)), CommandoWorm.build(1, config, Point(1, 1))), config)
 
-        val map = buildMapWithCellType(listOf(player1, player2), 5, CellType.AIR)
+        assertEquals(player.worms[0], player.currentWorm)
 
-        roundProcessor.processRound(map, mapOf(player1 to emptyList()))
+        val map = buildMapWithCellType(listOf(player), 5, CellType.AIR)
+        val selectCommand = SelectCommand(1)
+        val moveCommand = TeleportCommand(Point(2,2), random, config)
 
-        assertEquals(1, player1.consecutiveDoNothingsCount)
-        assertEquals(1, player2.consecutiveDoNothingsCount)
+        roundProcessor.processRound(map, commandMap(player, moveCommand, selectCommand))
+
+        assertEquals(0, player.consecutiveDoNothingsCount)
+        assertEquals(player.worms[0], player.currentWorm)
+        assertEquals(Point(2,2), player.worms[1].position)
     }
 
     /**
@@ -313,10 +353,9 @@ class WormsRoundProcessorTest {
         assertEquals(1, player2.consecutiveDoNothingsCount)
     }
 
-
     private fun commandMap(player1: WormsPlayer, player2: WormsPlayer, command1: WormsCommand, command2: WormsCommand = command1) =
             mapOf(Pair(player1, listOf(command1)), Pair(player2, listOf(command2)))
 
-    private fun commandMap(player: WormsPlayer, command: WormsCommand) =
-            mapOf(Pair(player, listOf(command)))
+    private fun commandMap(player: WormsPlayer, vararg command: WormsCommand) =
+            mapOf(Pair(player, command.asList()))
 }

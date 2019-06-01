@@ -136,10 +136,6 @@ class WormsMap(override val players: List<WormsPlayer>,
         }
     }
 
-    fun isOutOfBounds(target: Point): Boolean {
-        return (target.x !in xRange) || (target.y !in yRange)
-    }
-
     override fun applyHealthPacks() {
         /**
          * Right now we only have single use powerups. If that changes,
