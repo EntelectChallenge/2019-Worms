@@ -9,6 +9,7 @@ class PrintablePlayer(player: WormsPlayer) {
     val score: Int = player.totalScore
     var health: Int? = null
     val currentWormId = player.currentWorm.id
+    val remainingWormSelections = player.wormSelectionTokens
     var worms: List<PrintableWorm> = emptyList()
 
     @Transient
