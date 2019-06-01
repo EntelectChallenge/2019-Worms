@@ -13,9 +13,6 @@ public enum BotLanguage {
     @SerializedName("javascript")
     JAVASCRIPT,
 
-    @SerializedName("python")
-    PYTHON,
-
     @SerializedName("python3")
     PYTHON3,
 

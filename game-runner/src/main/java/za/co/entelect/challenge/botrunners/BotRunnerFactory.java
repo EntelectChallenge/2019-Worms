@@ -19,7 +19,6 @@ public class BotRunnerFactory {
                 return new DotNetCoreBotRunner(botMetaData, timeoutInMilliseconds);
             case JAVASCRIPT:
                 return new JavaScriptBotRunner(botMetaData, timeoutInMilliseconds);
-            case PYTHON:
             case PYTHON3:
                 return new PythonBotRunner(botMetaData, timeoutInMilliseconds);
             case CPLUSPLUS:
