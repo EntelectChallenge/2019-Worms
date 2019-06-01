@@ -15,7 +15,7 @@ class DelegateRoundProcessor(random: Random, config: GameConfig) : GameRoundProc
     private val wormsRoundProcessor = WormsRoundProcessor(config)
     private val commandParser = CommandParser(random, config)
 
-    override fun processRound(map: GameMap, commands: Map<GamePlayer, RawCommand>): Boolean {
+    override fun processRound(map: GameMap, commands: Map<GamePlayer, List<RawCommand>>): Boolean {
         if (map !is DelegateMap) {
             throw IllegalArgumentException("Unknown Map Class")
         }
@@ -23,10 +23,10 @@ class DelegateRoundProcessor(random: Random, config: GameConfig) : GameRoundProc
         val wormsCommands = commands.mapKeys { (key, _) ->
             (key as DelegatePlayer).wormsPlayer
         }.mapValues { (_, value) ->
-            commandParser.parseCommand(value.command)
+            value.map { commandParser.parseCommand(it.command)}
         }
 
-        return wormsRoundProcessor.processRound(map.wormsMap, wormsCommands.mapValues { listOf(it.value) })
+        return wormsRoundProcessor.processRound(map.wormsMap, wormsCommands)
     }
 
     override fun getErrorList(map: GameMap): List<String> {
