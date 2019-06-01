@@ -19,7 +19,6 @@
     "missedAttack": 2,
     "attack": 20,
     "killShot": 40,
-    "friendlyFire": -20,
     "dig": 7,
     "move": 5,
     "powerup": 20,

@@ -44,9 +44,11 @@ class ShootCommand(val direction: Direction, val config: GameConfig) : WormsComm
                 val occupier = cell.occupier!!
                 occupier.takeDamage(worm.weapon.damage, gameMap.currentRound)
 
+                val isAllyWorm = occupier.player == worm.player
                 return when {
+                    occupier.dead && isAllyWorm -> shootCommandHitFeedback(-config.scores.killShot, worm, position)
                     occupier.dead -> shootCommandHitFeedback(config.scores.killShot, worm, position)
-                    occupier.player == worm.player -> shootCommandHitFeedback(config.scores.friendlyFire, worm, position)
+                    isAllyWorm -> shootCommandHitFeedback(-config.scores.attack, worm, position)
                     else -> shootCommandHitFeedback(config.scores.attack, worm, position)
                 }
             }
