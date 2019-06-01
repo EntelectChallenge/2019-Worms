@@ -1,7 +1,5 @@
 package za.co.entelect.challenge.engine.runner;
 
-import io.reactivex.subjects.BehaviorSubject;
-import io.reactivex.subjects.Subject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import za.co.entelect.challenge.engine.exceptions.InvalidCommandException;
@@ -12,8 +10,6 @@ import za.co.entelect.challenge.game.contracts.game.GameRoundProcessor;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
 import za.co.entelect.challenge.game.contracts.player.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -33,7 +29,7 @@ public class RunnerRoundProcessor {
         commandsToProcess = new Hashtable<>();
     }
 
-    boolean processRound(BehaviorSubject<String> addToConsoleOutput) throws Exception {
+    boolean processRound() throws Exception {
         if (roundProcessed) {
             throw new InvalidOperationException("This round has already been processed!");
         }

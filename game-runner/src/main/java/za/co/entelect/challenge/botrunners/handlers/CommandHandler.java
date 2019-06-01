@@ -1,4 +1,4 @@
-package za.co.entelect.challenge.botrunners;
+package za.co.entelect.challenge.botrunners.handlers;
 
 import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.logging.log4j.LogManager;
@@ -109,6 +109,21 @@ public class CommandHandler implements ExecuteStreamHandler {
         return "";
     }
 
+    public String getBotError() {
+        if (!stopped.get()) {
+            reentrantLock.lock();
+            try {
+                if (!stopped.get()) {
+                    return botErrorHandler.getLastError();
+                }
+            } finally {
+                reentrantLock.unlock();
+            }
+        }
+
+        return "";
+    }
+
     public void signalNewRound(int round) {
 
         reentrantLock.lock();
@@ -119,6 +134,7 @@ public class CommandHandler implements ExecuteStreamHandler {
 
         try {
             botInputHandler.setCurrentRound(round);
+            botErrorHandler.setCurrentRound(round);
 
             if (!stopped.get()) {
                 botInputStream.write(Integer.toString(round).getBytes());

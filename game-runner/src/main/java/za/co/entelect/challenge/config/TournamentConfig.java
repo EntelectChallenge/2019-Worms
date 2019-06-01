@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class TournamentConfig {
 
+    @SerializedName("tournament-id")
+    public String tournamentId;
+
     @SerializedName("connection-string")
     public String connectionString;
 
@@ -12,6 +15,9 @@ public class TournamentConfig {
 
     @SerializedName("match-logs-container")
     public String matchLogsContainer;
+
+    @SerializedName("match-logs-path")
+    public String matchLogsPath;
 
     @SerializedName("game-engine-container")
     public String gameEngineContainer;
@@ -24,4 +30,10 @@ public class TournamentConfig {
 
     @SerializedName("api-endpoint")
     public String apiEndpoint;
+
+    @SerializedName("result-endpoint")
+    public String resultEndpoint;
+
+    @SerializedName("function-key")
+    public String functionKey;
 }
