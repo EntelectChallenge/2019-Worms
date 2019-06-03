@@ -25,15 +25,29 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
     fun parseCommand(rawCommand: String): WormsCommand {
         logger.info { "Parsing command \"$rawCommand\"" }
 
-        val splitCommand = rawCommand.split(" ")
-        val identifier = splitCommand[0].toLowerCase()
+        val splitCommand = rawCommand.split(" ", limit = 4)
 
-        return when (identifier) {
+        return when (splitCommand[0].toLowerCase()) {
             "move" -> teleportCommand(splitCommand)
             "dig" -> digCommand(splitCommand)
             "shoot" -> shootCommand(splitCommand)
+            "select" -> selectCommand(splitCommand)
             "nothing" -> DoNothingCommand(config)
             else -> InvalidCommand("Unknown command ${splitCommand[0]}")
+        }
+    }
+
+    private fun selectCommand(splitCommand: List<String>): WormsCommand {
+        if (splitCommand.size != 2) {
+            return InvalidCommand("Cannot parse move command: Invalid length ${splitCommand.size}, expected 2")
+        }
+
+        val wormId = splitCommand[1].toIntOrNull()
+
+        return if (wormId == null) {
+            InvalidCommand("Cannot parse worm Id as a number: ${splitCommand[1]}")
+        } else {
+            SelectCommand(wormId)
         }
     }
 
@@ -44,11 +58,11 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
 
         val direction = splitCommand[1]
 
-        if (!Direction.containsShortened(direction)) {
-            return InvalidCommand("Cannot parse direction command: Invalid direction $direction")
+        return if (!Direction.containsShortened(direction)) {
+            InvalidCommand("Cannot parse direction command: Invalid direction $direction")
+        } else {
+            ShootCommand(Direction.fromShortened(direction), config)
         }
-
-        return ShootCommand(Direction.fromShortened(direction), config)
     }
 
     private fun digCommand(splitCommand: List<String>): WormsCommand {

@@ -41,7 +41,7 @@ kotlin {
                 implementation("com.google.code.gson:gson:2.8.5")
                 implementation("io.github.microutils:kotlin-logging:1.6.24")
                 runtimeOnly("org.slf4j:slf4j-api:1.7.26")
-                api("za.co.entelect.challenge:game-engine-interface:2019.1.1")
+                api("za.co.entelect.challenge:game-engine-interface:2019.2+")
             }
         }
         val jvmTest by getting {

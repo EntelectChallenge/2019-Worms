@@ -76,13 +76,6 @@ class CommandParserTest {
 
     @Test
     fun shoot_valid() {
-        val command = parser.parseCommand("shoot ul")
-        assertTrue(command is ShootCommand)
-        assertEquals(Direction.UP_LEFT, command.direction)
-    }
-
-    @Test
-    fun shoot_valid_cartesian() {
         val command = parser.parseCommand("shoot NW")
         assertTrue(command is ShootCommand)
         assertEquals(Direction.UP_LEFT, command.direction)
@@ -97,6 +90,25 @@ class CommandParserTest {
     @Test
     fun shoot_tooShort() {
         val command = parser.parseCommand("shoot")
+        assertTrue(command is InvalidCommand)
+    }
+
+    @Test
+    fun select_valid() {
+        val command = parser.parseCommand("select 1")
+        assertTrue(command is SelectCommand)
+        assertEquals(1, command.wormId)
+    }
+
+    @Test
+    fun select_invalid() {
+        val command = parser.parseCommand("select A")
+        assertTrue(command is InvalidCommand)
+    }
+
+    @Test
+    fun select_tooShort() {
+        val command = parser.parseCommand("select")
         assertTrue(command is InvalidCommand)
     }
 

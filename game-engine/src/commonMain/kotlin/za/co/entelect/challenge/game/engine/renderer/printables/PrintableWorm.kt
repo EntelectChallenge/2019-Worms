@@ -10,6 +10,7 @@ class PrintableWorm private constructor(worm: Worm) {
 
     val id: Int = worm.id
     var playerId: Int? = null
+        private set
 
     val health: Int? = worm.health
     val position: Point? = worm.position

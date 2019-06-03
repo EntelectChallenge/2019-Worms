@@ -103,9 +103,10 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
         return lines.joinToString(EOL)
     }
 
-    private fun getBasePlayerText(enemyPlayer: PrintablePlayer): String {
-        return """|Player id: ${enemyPlayer.id}
-                  |Score: ${enemyPlayer.score}"""
+    private fun getBasePlayerText(player: PrintablePlayer): String {
+        return """|Player id: ${player.id}
+                  |Score: ${player.score}
+                  |Selection Tokens: ${player.remainingWormSelections}"""
     }
 
     private fun getBaseWormText(worm: PrintableWorm): String {

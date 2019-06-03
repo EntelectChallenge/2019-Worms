@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface GameRoundProcessor {
 
-    boolean processRound(GameMap gameMap, Map<GamePlayer, RawCommand> commandsToProcess);
+    boolean processRound(GameMap gameMap, Map<GamePlayer, List<RawCommand>> commandsToProcess);
 
     List<String> getErrorList(GameMap gameMap);
 

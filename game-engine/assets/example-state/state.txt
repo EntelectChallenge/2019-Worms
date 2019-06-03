@@ -10,9 +10,10 @@ Worms per player: 3
 Pushback Damage: 4
 
 @02 My Player
-Section lines count: 34
+Section lines count: 35
 Player id: 1
 Score: 100
+Selection Tokens: 1
 Health: 300
 Current Worm: 1
 Worms: 
@@ -45,9 +46,10 @@ Weapon damage: 1
 Weapon range: 3
 
 @03 Opponents
-Section lines count: 29
+Section lines count: 30
 Player id: 2
 Score: 100
+Selection Tokens: 1
 Current Worm: 1
 Worms: 
 

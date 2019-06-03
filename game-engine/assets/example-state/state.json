@@ -10,6 +10,7 @@
     "score": 100,
     "health": 300,
     "currentWormId": 1,
+    "remainingWormSelections": 1,
     "worms": [
       {
         "id": 1,
@@ -60,6 +61,7 @@
       "id": 2,
       "score": 100,
       "currentWormId": 1,
+      "remainingWormSelections": 1,
       "worms": [
         {
           "id": 1,
