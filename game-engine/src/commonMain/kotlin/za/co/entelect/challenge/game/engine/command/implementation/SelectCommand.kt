@@ -20,7 +20,7 @@ class SelectCommand(val wormId: Int) : WormsCommand {
         val newWorm = player.worms.firstOrNull { it.id == wormId }
 
         return when {
-            player.wormSelectionTokens <= 0 -> CommandValidation.invalidMove("Player has no selection tokens")
+            player.wormSelectionTokens == 0 -> CommandValidation.invalidMove("Player has no selection tokens")
             newWorm == null -> CommandValidation.invalidMove("Worm with id $wormId not found")
             newWorm.dead -> CommandValidation.invalidMove("Worm with id $wormId not alive")
             else -> CommandValidation.validMove()
