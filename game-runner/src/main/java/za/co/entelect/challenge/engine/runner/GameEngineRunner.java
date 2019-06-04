@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.engine.runner;
 
 import io.reactivex.subjects.BehaviorSubject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import za.co.entelect.challenge.config.GameRunnerConfig;
@@ -23,12 +24,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameEngineRunner implements LifecycleEngineRunner {
 
     private static final Logger log = LogManager.getLogger(GameEngineRunner.class);
+    private static final String COMMAND_DELIMITER = "\\|";
 
     private GameRunnerConfig gameRunnerConfig;
 
@@ -121,7 +125,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
                 BotExecutionContext botExecutionContext = currentPlayer.executeBot(gameMap);
 
                 botExecutionContexts.add(botExecutionContext);
-                roundProcessor.addPlayerCommand(player, new RawCommand(botExecutionContext.command));
+                roundProcessor.addPlayerCommand(player, splitPlayerCommands(botExecutionContext.command));
                 referee.trackExecution(player, botExecutionContext);
             });
             thread.start();
@@ -129,6 +133,14 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         }
         roundProcessor.processRound();
         players.forEach(p -> p.roundComplete(gameMap, gameMap.getCurrentRound()));
+    }
+
+    private List<RawCommand> splitPlayerCommands(String commands) {
+        return Arrays.stream(commands.split(COMMAND_DELIMITER))
+                .map(String::trim)
+                .filter(StringUtils::isNotEmpty)
+                .map(RawCommand::new)
+                .collect(Collectors.toList());
     }
 
     @Override
