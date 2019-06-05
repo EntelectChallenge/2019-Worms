@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 public class GameEngineRunner implements LifecycleEngineRunner {
 
     private static final Logger log = LogManager.getLogger(GameEngineRunner.class);
-    private static final String COMMAND_DELIMITER = "\\|";
+    private static final String COMMAND_DELIMITER = ";";
 
     private GameRunnerConfig gameRunnerConfig;
 
