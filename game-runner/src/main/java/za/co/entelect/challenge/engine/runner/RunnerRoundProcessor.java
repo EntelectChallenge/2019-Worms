@@ -12,6 +12,7 @@ import za.co.entelect.challenge.game.contracts.player.Player;
 
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 public class RunnerRoundProcessor {
     private static final Logger log = LogManager.getLogger(RunnerRoundProcessor.class);
@@ -20,7 +21,7 @@ public class RunnerRoundProcessor {
     private GameRoundProcessor gameRoundProcessor;
 
     private boolean roundProcessed;
-    private Hashtable<GamePlayer, RawCommand> commandsToProcess;
+    private Map<GamePlayer, List<RawCommand>> commandsToProcess;
 
     RunnerRoundProcessor(GameMap gameMap, GameRoundProcessor gameRoundProcessor) {
         this.gameMap = gameMap;
@@ -29,7 +30,7 @@ public class RunnerRoundProcessor {
         commandsToProcess = new Hashtable<>();
     }
 
-    boolean processRound() throws Exception {
+    boolean processRound() throws InvalidOperationException {
         if (roundProcessed) {
             throw new InvalidOperationException("This round has already been processed!");
         }
@@ -45,7 +46,7 @@ public class RunnerRoundProcessor {
         return processed;
     }
 
-    synchronized void addPlayerCommand(Player player, RawCommand command) {
+    synchronized void addPlayerCommand(Player player, List<RawCommand> command) {
         try {
             if (commandsToProcess.containsKey(player.getGamePlayer()))
                 throw new InvalidCommandException("Player already has a command registered for this round, wait for the next round before sending a new command");
