@@ -19,10 +19,9 @@ class CommandExecutor(private val player: WormsPlayer,
     fun execute() {
         logger.info { "Executing command $worm Command($command) $moveValidation " }
 
-        if (moveValidation.isNothing) {
-            player.consecutiveDoNothingsCount++
-        } else {
-            player.consecutiveDoNothingsCount = 0
+        when {
+            moveValidation.isNothing -> player.consecutiveDoNothingsCount++
+            else -> player.consecutiveDoNothingsCount = 0
         }
 
         if (moveValidation.isValid) {

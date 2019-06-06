@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.map
 
 import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
+import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.processor.GameError
@@ -29,6 +30,10 @@ interface GameMap {
 
     fun removeDeadWorms()
     fun applyHealthPacks()
+
+    fun detectRefereeIssues()
+    fun getRefereeIssues(): List<String>
+    fun setScoresForKilledWorms(config: GameConfig)
 
 }
 
@@ -151,7 +156,7 @@ class WormsMap(override val players: List<WormsPlayer>,
                 }
     }
 
-    fun detectRefereeIssues() {
+    override fun detectRefereeIssues() {
         val doNothingsCountLimit = 3
         livingPlayers.forEach {
             if (it.consecutiveDoNothingsCount == doNothingsCountLimit) {
@@ -161,8 +166,25 @@ class WormsMap(override val players: List<WormsPlayer>,
         }
     }
 
-    fun getRefereeIssues(): List<String> {
+    override fun getRefereeIssues(): List<String> {
         return refereeIssues
     }
+
+    override fun setScoresForKilledWorms(config: GameConfig) {
+        players.flatMap { it.worms }
+                .filter { it.dead && it.lastAttackedBy.any() }
+                .forEach { worm ->
+                    worm.lastAttackedBy
+                            .distinct()
+                            .forEach { attacker ->
+                                when (attacker) {
+                                    worm.player -> attacker.commandScore -= config.scores.killShot
+                                    else -> attacker.commandScore += config.scores.killShot
+                                }
+                            }
+                    worm.lastAttackedBy.clear()
+                }
+    }
+
 }
 

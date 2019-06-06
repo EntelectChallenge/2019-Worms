@@ -27,9 +27,13 @@ class WormsRoundProcessor(val config: GameConfig) {
         logger.info { "Applying powerups" }
         wormsMap.applyHealthPacks()
 
+        logger.info { "Adding kill scores for dead worms" }
+        wormsMap.setScoresForKilledWorms(config)
+
         logger.info { "Removing dead worms from the map" }
         wormsMap.removeDeadWorms()
 
+        logger.info { "Checking for referee issues" }
         wormsMap.detectRefereeIssues()
 
         return true

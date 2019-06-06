@@ -3,9 +3,11 @@ package za.co.entelect.challenge.game.engine.processor
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.implementation.*
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
+import za.co.entelect.challenge.game.engine.player.AgentWorm
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
@@ -29,6 +31,8 @@ class WormsRoundProcessorTest {
         roundProcessor.processRound(map, commandMap)
 
         assertEquals(CellType.AIR, map[1, 1].type)
+
+        assertEquals(player1.commandScore, player2.commandScore)
     }
 
     @Test
@@ -335,6 +339,33 @@ class WormsRoundProcessorTest {
         assertEquals(0, player.consecutiveDoNothingsCount)
         assertEquals(player.worms[0], player.currentWorm)
         assertEquals(Point(2,2), player.worms[1].position)
+    }
+
+    @Test
+    fun test_shootCommand_sameKill() {
+        val traitorWorm = CommandoWorm.build(1, config, Point(0, 0))
+        val victimWorm = CommandoWorm.build(1, config, Point(1, 1))
+
+        val targetPlayer = WormsPlayer.build(0, listOf(traitorWorm, victimWorm), config)
+
+        val attackerWorm = CommandoWorm.build(0, config, Point(2, 2))
+        val attackingPlayer = WormsPlayer.build(1, listOf(attackerWorm), config)
+
+        val testMap = TestMapFactory.buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 3, CellType.AIR)
+
+        val traitorCommand = ShootCommand(Direction.DOWN_RIGHT, config)
+        val otherCommand = ShootCommand(Direction.UP_LEFT, config)
+
+        val commandMap = commandMap(targetPlayer, attackingPlayer, traitorCommand, otherCommand)
+
+        victimWorm.health = 2
+        roundProcessor.processRound(testMap, commandMap)
+
+        assertTrue(victimWorm.dead)
+        assertEquals(0, victimWorm.health)
+        assertEquals(41, attackingPlayer.commandScore)
+        assertEquals(-41, targetPlayer.commandScore)
+
     }
 
     /**

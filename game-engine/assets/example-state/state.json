@@ -24,7 +24,8 @@
           "range": 3
         },
         "diggingRange": 1,
-        "movementRange": 1
+        "movementRange": 1,
+        "profession": "Commando"
       },
       {
         "id": 2,
@@ -38,7 +39,8 @@
           "range": 3
         },
         "diggingRange": 1,
-        "movementRange": 1
+        "movementRange": 1,
+        "profession": "Commando"
       },
       {
         "id": 3,
@@ -48,11 +50,18 @@
           "y": 3
         },
         "weapon": {
-          "damage": 1,
-          "range": 3
+          "damage": 8,
+          "range": 4
+        },
+        "bananaBombs": {
+          "damage": 20,
+          "range": 5,
+          "count": 3,
+          "damageRadius": 2
         },
         "diggingRange": 1,
-        "movementRange": 1
+        "movementRange": 1,
+        "profession": "Agent"
       }
     ]
   },
@@ -71,7 +80,8 @@
             "y": 16
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "profession": "Commando"
         },
         {
           "id": 2,
@@ -81,7 +91,8 @@
             "y": 29
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "profession": "Commando"
         },
         {
           "id": 3,
@@ -91,7 +102,8 @@
             "y": 3
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "profession": "Agent"
         }
       ]
     }
@@ -652,7 +664,8 @@
             "y": 3
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "profession": "Agent"
         }
       },
       {
@@ -743,11 +756,18 @@
             "y": 3
           },
           "weapon": {
-            "damage": 1,
-            "range": 3
+            "damage": 8,
+            "range": 4
+          },
+          "bananaBombs": {
+            "damage": 20,
+            "range": 5,
+            "count": 3,
+            "damageRadius": 2
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "profession": "Agent"
         }
       },
       {
@@ -2822,7 +2842,8 @@
             "range": 3
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "profession": "Commando"
         }
       },
       {
@@ -2983,7 +3004,8 @@
             "y": 16
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "profession": "Commando"
         }
       },
       {
@@ -5059,7 +5081,8 @@
             "y": 29
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "profession": "Commando"
         }
       },
       {
@@ -5149,7 +5172,8 @@
             "range": 3
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "profession": "Commando"
         }
       },
       {

@@ -85,8 +85,10 @@ class WormsPlayer private constructor(val id: Int,
         fun build(id: Int, config: GameConfig): WormsPlayer {
             val commandoWorms = (0 until config.commandoWorms.count)
                     .map { i -> CommandoWorm.build(i + 1, config) }
+            val agentWorms = (0 until config.agentWorms.count)
+                    .map { i -> AgentWorm.build(i + 3, config) }
 
-            return WormsPlayer(id, commandoWorms, config)
+            return WormsPlayer(id, commandoWorms + agentWorms, config)
         }
 
         @JsName("buildWithWorms")
