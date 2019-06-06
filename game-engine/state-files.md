@@ -5,18 +5,25 @@
 ##### A file called "state.json", containing the following game details:
 * currentRound → *The current round number*
 * maxRounds → *The maximum number of allowed rounds for this match*
+* pushbackDamage → *The amount of damage that worms will sustain when moving into the same cell on the same round*
 * mapSize → *The number of rows or columns in the map*
 * currentWormId → *The Id number of your worm that is currently in play*
-* consecutiveDoNothingsCount → *The number of consecutive **do nothing** commands that you have submitted in this match*
+* consecutiveDoNothingCount → *The number of consecutive **do nothing** commands that you have submitted in this match*
 * myPlayer → *Your player's details*
   * id → *The Id number of your player* 
   * score → *Your score points acquired*
   * health → *The sum of all your worms' hitpoints*
   * currentWormId  → *The Id number of your worm that is currently in play. This is the same as the currentWormId above*
+  * remainingWormSelections → *The amount of custom selections via the Select command that is available to the player*
   * worms → *The list of all your worms. Worms in this list look like a **[default worm](#default-worm-properties)**, and in addition you can also see these extra attributes of your own worms:*
     * weapon → *The weapon that this worm is capable of using*
       * damage → *The number of hitpoints that this weapon can remove per shot*
       * range → *The distance to which this weapon can affect opponents*
+    * bananaBombs → *The Banana Bombs that this worm has at it's disposal. Only applicable to the Agent worm*
+      * damage → *The peak damage inflicted by this weapon, at the center cell*
+      * range → *The distance to which this can be thrown*
+      * count → *The amount of Banana Bombs in this worm's inventory*
+      * damageRadius → *The radius to which the impact will destroy dirt blocks and damage worms*
       
       
 * opponents → *The player details of your opponents. An example of an opponent looks like the following:*
@@ -45,6 +52,9 @@
   * y → *A y coordinate number between 0-32 (inclusive)*
 * diggingRange → *A number describing the range that this worm can dig around itself*
 * movementRange → *A number describing the range that this worm can move around itself*
+* profession → *A string describing the worm type. This could be*
+  * Commando
+  * Agent
  
 ### Text File [*example*](assets/example-state/state.txt "An example of the Text state file")
 
@@ -60,17 +70,23 @@ This file is encoded using UTF-8
   * Consecutive do nothing count → *The number of consecutive **do nothing** commands that you have submitted in this match*
   * Players count → *The total number of players stated in this file*
   * Worms per player → *The number of worms denoted to each player stated in this file*
+  * Pushback damage → *The amount of damage that worms will sustain when moving into the same cell on the same round*
 
 
 * @&#8203;02 My Player → *Section denoting your details*
   * Section lines count → *The number of lines in this section*
   * Player id → *The Id number of this player*
   * Score → *This player's score points currently acquired*
+  * Selection Tokens → *The amount of custom selections via the Select command that is available to the player*
   * Health → *The sum of all your worms' hitpoints*
   * Current worm id → *The Id number of your worm that is currently in play. This is the same as the currentWormId above*
   * Worms → *The list of all your worms. Worms in this list look like a **[default worm](#default-text-worm-properties)**, except that in addition you can also see these extra attributes of your own worms:* 
     * Weapon damage → *The number of hitpoints that this weapon can remove per shot*
     * Weapon range → *The distance to which this weapon can affect opponents* 
+    * Banana bomb damage → *The peak damage inflicted by this weapon, at the center cell* 
+    * Banana bomb range → *The distance to which this can be thrown* 
+    * Banana bombs count → *The amount of Banana Bombs in this worm's inventory* 
+    * Banana bomb damage radius → *The radius to which the impact will destroy dirt blocks and damage worms* 
 
 
 * @&#8203;03 Opponents → *Section denoting the list of opponents in this match*
@@ -107,7 +123,9 @@ This file is encoded using UTF-8
 * Position y → *A y coordinate number between 0-32 (inclusive)*
 * Digging range → *A number describing the range that this worm can dig around itself*
 * Movement range → *A number describing the range that this worm can move around itself*
-
+* Profession → *A string describing the worm type. This could be*
+  * Commando
+  * Agent
 
 ### Console [*example*](assets/example-state/console.txt "An example of the console file")
 
@@ -115,6 +133,7 @@ This file is encoded using UTF-8
   * H → *The sum of all your worms' hitpoints*
   * S → *Your score points currently acquired*
   * W → *The Id number of the worm you are currently commanding*
+  * X,Y → *The x,y coordinates of the currently selected worm*
 * Player {Id} → *A list of opponents and their attributes*
   * H → *The sum of all their worms' hitpoints*
   * S → *This player's score points currently acquired*  

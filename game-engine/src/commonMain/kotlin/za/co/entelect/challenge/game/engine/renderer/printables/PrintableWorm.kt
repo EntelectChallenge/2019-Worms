@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.renderer.printables
 
 import za.co.entelect.challenge.game.engine.map.Point
+import za.co.entelect.challenge.game.engine.player.Bananas
 import za.co.entelect.challenge.game.engine.player.Weapon
 import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
@@ -15,9 +16,11 @@ class PrintableWorm private constructor(worm: Worm) {
     val health: Int? = worm.health
     val position: Point? = worm.position
     var weapon: Weapon? = null
+    var bananaBombs: Bananas? = null
 
     val diggingRange: Int? = worm.diggingRange
     val movementRange: Int? = worm.movementRange
+    val profession: String = worm.profession
     @Transient
     val printable: String = worm.printable
 
@@ -30,6 +33,7 @@ class PrintableWorm private constructor(worm: Worm) {
             val wormForPerspectivePlayer = PrintableWorm(worm)
             if (PrintablePlayer.isPerspectivePlayer(worm.player, perspectivePlayer)) {
                 wormForPerspectivePlayer.weapon = worm.weapon
+                wormForPerspectivePlayer.bananaBombs = worm.bananas
             }
             return wormForPerspectivePlayer
         }

@@ -35,7 +35,9 @@ State files are explained in detail [here](https://github.com/EntelectChallenge/
 
 In every round each player can submit one command for their active worm. The active worm will be determined by the game engine and will be indicated in the map files as described above. 
 
-All player commands are validated before executing any commands. Invalid commands (eg. Invalid syntax, moving to an occupied cell) result in the worm doing nothing. 
+All player commands are validated before executing any commands. Invalid commands (eg. Invalid syntax, moving to an occupied cell) result in the worm doing nothing.
+
+Both player's commands are executed at the same time (in a single round), and not sequentially. 
 
 ### Move
 The format of the move command is `move x y`
@@ -55,6 +57,37 @@ The format of the dig command is `dig x y`
 * Worms can dig any adjacent dirt cells (including diagonally)
 * Digging a dirt cells will change its type to air
 * Two worms digging the same cell in the same turn is a valid move 
+
+### Banana Bomb
+The format of the Banana Bomb command is `banana x y`
+
+* `x y` is the target coordinate where the Banana Bomb will be thrown
+* Throwing distance is measured in [euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance). To determine if a cell is in range, calculate its euclidean distance from the worm's position, round it downwards to the nearest integer (floor), and check if it is less than or equal to the max range
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=distance&space;=&space;\left&space;\lfloor&space;\sqrt{(x_{a}-x_{b})^{2}&space;+&space;(y_{a}-y_{2})^{2}}&space;\right&space;\rfloor" target="_blank"><img src="https://latex.codecogs.com/gif.latex?distance&space;=&space;\left&space;\lfloor&space;\sqrt{(x_{a}-x_{b})^{2}&space;+&space;(y_{a}-y_{2})^{2}}&space;\right&space;\rfloor" title="Euclidean Distance" /></a>
+
+* The Banana Bomb has a maximum throw range of **5**
+* Banana Bombs can be thrown over dirt
+* If a Banana Bomb is thrown into deep space, the Banana Bomb will be lost
+* The Banana Bomb has a damage radius of **2**
+  * The damage radius can be represented like this:
+    * ▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+    * ▓▓▓▓▓▓░░▓▓▓▓▓▓
+    * ▓▓▓▓░░░░░░▓▓▓▓
+    * ▓▓░░░░██░░░░▓▓
+    * ▓▓▓▓░░░░░░▓▓▓▓
+    * ▓▓▓▓▓▓░░▓▓▓▓▓▓
+    * ▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+  * The Banana bomb has a peak damage of **20**
+  * Any worm caught within this radius during the impact, will be dealt damage to
+    * Worms in the impact cell "██" are dealt peak damage
+    * Worms within the damage radius "░░" will be dealt less damage, the further away from the impact cell they are
+    * You will be awarded score based on the damage done to all worms in this radius
+  * The Banana bomb will destroy any dirt in the damage radius
+    * You will be rewarded the same score as if you dug out all the affected dirt blocks
+* When a worm's health is 0 or lower, it will fall unconscious and be removed from the map 
+* Be careful! Friendly fire will damage your own worms
+  *  You will be penalised with negative score based on the damage dealt
 
 ### Shoot
 The format of the shoot command is `shoot {direction}`
@@ -82,12 +115,29 @@ The `nothing` command can be used when a Player does not want to do anything. An
 
 If a player does nothing for **12** consecutive turns, their bot will be considered invalid and they will be disqualified from the match.
 
+### Select
+The format of the select command is `select {worm id};{command}`
+
+* `{worm id}` is the id number of your worm that you want to select
+  * You can only select a living worm
+* `{command}` is any of the above mentioned commands
+* You must use this in combination with another action command, that will be executed by the selected worm
+  * The following are examples for valid commands, hypothetically for round 5, selecting worm 1
+    * ` C;5;select 1;move 1 1`
+    * ` C;5;select 1;dig 1 1`
+    * ` C;5;select 1;banana 1 1`
+    * ` C;5;select 1;shoot N`
+* This will override the selected worm for your player, meaning that in the next round your 
+selected worm index will start cycling from this selected worm 
+
 ## Command Order
 
 All commands submitted in a round will be evaluated in the following order:
+1. Select
 1. Movement
 2. Digging
-3. Shooting
+3. Banana
+4. Shooting
 
 This implies the following regarding command interaction:
 * A worm cannot move into a cell that another worm is digging open in this round
@@ -96,6 +146,18 @@ This implies the following regarding command interaction:
 * A worm can move out of range of another worm's shot 
 * Two worms can dig open the same dirt cell in a single round
 
+## Worm Profession
+
+All worms have a profession, which will give it special attributes and weapons.
+Worms can have only one of the following professions:
+* `Commando`
+  * Health → **150**
+  * Can use the basic weapon to shoot
+* `Agent`
+  * Health → **100**
+  * Can use the basic weapon to shoot
+  * Trained to use **Banana Bombs**
+
 ## Scores
 
 Player scores will only be considered in the case of a tie:
@@ -103,11 +165,11 @@ Player scores will only be considered in the case of a tie:
 * If both players lost their last worm in the same round 
 
 The total score value is determined by adding together the player's average worm health and the points for every single command the they played: 
-*  Attack:
-    * Shooting any worm unconscious gives **40** points
-    * Shooting an enemy worm gives **20** points (unless it is shot unconsious, then the first rule applies)
-    * Shooting one of your own worms will **reduce** your points by **20** 
-    * A missed attack gives **2** points  
+* Attack:
+  * Damaging any worm's health to zero or less gives **40** points
+  * Damaging any worm gives points equal to damage dealt multiplied by **2**
+  * Any of the above will **reduce** your points if they have been done to your own worm
+  * A missed attack gives **2** points  
 * Moving gives **5** point
 * Digging gives **7** points
 * Doing nothing gives **0** points

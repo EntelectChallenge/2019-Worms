@@ -15,15 +15,27 @@ class GameConfigFactoryTest {
         assertEquals(200, config.maxRounds)
         assertEquals(10, config.maxDoNothings)
 
-        assertEquals(3, config.commandoWorms.count)
+        assertEquals(2, config.commandoWorms.count)
         assertEquals(100, config.commandoWorms.initialHp)
         assertEquals(1, config.commandoWorms.movementRage)
         assertEquals(1, config.commandoWorms.diggingRange)
         assertEquals(1, config.commandoWorms.weapon.damage)
         assertEquals(3, config.commandoWorms.weapon.range)
 
+        assertEquals(1, config.agentWorms.count)
+        assertEquals(100, config.agentWorms.initialHp)
+        assertEquals(1, config.agentWorms.movementRage)
+        assertEquals(1, config.agentWorms.diggingRange)
+        assertEquals(8, config.agentWorms.weapon.damage)
+        assertEquals(4, config.agentWorms.weapon.range)
+        assertEquals(20, config.agentWorms.bananas?.damage)
+        assertEquals(5, config.agentWorms.bananas?.range)
+        assertEquals(3, config.agentWorms.bananas?.count)
+        assertEquals(2, config.agentWorms.bananas?.damageRadius)
+
         assertEquals(4, config.pushbackDamage)
         assertEquals(33, config.mapSize)
         assertEquals(5, config.healthPackHp)
+
     }
 }

@@ -14,8 +14,9 @@ class WormsPlayerTest {
     fun test_playerBuild() {
         val player = WormsPlayer.build(0, config)
 
-        assertEquals(config.commandoWorms.count, player.worms.size)
-        assertEquals(config.commandoWorms.count * config.commandoWorms.initialHp, player.health)
+        val allWormsCount = config.commandoWorms.count + config.agentWorms.count
+        assertEquals(allWormsCount, player.worms.size)
+        assertEquals(allWormsCount * config.commandoWorms.initialHp, player.health)
         assertFalse(player.dead)
         assertEquals(player.worms[0], player.currentWorm)
 
@@ -29,8 +30,10 @@ class WormsPlayerTest {
         val player = WormsPlayer.build(0, config)
         player.worms[1].health = 0
 
-        assertEquals(config.commandoWorms.count, player.worms.size)
-        assertEquals((config.commandoWorms.count - 1) * config.commandoWorms.initialHp, player.health)
+        val allWormsCount = config.commandoWorms.count + config.agentWorms.count
+        assertEquals(allWormsCount, player.worms.size)
+        assertEquals((config.commandoWorms.count - 1) * config.commandoWorms.initialHp
+                + config.agentWorms.count * config.agentWorms.initialHp, player.health)
         assertFalse(player.dead)
 
         player.selectNextWorm()
@@ -45,7 +48,8 @@ class WormsPlayerTest {
         val player = WormsPlayer.build(0, config)
         player.worms.forEachIndexed { i, worm -> worm.health = -i }
 
-        assertEquals(config.commandoWorms.count, player.worms.size)
+        val allWormsCount = config.commandoWorms.count + config.agentWorms.count
+        assertEquals(allWormsCount, player.worms.size)
         assertEquals(0, player.health)
         assertTrue(player.dead)
 

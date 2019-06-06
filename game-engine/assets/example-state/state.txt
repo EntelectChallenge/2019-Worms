@@ -7,10 +7,10 @@ Current worm id: 1
 Consecutive do nothing count: 0
 Players count: 2
 Worms per player: 3
-Pushback Damage: 4
+Pushback damage: 4
 
 @02 My Player
-Section lines count: 35
+Section lines count: 50
 Player id: 1
 Score: 100
 Selection Tokens: 1
@@ -24,8 +24,13 @@ Position x: 24
 Position y: 29
 Digging range: 1
 Movement range: 1
+Profession: Commando
 Weapon damage: 1
 Weapon range: 3
+Banana bomb damage: null
+Banana bomb range: null
+Banana bombs count: null
+Banana bomb damage radius: null
 
 Worm id: 2
 Health: 100
@@ -33,8 +38,13 @@ Position x: 1
 Position y: 16
 Digging range: 1
 Movement range: 1
+Profession: Commando
 Weapon damage: 1
 Weapon range: 3
+Banana bomb damage: null
+Banana bomb range: null
+Banana bombs count: null
+Banana bomb damage radius: null
 
 Worm id: 3
 Health: 100
@@ -42,11 +52,16 @@ Position x: 24
 Position y: 3
 Digging range: 1
 Movement range: 1
-Weapon damage: 1
-Weapon range: 3
+Profession: Agent
+Weapon damage: 8
+Weapon range: 4
+Banana bomb damage: 20
+Banana bomb range: 5
+Banana bombs count: 3
+Banana bomb damage radius: 2
 
 @03 Opponents
-Section lines count: 30
+Section lines count: 33
 Player id: 2
 Score: 100
 Selection Tokens: 1
@@ -59,6 +74,7 @@ Position x: 31
 Position y: 16
 Digging range: 1
 Movement range: 1
+Profession: Commando
 
 Worm id: 2
 Health: 100
@@ -66,6 +82,7 @@ Position x: 9
 Position y: 29
 Digging range: 1
 Movement range: 1
+Profession: Commando
 
 Worm id: 3
 Health: 100
@@ -73,6 +90,7 @@ Position x: 8
 Position y: 3
 Digging range: 1
 Movement range: 1
+Profession: Agent
 
 
 @04 Special Items
