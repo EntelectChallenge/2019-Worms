@@ -133,11 +133,30 @@ class ShootCommandTest {
             assertEquals(testMap.currentRound, targetWorm.roundHit, "Hit round for worm in direction $direction")
             assertEquals(expectedHp, targetWorm.health, "Health for worm in direction $direction")
             assertEquals(ShootResult.HIT, feedback.result, "Result correct for attack in direction $direction")
-            assertEquals(config.scores.friendlyFire, feedback.score)
+            assertEquals(-config.scores.attack * attacker.weapon.damage, feedback.score)
             assertEquals(targetWorm.position, feedback.target, "Target correct for attack in direction $direction")
         }
 
         assertEquals(initialHp, attacker.health)
+    }
+
+    @Test
+    fun test_valid_friendly_kill() {
+        val targetWorm = CommandoWorm.build(0, config, Point(1, 1))
+        val attacker = CommandoWorm.build(0, config, Point(2, 2))
+        val attackingPlayer = WormsPlayer.build(0, listOf(targetWorm, attacker), config)
+
+        val testMap = buildMapWithCellType(listOf(attackingPlayer), 5, CellType.AIR)
+
+        testMap.currentRound++
+        targetWorm.health = 1
+
+        val testCommand = ShootCommand(UP_LEFT, config)
+        val feedback = testCommand.execute(testMap, attacker)
+
+        assertTrue(targetWorm.dead, "Target worm was supposed to be dead")
+        assertEquals(ShootResult.HIT, feedback.result, "Result correct for attack in direction $UP_LEFT")
+        assertEquals(-config.scores.attack * attacker.weapon.damage, feedback.score)
     }
 
     @Test

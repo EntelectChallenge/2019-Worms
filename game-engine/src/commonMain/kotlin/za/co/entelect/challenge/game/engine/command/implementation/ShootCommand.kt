@@ -17,7 +17,7 @@ import za.co.entelect.challenge.game.engine.player.Worm
  */
 class ShootCommand(val direction: Direction, val config: GameConfig) : WormsCommand {
 
-    override val order: Int = 3
+    override val order: Int = 4
 
     override fun validate(gameMap: WormsMap, worm: Worm): CommandValidation {
         return CommandValidation.validMove()
@@ -42,12 +42,12 @@ class ShootCommand(val direction: Direction, val config: GameConfig) : WormsComm
             if (cell.isOccupied()) {
                 logger.debug { "Shot hit: $worm shooting $cell ${cell.occupier}" }
                 val occupier = cell.occupier!!
-                occupier.takeDamage(worm.weapon.damage, gameMap.currentRound)
+                val damageScore = config.scores.attack * occupier.takeDamage(worm.weapon.damage, gameMap.currentRound, worm.player)
 
+                val isAllyWorm = occupier.player == worm.player
                 return when {
-                    occupier.dead -> shootCommandHitFeedback(config.scores.killShot, worm, position)
-                    occupier.player == worm.player -> shootCommandHitFeedback(config.scores.friendlyFire, worm, position)
-                    else -> shootCommandHitFeedback(config.scores.attack, worm, position)
+                    isAllyWorm -> shootCommandHitFeedback(-damageScore, worm, position)
+                    else -> shootCommandHitFeedback(damageScore, worm, position)
                 }
             }
 
@@ -61,9 +61,7 @@ class ShootCommand(val direction: Direction, val config: GameConfig) : WormsComm
     private fun shootCommandHitFeedback(score: Int, worm: Worm, position: Point) =
             ShootCommandFeedback(this.toString(), score = score, playerId = worm.player.id, result = ShootResult.HIT, target = position)
 
-    override fun toString(): String {
-        return "shoot ${direction.shortCardinal}"
-    }
+    override fun toString(): String = "shoot ${direction.shortCardinal}"
 
     companion object {
         private val logger = KotlinLogging.logger { }

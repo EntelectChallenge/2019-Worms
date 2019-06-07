@@ -7,10 +7,10 @@ import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.processor.GameError
 
-class CommandExecutor(val player: WormsPlayer,
-                      val map: WormsMap,
-                      val command: WormsCommand,
-                      val config: GameConfig) {
+class CommandExecutor(private val player: WormsPlayer,
+                      private val map: WormsMap,
+                      private val command: WormsCommand,
+                      private val config: GameConfig) {
 
     val worm = player.currentWorm
     // Moves are validated on command executor construction
@@ -19,10 +19,9 @@ class CommandExecutor(val player: WormsPlayer,
     fun execute() {
         logger.info { "Executing command $worm Command($command) $moveValidation " }
 
-        if (moveValidation.isNothing) {
-            player.consecutiveDoNothingsCount++
-        } else {
-            player.consecutiveDoNothingsCount = 0
+        when {
+            moveValidation.isNothing -> player.consecutiveDoNothingsCount++
+            else -> player.consecutiveDoNothingsCount = 0
         }
 
         if (moveValidation.isValid) {
@@ -47,12 +46,12 @@ class CommandExecutor(val player: WormsPlayer,
         map.addError(GameError(message, player, worm, map.currentRound))
     }
 
-    companion object {
-        private val logger = KotlinLogging.logger{}
-    }
-
     override fun toString(): String {
         return "CommandExecutor(worm=$worm, command=\"$command\")"
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger{}
     }
 
 }

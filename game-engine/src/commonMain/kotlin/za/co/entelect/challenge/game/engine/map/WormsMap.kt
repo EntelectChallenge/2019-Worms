@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.map
 
 import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
+import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.processor.GameError
@@ -16,7 +17,6 @@ interface GameMap {
     val cells: List<MapCell>
     var currentRound: Int
     val currentRoundErrors: List<GameError>
-    val currentRoundFeedback: List<CommandFeedback>
 
     operator fun contains(target: Point): Boolean
 
@@ -26,9 +26,14 @@ interface GameMap {
 
     fun addError(gameError: GameError)
     fun addFeedback(feedback: CommandFeedback)
+    fun getFeedback(round: Int): List<CommandFeedback>
 
     fun removeDeadWorms()
     fun applyHealthPacks()
+
+    fun detectRefereeIssues()
+    fun getRefereeIssues(): List<String>
+    fun setScoresForKilledWorms(config: GameConfig)
 
 }
 
@@ -36,9 +41,7 @@ class WormsMap(override val players: List<WormsPlayer>,
                val size: Int,
                cells: List<MapCell>) : GameMap {
 
-    val allFeedback = mutableMapOf<Int, MutableList<CommandFeedback>>()
-    override val currentRoundFeedback: List<CommandFeedback>
-        get() = allFeedback[currentRound].orEmpty()
+    private val allFeedback = mutableMapOf<Int, MutableList<CommandFeedback>>()
 
     override var currentRound: Int = 0
     override val cells: List<MapCell>
@@ -49,6 +52,8 @@ class WormsMap(override val players: List<WormsPlayer>,
 
     private val xRange = 0 until size
     private val yRange = 0 until size
+
+    private val refereeIssues = mutableListOf<String>()
 
     override val livingPlayers: List<WormsPlayer>
         get() = players.filter { !it.dead && !it.disqualified }
@@ -108,6 +113,10 @@ class WormsMap(override val players: List<WormsPlayer>,
         allFeedback.getOrPut(currentRound) { mutableListOf() }.add(feedback)
     }
 
+    override fun getFeedback(round: Int): List<CommandFeedback> {
+        return allFeedback[round] ?: emptyList()
+    }
+
     override fun removeDeadWorms() {
         players.flatMap { it.worms }
                 .filter { it.dead || it.player.disqualified }
@@ -132,10 +141,6 @@ class WormsMap(override val players: List<WormsPlayer>,
         }
     }
 
-    fun isOutOfBounds(target: Point): Boolean {
-        return (target.x !in xRange) || (target.y !in yRange)
-    }
-
     override fun applyHealthPacks() {
         /**
          * Right now we only have single use powerups. If that changes,
@@ -150,5 +155,36 @@ class WormsMap(override val players: List<WormsPlayer>,
                     }
                 }
     }
+
+    override fun detectRefereeIssues() {
+        val doNothingsCountLimit = 3
+        livingPlayers.forEach {
+            if (it.consecutiveDoNothingsCount == doNothingsCountLimit) {
+                refereeIssues.add("DoNothingsCount for @Player(${it.id}) " +
+                        "reached a count of $doNothingsCountLimit @Round($currentRound)")
+            }
+        }
+    }
+
+    override fun getRefereeIssues(): List<String> {
+        return refereeIssues
+    }
+
+    override fun setScoresForKilledWorms(config: GameConfig) {
+        players.flatMap { it.worms }
+                .filter { it.dead && it.lastAttackedBy.any() }
+                .forEach { worm ->
+                    worm.lastAttackedBy
+                            .distinct()
+                            .forEach { attacker ->
+                                when (attacker) {
+                                    worm.player -> attacker.commandScore -= config.scores.killShot
+                                    else -> attacker.commandScore += config.scores.killShot
+                                }
+                            }
+                    worm.lastAttackedBy.clear()
+                }
+    }
+
 }
 

@@ -59,7 +59,7 @@ public abstract class BasePlayer extends Player {
         this.playerId = playerId;
     }
 
-    public abstract String getCommand(BotExecutionContext botExecutionContext) throws Exception;
+    public abstract void setExecutionResult(BotExecutionContext botExecutionContext) throws Exception;
 
     public BotExecutionContext executeBot(GameMap gameMap) {
 
@@ -72,22 +72,19 @@ public abstract class BasePlayer extends Player {
         botExecutionContext.csvState = csvRenderer.render(gameMap, getGamePlayer());
         botExecutionContext.round = gameMap.getCurrentRound();
 
-        String command;
         try {
             // Get a command from the bot
             // The manner in which we get the command will depend
             // on the subclasses i.e Console, File, etc.
-            command = getCommand(botExecutionContext);
-            if (command == null || command.isEmpty()) {
+            setExecutionResult(botExecutionContext);
+            if (botExecutionContext.command == null || botExecutionContext.command.isEmpty()) {
                 log.warn("No command provided by bot. Falling back to default no command");
-                command = NO_COMMAND;
+                botExecutionContext.command = NO_COMMAND;
             }
         } catch (Exception e) {
             log.error("No command provided by bot. Falling back to default no command", e);
-            command = NO_COMMAND;
+            botExecutionContext.command = NO_COMMAND;
         }
-
-        botExecutionContext.command = command;
 
         return botExecutionContext;
     }

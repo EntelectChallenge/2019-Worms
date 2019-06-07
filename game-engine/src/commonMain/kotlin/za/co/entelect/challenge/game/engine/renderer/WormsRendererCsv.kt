@@ -24,7 +24,8 @@ class WormsRendererCsv(val config: GameConfig) : WormsRenderer {
             (standardHeaders + wormHeaders).joinToString(separator = config.csvSeparator, postfix = EOL)
         } else ""
 
-        val command = wormsMap.currentRoundFeedback.firstOrNull { it.playerId == player.id }?.command
+        val command = wormsMap.getFeedback(wormsMap.currentRound - 1)
+                .firstOrNull { it.playerId == player.id }?.command
         val commandType = command?.run {
             val firstSpace = this.indexOf(' ')
             if (firstSpace != -1) {

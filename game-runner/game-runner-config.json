@@ -6,16 +6,14 @@
   "max-runtime-ms": 1000,
   "player-a": "../starter-bots/javascript",
   "player-b": "../reference-bot/javascript",
-  "max-request-retries": 5,
+  "max-request-retries": 10,
   "request-timeout-ms": 5000,
   "is-tournament-mode": false,
   "tournament": {
     "connection-string": "",
-    "bots-container": "bot-source-code-container-qa",
-    "match-logs-container": "match-logs-qa",
-    "game-engine-container": "game-engine-container-qa",
-    "match-result-queue": "match-results-qa",
-    "dead-match-queue": "dead-match-qa",
-    "api-endpoint": "http://host.docker.internal"
+    "bots-container": "",
+    "match-logs-container": "",
+    "game-engine-container": "",
+    "api-endpoint": "http://localhost"
   }
 }

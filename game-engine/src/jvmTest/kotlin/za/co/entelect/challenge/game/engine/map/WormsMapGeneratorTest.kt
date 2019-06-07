@@ -58,7 +58,7 @@ class WormsMapGeneratorTest {
                 .forEach { w ->
                     (-1..1).flatMap { i -> (-1..1).map { j -> Point(i, j) } }
                             .map { w.position + it }
-                            .filter { !wormsMap.isOutOfBounds(it) }
+                            .filter { it in wormsMap }
                             .map { wormsMap[it] }
                             .forEach {
                                 assertTrue(listOf(CellType.AIR, CellType.DEEP_SPACE).contains(it.type),

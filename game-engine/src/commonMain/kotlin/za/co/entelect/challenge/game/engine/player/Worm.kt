@@ -7,13 +7,18 @@ import za.co.entelect.challenge.game.engine.map.WormsMap
 open class Worm(val id: Int,
                 var health: Int,
                 val weapon: Weapon,
+                var bananas: Bananas? = null,
                 val diggingRange: Int,
-                val movementRange: Int) : Printable {
+                val movementRange: Int,
+                val profession: String) : Printable {
 
-    constructor(id: Int, health: Int, position: Point, weapon: Weapon, diggingRange: Int = 1, movementRange: Int = 1)
-            : this(id, health, weapon, diggingRange, movementRange) {
+    constructor(id: Int, health: Int, position: Point, weapon: Weapon, bananas: Bananas? = null, diggingRange: Int = 1, movementRange: Int = 1, profession: String)
+            : this(id, health, weapon, bananas, diggingRange, movementRange, profession) {
         this.position = position
         this.previousPosition = position
+        if (bananas != null) {
+            this.bananas = Bananas(bananas)
+        }
     }
 
     override val printable
@@ -35,6 +40,8 @@ open class Worm(val id: Int,
 
     val dead: Boolean
         get() = health <= 0
+
+    val lastAttackedBy: MutableList<WormsPlayer> = mutableListOf()
 
     /**
      * Set position and previous position to the same value
@@ -67,10 +74,15 @@ open class Worm(val id: Int,
 
     }
 
-
-    fun takeDamage(damage: Int, round: Int) {
+    /**
+     * Applies damage to worm, and returns the amount of damage that was done
+     */
+    fun takeDamage(damage: Int, round: Int, attacker: WormsPlayer? = null): Int {
         health -= damage
         roundHit = round
+
+        if (attacker != null) lastAttackedBy.add(attacker)
+        return damage
     }
 
     override fun toString(): String {

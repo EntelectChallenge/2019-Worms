@@ -49,10 +49,11 @@ class WormsRendererCsvTest {
     @Test
     fun testCommand() {
         val (player, map) = setupMap()
-
-        map.currentRound = 2
+        map.currentRound = 1
         map.addFeedback(StandardCommandFeedback(command = "move (22, 28)", score = 0, playerId = player.id))
 
+        //Renderers get called at the beginning of a round
+        map.currentRound = 2
         assertEquals(round2Expected, renderer.render(map, player))
     }
 

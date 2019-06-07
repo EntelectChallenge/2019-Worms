@@ -1,10 +1,13 @@
 package za.co.entelect.challenge.game.engine.processor
 
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
+import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.implementation.*
+import za.co.entelect.challenge.game.engine.factory.TestMapFactory
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
+import za.co.entelect.challenge.game.engine.player.AgentWorm
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
@@ -13,9 +16,9 @@ import kotlin.test.*
 
 class WormsRoundProcessorTest {
 
-    val config = TEST_CONFIG
-    val roundProcessor = WormsRoundProcessor(config)
-    val random = Random(0)
+    private val config = TEST_CONFIG
+    private val roundProcessor = WormsRoundProcessor(config)
+    private val random = Random(0)
 
     @Test
     fun processRound_digSameHole() {
@@ -24,10 +27,12 @@ class WormsRoundProcessorTest {
         val map = buildMapWithCellType(listOf(player1, player2), 3, CellType.DIRT)
         val command = DigCommand(1, 1, TEST_CONFIG)
 
-        val commandMap = mapOf(Pair(player1, command), Pair(player2, command))
+        val commandMap = commandMap(player1, player2, command)
         roundProcessor.processRound(map, commandMap)
 
         assertEquals(CellType.AIR, map[1, 1].type)
+
+        assertEquals(player1.commandScore, player2.commandScore)
     }
 
     @Test
@@ -35,9 +40,9 @@ class WormsRoundProcessorTest {
         val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
         val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(2, 2))), config)
         val map = buildMapWithCellType(listOf(player1, player2), 3, CellType.AIR)
-        val command = TeleportCommand(Point(1, 1), random, TEST_CONFIG)
+        val command: WormsCommand = TeleportCommand(Point(1, 1), random, TEST_CONFIG)
 
-        val commandMap = mapOf(Pair(player1, command), Pair(player2, command))
+        val commandMap = commandMap(player1, player2, command)
         roundProcessor.processRound(map, commandMap)
 
         assertNull(map[1, 1].occupier)
@@ -57,7 +62,7 @@ class WormsRoundProcessorTest {
         map[1, 1].powerup = HealthPack(config.healthPackHp)
         val command = TeleportCommand(Point(1, 1), random, TEST_CONFIG)
 
-        val commandMap = mapOf(Pair(player1, command), Pair(player2, command))
+        val commandMap = commandMap(player1, player2, command)
         roundProcessor.processRound(map, commandMap)
 
         assertNull(map[1, 1].occupier)
@@ -78,7 +83,7 @@ class WormsRoundProcessorTest {
         val digCommand = DigCommand(1, 1, TEST_CONFIG)
         val moveCommand = TeleportCommand(Point(1, 1), random, TEST_CONFIG)
 
-        val commandMap = mapOf(Pair(player1, digCommand), Pair(player2, moveCommand))
+        val commandMap = commandMap(player1, player2, digCommand, moveCommand)
         roundProcessor.processRound(map, commandMap)
 
         assertNull(map[1, 1].occupier)
@@ -99,7 +104,7 @@ class WormsRoundProcessorTest {
         val digCommand = DigCommand(1, 1, TEST_CONFIG)
         val shootCommand = ShootCommand(Direction.UP_LEFT, TEST_CONFIG)
 
-        val commandMap = mapOf(Pair(player1, digCommand), Pair(player2, shootCommand))
+        val commandMap = commandMap(player1, player2, digCommand, shootCommand)
         roundProcessor.processRound(map, commandMap)
 
         assertNull(map[1, 1].occupier)
@@ -117,7 +122,8 @@ class WormsRoundProcessorTest {
         val shootCommand = ShootCommand(Direction.DOWN, TEST_CONFIG)
         val moveCommand = TeleportCommand(Point(0, 2), random, TEST_CONFIG)
 
-        val commandMap = mapOf(Pair(player1, shootCommand), Pair(player2, moveCommand))
+        val commandMap = commandMap(player1, player2, shootCommand, moveCommand)
+
         roundProcessor.processRound(map, commandMap)
 
         assertNotEquals(config.commandoWorms.initialHp, player2.worms[0].health)
@@ -133,7 +139,7 @@ class WormsRoundProcessorTest {
         val shootCommand = ShootCommand(Direction.DOWN, TEST_CONFIG)
         val moveCommand = TeleportCommand(Point(1, 1), random, TEST_CONFIG)
 
-        val commandMap = mapOf(Pair(player1, shootCommand), Pair(player2, moveCommand))
+        val commandMap = commandMap(player1, player2, shootCommand, moveCommand)
         roundProcessor.processRound(map, commandMap)
 
         assertEquals(config.commandoWorms.initialHp, player2.worms[0].health)
@@ -161,7 +167,7 @@ class WormsRoundProcessorTest {
         val shootCommand = ShootCommand(Direction.DOWN, TEST_CONFIG)
         val doNothingCommand = DoNothingCommand(config)
 
-        val commandMap = mapOf(Pair(player1, shootCommand), Pair(player2, doNothingCommand))
+        val commandMap = commandMap(player1, player2, shootCommand, doNothingCommand)
         roundProcessor.processRound(map, commandMap)
 
         assertTrue(targetWorm.dead)
@@ -180,7 +186,7 @@ class WormsRoundProcessorTest {
         assertEquals(0, roundProcessor.getErrorList(map).size)
 
         val invalidCommand = InvalidCommand("Test")
-        val commandMap = mapOf(Pair(player1, invalidCommand))
+        val commandMap = commandMap(player1, invalidCommand)
 
         //The game runner is responsible for updating the round number
         map.currentRound = 1
@@ -208,15 +214,16 @@ class WormsRoundProcessorTest {
         val map = buildMapWithCellType(listOf(player), 5, CellType.AIR)
 
         val target = Point(1, 2)
-        val command = TeleportCommand(target, Random, config)
+        val command: WormsCommand = TeleportCommand(target, Random, config)
         map[target].powerup = HealthPack(config.healthPackHp)
 
         command.execute(map, worm)
-        roundProcessor.processRound(map, mapOf(Pair(player, command)))
+        roundProcessor.processRound(map, commandMap(player, command))
 
-        val expecteHealth = config.commandoWorms.initialHp + config.healthPackHp
-        assertEquals(expecteHealth, player.health)
+        val expectedHealth = config.commandoWorms.initialHp + config.healthPackHp
+        assertEquals(expectedHealth, player.health)
     }
+
 
     /**
      * A healthpack can resurrect a worm that is still on the map (i.e. it died in this round)
@@ -233,7 +240,7 @@ class WormsRoundProcessorTest {
         map[target].powerup = HealthPack(config.healthPackHp)
 
         command.execute(map, worm)
-        roundProcessor.processRound(map, mapOf(Pair(player, command)))
+        roundProcessor.processRound(map, mapOf(Pair(player, listOf(command))))
 
         assertEquals(config.healthPackHp, player.health)
         assertEquals(worm, map[target].occupier)
@@ -261,4 +268,125 @@ class WormsRoundProcessorTest {
         assertNotNull(map[target].powerup)
         assertTrue(player.dead)
     }
+
+    /**
+     * If a dead worm (that is no longer on the map) has the same last position as a living worm's current position, the
+     * healthpack should only be applied to living worms
+     */
+    @Test
+    fun  processRound_applyHealthpackDeadWormPosition() {
+        val originPosition = Point(2, 2)
+        val targetPosition = Point(1, 1)
+
+        val livingWorm = CommandoWorm.build(0, config, originPosition)
+        val deadWorm = CommandoWorm.build(1, config, targetPosition).apply {
+            health = 0
+        }
+
+        val player = WormsPlayer.build(0, listOf(livingWorm, deadWorm), config)
+        val map = buildMapWithCellType(listOf(player), 3, CellType.AIR)
+
+        map.removeDeadWorms()
+        assertNull(map[targetPosition].occupier)
+        assertFalse(map[targetPosition].isOccupied())
+
+        map[targetPosition].powerup = HealthPack(config.healthPackHp)
+
+        roundProcessor.processRound(map, commandMap(player, TeleportCommand(targetPosition, random, config)))
+
+        assertNull(map[originPosition].occupier)
+        assertNotNull(map[targetPosition].occupier)
+        assertNull(map[targetPosition].powerup)
+
+        assertTrue(deadWorm.dead)
+        assertEquals(0, deadWorm.health)
+
+        assertFalse(livingWorm.dead)
+        assertEquals(config.commandoWorms.initialHp + config.healthPackHp, livingWorm.health)
+    }
+
+    /**
+     * When the engine receives no commands for a specific player it should execute a "do nothing" command
+     */
+    @Test
+    fun  processRound_noCommands() {
+        val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
+        val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(0, 2))), config)
+
+        val map = buildMapWithCellType(listOf(player1, player2), 5, CellType.AIR)
+
+        roundProcessor.processRound(map, mapOf(player1 to emptyList()))
+
+        assertEquals(1, player1.consecutiveDoNothingsCount)
+        assertEquals(1, player2.consecutiveDoNothingsCount)
+    }
+
+    /**
+     * When the engine receives no commands for a specific player it should execute a "do nothing" command
+     */
+    @Test
+    fun  processRound_selectAndMove() {
+        val player = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0)), CommandoWorm.build(1, config, Point(1, 1))), config)
+
+        assertEquals(player.worms[0], player.currentWorm)
+
+        val map = buildMapWithCellType(listOf(player), 5, CellType.AIR)
+        val selectCommand = SelectCommand(1)
+        val moveCommand = TeleportCommand(Point(2,2), random, config)
+
+        roundProcessor.processRound(map, commandMap(player, moveCommand, selectCommand))
+
+        assertEquals(0, player.consecutiveDoNothingsCount)
+        assertEquals(player.worms[0], player.currentWorm)
+        assertEquals(Point(2,2), player.worms[1].position)
+    }
+
+    @Test
+    fun test_shootCommand_sameKill() {
+        val traitorWorm = CommandoWorm.build(1, config, Point(0, 0))
+        val victimWorm = CommandoWorm.build(1, config, Point(1, 1))
+
+        val targetPlayer = WormsPlayer.build(0, listOf(traitorWorm, victimWorm), config)
+
+        val attackerWorm = CommandoWorm.build(0, config, Point(2, 2))
+        val attackingPlayer = WormsPlayer.build(1, listOf(attackerWorm), config)
+
+        val testMap = TestMapFactory.buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 3, CellType.AIR)
+
+        val traitorCommand = ShootCommand(Direction.DOWN_RIGHT, config)
+        val otherCommand = ShootCommand(Direction.UP_LEFT, config)
+
+        val commandMap = commandMap(targetPlayer, attackingPlayer, traitorCommand, otherCommand)
+
+        victimWorm.health = 2
+        roundProcessor.processRound(testMap, commandMap)
+
+        assertTrue(victimWorm.dead)
+        assertEquals(0, victimWorm.health)
+        assertEquals(41, attackingPlayer.commandScore)
+        assertEquals(-41, targetPlayer.commandScore)
+
+    }
+
+    /**
+     * When the engine receives only a select command for a player, their do nothing count should also be incremented
+     */
+    @Test
+    fun  processRound_selectOnly() {
+        val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0)), CommandoWorm.build(1, config, Point(1, 1))), config)
+        val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(0, 2))), config)
+
+        val map = buildMapWithCellType(listOf(player1, player2), 5, CellType.AIR)
+
+        roundProcessor.processRound(map, commandMap(player1, player2, SelectCommand(0)))
+
+        assertEquals(1, player1.consecutiveDoNothingsCount)
+        assertEquals(1, player2.consecutiveDoNothingsCount)
+    }
+
+    private fun commandMap(player1: WormsPlayer, player2: WormsPlayer, command1: WormsCommand, command2: WormsCommand = command1) =
+            mapOf(Pair(player1, listOf(command1)), Pair(player2, listOf(command2)))
+
+    private fun commandMap(player: WormsPlayer, vararg command: WormsCommand) =
+            mapOf(Pair(player, command.asList()))
 }

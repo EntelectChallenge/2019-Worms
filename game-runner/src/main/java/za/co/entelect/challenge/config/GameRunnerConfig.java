@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import za.co.entelect.challenge.utils.EnvironmentVariable;
+import za.co.entelect.challenge.enums.EnvironmentVariable;
 import za.co.entelect.challenge.utils.FileUtils;
 
 import java.io.FileReader;
@@ -85,6 +85,12 @@ public class GameRunnerConfig {
                 gameRunnerConfig.seed = Integer.valueOf(System.getenv(EnvironmentVariable.SEED.name()));
                 gameRunnerConfig.playerAId = System.getenv(EnvironmentVariable.PLAYER_A_ID.name());
                 gameRunnerConfig.playerBId = System.getenv(EnvironmentVariable.PLAYER_B_ID.name());
+
+                gameRunnerConfig.tournamentConfig.connectionString = System.getenv(EnvironmentVariable.CONNECTION_STRING.name());
+                gameRunnerConfig.tournamentConfig.tournamentId = System.getenv(EnvironmentVariable.TOURNAMENT_ID.name());
+                gameRunnerConfig.tournamentConfig.resultEndpoint = System.getenv(EnvironmentVariable.RESULT_URL.name());
+                gameRunnerConfig.tournamentConfig.functionKey = System.getenv(EnvironmentVariable.FUNCTION_KEY.name());
+                gameRunnerConfig.tournamentConfig.matchLogsPath = System.getenv(EnvironmentVariable.MATCH_LOGS_PATH.name());
             }
 
             if (gameRunnerConfig.matchId == null) {

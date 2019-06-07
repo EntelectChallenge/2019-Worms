@@ -16,6 +16,9 @@ public class RunBotResponseDto {
     @SerializedName("return_code")
     private String returnCode;
 
+    @SerializedName("execution_time")
+    private long executionTime;
+
     public String getCommand() {
         return command;
     }
@@ -46,5 +49,13 @@ public class RunBotResponseDto {
 
     public void setReturnCode(String returnCode) {
         this.returnCode = returnCode;
+    }
+
+    public long getExecutionTime() {
+        return executionTime;
+    }
+
+    public void setExecutionTime(long executionTime) {
+        this.executionTime = executionTime;
     }
 }

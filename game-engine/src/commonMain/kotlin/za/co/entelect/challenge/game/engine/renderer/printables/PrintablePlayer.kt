@@ -5,10 +5,11 @@ import kotlin.jvm.Transient
 
 class PrintablePlayer(player: WormsPlayer) {
 
-    var id: Int = player.id
-    var score: Int = player.totalScore
+    val id: Int = player.id
+    val score: Int = player.totalScore
     var health: Int? = null
     val currentWormId = player.currentWorm.id
+    val remainingWormSelections = player.wormSelectionTokens
     var worms: List<PrintableWorm> = emptyList()
 
     @Transient

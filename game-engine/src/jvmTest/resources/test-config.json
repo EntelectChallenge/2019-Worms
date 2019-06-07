@@ -2,29 +2,49 @@
   "maxRounds": 200,
   "maxDoNothings": 10,
   "commandoWorms": {
-    "count": 3,
+    "count": 2,
     "initialHp": 100,
     "movementRage": 1,
     "diggingRange": 1,
     "weapon": {
       "damage": 1,
       "range": 3
-    }
+    },
+    "professionName": "Commando"
+  },
+  "agentWorms": {
+    "count": 1,
+    "initialHp": 100,
+    "movementRage": 1,
+    "diggingRange": 1,
+    "weapon": {
+      "damage": 8,
+      "range": 4
+    },
+    "bananas": {
+      "damage": 20,
+      "range": 5,
+      "count": 3,
+      "damageRadius": 2
+    },
+    "professionName": "Agent"
   },
   "pushbackDamage": 4,
   "mapSize": 33,
   "healthPackHp": 5,
   "totalHealthPacks": 2,
   "scores": {
-    "attack": 5,
-    "friendlyFire": 4,
-    "killShot": 10,
+    "attack": 1,
+    "killShot": 40,
     "missedAttack": 2,
     "powerup": 6,
     "dig": 4,
     "move": 1,
     "invalidCommand": -1,
     "doNothing": 0
+  },
+  "wormSelectTokens": {
+    "count": 1
   },
   "csvSeparator": ","
 }

@@ -28,15 +28,15 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
             |Consecutive do nothing count: ${wormGameDetails.consecutiveDoNothingCount}
             |Players count: ${wormsMap.players.size}
             |Worms per player: ${wormsMap.players.first().worms.size}
-            |Pushback Damage: ${wormGameDetails.pushbackDamage}
+            |Pushback damage: ${wormGameDetails.pushbackDamage}
             """.trimMargin()
 
         val myPlayerWorms = wormGameDetails.myPlayer.worms
                 .fold("") { sum, worm ->
                     sum + """
                         ${getBaseWormText(worm)}
-                        |Weapon damage: ${worm.weapon?.damage}
-                        |Weapon range: ${worm.weapon?.range}
+                        ${getWormWeaponDetails(worm)}
+                        ${getWormBananasDetails(worm)}
                         """.trimMargin()
                 }
 
@@ -96,6 +96,16 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
             """.trimMargin()
     }
 
+    private fun getWormWeaponDetails(worm: PrintableWorm) =
+            """|Weapon damage: ${worm.weapon?.damage}
+                            |Weapon range: ${worm.weapon?.range}"""
+
+    private fun getWormBananasDetails(worm: PrintableWorm) =
+            """|Banana bomb damage: ${worm.bananaBombs?.damage}
+                            |Banana bomb range: ${worm.bananaBombs?.range}
+                            |Banana bombs count: ${worm.bananaBombs?.count}
+                            |Banana bomb damage radius: ${worm.bananaBombs?.damageRadius}"""
+
     private fun addLinesCount(section: String): String {
         val lines = section.split(EOL).toMutableList()
         lines.add(1, "Section lines count: ${lines.size + 1}")
@@ -103,9 +113,10 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
         return lines.joinToString(EOL)
     }
 
-    private fun getBasePlayerText(enemyPlayer: PrintablePlayer): String {
-        return """|Player id: ${enemyPlayer.id}
-                  |Score: ${enemyPlayer.score}"""
+    private fun getBasePlayerText(player: PrintablePlayer): String {
+        return """|Player id: ${player.id}
+                  |Score: ${player.score}
+                  |Selection Tokens: ${player.remainingWormSelections}"""
     }
 
     private fun getBaseWormText(worm: PrintableWorm): String {
@@ -115,7 +126,8 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
                   |Position x: ${worm.position?.x}
                   |Position y: ${worm.position?.y}
                   |Digging range: ${worm.diggingRange}
-                  |Movement range: ${worm.movementRange}"""
+                  |Movement range: ${worm.movementRange}
+                  |Profession: ${worm.profession}"""
     }
 
 }

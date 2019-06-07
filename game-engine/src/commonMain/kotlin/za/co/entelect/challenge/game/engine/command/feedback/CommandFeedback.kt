@@ -21,3 +21,14 @@ enum class ShootResult {
     BLOCKED,
     OUT_OF_RANGE
 }
+
+class BananaCommandFeedback(command: String, playerId: Int, score: Int, val result: BananaResult, val target: Point)
+    : CommandFeedback(command = command, score = score, playerId = playerId, success = true) {
+    override val message = "Banana hit $result at $target"
+}
+
+enum class BananaResult {
+    BULLSEYE,
+    TERRAIN,
+    DEEP_SPACE
+}
