@@ -72,7 +72,7 @@ kotlin {
 }
 
 group = "za.co.entelect.challenge"
-version = "2019.1.1"
+version = "2019.2.0"
 
 task<JacocoReport>("testCoverageReport") {
     group = "report"
