@@ -25,7 +25,7 @@ class WormsRendererCsv(val config: GameConfig) : WormsRenderer {
         } else ""
 
         val command = wormsMap.getFeedback(wormsMap.currentRound - 1)
-                .firstOrNull { it.playerId == player.id }?.command
+                .firstOrNull { it.playerId == player.id && !it.command.startsWith("select") }?.command
         val commandType = command?.run {
             val firstSpace = this.indexOf(' ')
             if (firstSpace != -1) {
