@@ -113,6 +113,28 @@ class CommandParserTest {
     }
 
     @Test
+    fun banana_valid() {
+        val command = parser.parseCommand("banana 15 13")
+        assertTrue(command is BananaCommand)
+        assertEquals(Point(15, 13), command.target)
+    }
+
+    @Test
+    fun banana_invalid() {
+        val command = parser.parseCommand("banana A 5")
+        assertTrue(command is InvalidCommand)
+    }
+
+    @Test
+    fun banana_tooShort() {
+        val commandOnly = parser.parseCommand("banana")
+        assertTrue(commandOnly is InvalidCommand)
+
+        val commandOneParameter = parser.parseCommand("banana 15")
+        assertTrue(commandOneParameter is InvalidCommand)
+    }
+
+    @Test
     fun nothing() {
         val command = parser.parseCommand("nothing")
         assertTrue(command is DoNothingCommand)
