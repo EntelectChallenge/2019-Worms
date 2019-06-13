@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.implementation.*
 import za.co.entelect.challenge.game.engine.config.GameConfig
+import za.co.entelect.challenge.game.engine.map.Point
 import kotlin.random.Random
 
 /**
@@ -31,9 +32,24 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
             "move" -> teleportCommand(splitCommand)
             "dig" -> digCommand(splitCommand)
             "shoot" -> shootCommand(splitCommand)
+            "banana" -> bananaCommand(splitCommand)
             "select" -> selectCommand(splitCommand)
             "nothing" -> DoNothingCommand(config)
             else -> InvalidCommand("Unknown command ${splitCommand[0]}")
+        }
+    }
+
+    private fun bananaCommand(splitCommand: List<String>): WormsCommand {
+        if (splitCommand.size != 3) {
+            return InvalidCommand("Cannot parse banana command: Invalid length ${splitCommand.size}, expected 2")
+        }
+
+        val x = splitCommand[1].toIntOrNull()
+        val y = splitCommand[2].toIntOrNull()
+
+        return when {
+            x == null || y == null -> InvalidCommand("Cannot parse coordinates: Invalid coordinate x:$x y:$y")
+            else -> BananaCommand(Point(x, y), config)
         }
     }
 
