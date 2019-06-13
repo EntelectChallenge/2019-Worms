@@ -25,12 +25,12 @@ class WormsMapGeneratorTest {
                         "has ${wormsMap.cells.size} cells \n expected ${config.mapSize * config.mapSize} cells")
 
         val wormPositions = listOf(
-                Point(24, 29),
+                Point(24, 28),
                 Point(1, 16),
-                Point(24, 3),
+                Point(24, 4),
                 Point(31, 16),
-                Point(9, 29),
-                Point(8, 3)
+                Point(8, 28),
+                Point(8, 4)
         )
 
         val mapSpawnError = "Check if MapConfig, map alignment, or spawn rules changed."
