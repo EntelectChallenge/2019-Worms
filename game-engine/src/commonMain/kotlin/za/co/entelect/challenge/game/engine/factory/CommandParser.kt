@@ -41,7 +41,7 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
 
     private fun bananaCommand(splitCommand: List<String>): WormsCommand {
         if (splitCommand.size != 3) {
-            return InvalidCommand("Cannot parse banana command: Invalid length ${splitCommand.size}, expected 2")
+            return InvalidCommand("Cannot parse banana command: Invalid length ${splitCommand.size}, expected 3")
         }
 
         val x = splitCommand[1].toIntOrNull()
