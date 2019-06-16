@@ -70,7 +70,7 @@ kotlin {
     }
 
     kotlin.js().compilation("main").kotlinOptions {
-        moduleKind = "commonjs"
+        moduleKind = "umd"
     }
 }
 
@@ -146,6 +146,7 @@ task<ShadowJar>("shadowJarJs") {
 
     val compilation = kotlin.js().compilation("main")
 
+    exclude("**/*.kjsm", "**/*.kotlin_metadata")
     from(compilation.output)
 
     configurations = listOf(compilation.runtimeDependencyFiles as Configuration)
