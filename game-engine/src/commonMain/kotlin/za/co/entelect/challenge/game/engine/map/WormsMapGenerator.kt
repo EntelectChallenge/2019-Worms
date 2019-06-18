@@ -84,8 +84,18 @@ class WormsMapGenerator(private val config: GameConfig, private val seed: Int) {
                     val t = 2.0 * PI * (it.toDouble() / count.toDouble()) + tilt
                     val x = radius * cos(t) + mapCenter.first
                     val y = radius * sin(t) + mapCenter.second
-                    getCellAt(Point(x.roundToInt(), y.roundToInt()), blankMap)!!
+                    getCellAt(roundCoordinatesToIntByAngle(t, x, y), blankMap)!!
                 }
+    }
+
+    private fun roundCoordinatesToIntByAngle(angle: Double, x: Double, y: Double): Point {
+        val angleCapped = angle % (2.0 * PI)
+        return when {
+            angleCapped <= (PI * 0.5) -> Point(ceil(x).toInt(), floor(y).toInt())
+            angleCapped <= (PI * 1.0) -> Point(floor(x).toInt(), floor(y).toInt())
+            angleCapped <= (PI * 1.5) -> Point(floor(x).toInt(), ceil(y).toInt())
+            else -> Point(ceil(x).toInt(), ceil(y).toInt())
+        }
     }
 
     private fun createWormWalledSpawnLocations(wormsPlayers: List<WormsPlayer>,
