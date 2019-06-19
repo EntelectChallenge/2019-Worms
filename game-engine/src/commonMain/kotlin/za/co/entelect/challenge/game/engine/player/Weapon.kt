@@ -1,6 +1,6 @@
 package za.co.entelect.challenge.game.engine.player
 
-class Weapon(
+data class Weapon(
         val damage: Int,
         val range: Int
 )

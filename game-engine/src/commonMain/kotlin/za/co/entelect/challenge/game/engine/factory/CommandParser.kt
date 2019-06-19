@@ -35,7 +35,7 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
             "banana" -> bananaCommand(splitCommand)
             "select" -> selectCommand(splitCommand)
             "nothing" -> DoNothingCommand(config)
-            else -> InvalidCommand("Unknown command ${splitCommand[0]}")
+            else -> InvalidCommand("Unknown command: $rawCommand")
         }
     }
 
