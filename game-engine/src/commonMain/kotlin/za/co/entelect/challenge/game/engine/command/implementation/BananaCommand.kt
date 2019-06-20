@@ -30,8 +30,7 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
             (worm.bananas == null) -> CommandValidation.invalidMove("This worm is not trained to use Banana bombs")
             (worm.bananas?.count == 0) -> CommandValidation.invalidMove("No bananas bombs in inventory")
             (target !in gameMap) -> CommandValidation.invalidMove("$target out of map bounds")
-            (target.euclideanDistance(worm.position) > worm.bananas?.range!!) ->
-                CommandValidation.invalidMove("Cell $target is too far away")
+            (target.shootingDistance(worm.position) > worm.bananas?.range!!) -> CommandValidation.invalidMove("Cell $target is too far away")
             else -> CommandValidation.validMove()
         }
     }
