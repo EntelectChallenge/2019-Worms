@@ -10,6 +10,9 @@ plugins {
     id("jacoco")
 }
 
+group = "za.co.entelect.challenge"
+version = "2019.2.2"
+
 repositories {
     mavenLocal()
     jcenter()
@@ -70,9 +73,6 @@ kotlin {
         moduleKind = "commonjs"
     }
 }
-
-group = "za.co.entelect.challenge"
-version = "2019.2.1"
 
 task<JacocoReport>("testCoverageReport") {
     group = "report"
