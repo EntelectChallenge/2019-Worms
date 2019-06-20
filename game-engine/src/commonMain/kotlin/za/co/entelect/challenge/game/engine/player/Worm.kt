@@ -16,9 +16,6 @@ open class Worm(val id: Int,
             : this(id, health, weapon, bananas, diggingRange, movementRange, profession) {
         this.position = position
         this.previousPosition = position
-        if (bananas != null) {
-            this.bananas = Bananas(bananas)
-        }
     }
 
     override val printable

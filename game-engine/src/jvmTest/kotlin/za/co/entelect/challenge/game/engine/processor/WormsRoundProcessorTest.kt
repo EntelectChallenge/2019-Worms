@@ -1,5 +1,6 @@
 package za.co.entelect.challenge.game.engine.processor
 
+import org.junit.Assert
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.implementation.*
@@ -11,6 +12,7 @@ import za.co.entelect.challenge.game.engine.player.AgentWorm
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
+import za.co.entelect.challenge.game.engine.renderer.WormsRendererText
 import kotlin.random.Random
 import kotlin.test.*
 
@@ -252,7 +254,7 @@ class WormsRoundProcessorTest {
      * A healthpack cannot resurrect a worm that is no longer on the map (i.e. it died in a previous round)
      */
     @Test
-    fun  processRound_applyHealthpackNoResurrection() {
+    fun processRound_applyHealthpackNoResurrection() {
         val worm = CommandoWorm.build(0, config, Point(2, 2))
         worm.health = 0
         val player = WormsPlayer.build(0, listOf(worm), config)
@@ -274,7 +276,7 @@ class WormsRoundProcessorTest {
      * healthpack should only be applied to living worms
      */
     @Test
-    fun  processRound_applyHealthpackDeadWormPosition() {
+    fun processRound_applyHealthpackDeadWormPosition() {
         val originPosition = Point(2, 2)
         val targetPosition = Point(1, 1)
 
@@ -309,7 +311,7 @@ class WormsRoundProcessorTest {
      * When the engine receives no commands for a specific player it should execute a "do nothing" command
      */
     @Test
-    fun  processRound_noCommands() {
+    fun processRound_noCommands() {
         val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0))), config)
         val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(0, 2))), config)
 
@@ -325,20 +327,20 @@ class WormsRoundProcessorTest {
      * When the engine receives no commands for a specific player it should execute a "do nothing" command
      */
     @Test
-    fun  processRound_selectAndMove() {
+    fun processRound_selectAndMove() {
         val player = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0)), CommandoWorm.build(1, config, Point(1, 1))), config)
 
         assertEquals(player.worms[0], player.currentWorm)
 
         val map = buildMapWithCellType(listOf(player), 5, CellType.AIR)
         val selectCommand = SelectCommand(1)
-        val moveCommand = TeleportCommand(Point(2,2), random, config)
+        val moveCommand = TeleportCommand(Point(2, 2), random, config)
 
         roundProcessor.processRound(map, commandMap(player, moveCommand, selectCommand))
 
         assertEquals(0, player.consecutiveDoNothingsCount)
         assertEquals(player.worms[0], player.currentWorm)
-        assertEquals(Point(2,2), player.worms[1].position)
+        assertEquals(Point(2, 2), player.worms[1].position)
     }
 
     @Test
@@ -372,7 +374,7 @@ class WormsRoundProcessorTest {
      * When the engine receives only a select command for a player, their do nothing count should also be incremented
      */
     @Test
-    fun  processRound_selectOnly() {
+    fun processRound_selectOnly() {
         val player1 = WormsPlayer.build(1, listOf(CommandoWorm.build(0, config, Point(0, 0)), CommandoWorm.build(1, config, Point(1, 1))), config)
         val player2 = WormsPlayer.build(2, listOf(CommandoWorm.build(0, config, Point(0, 2))), config)
 
@@ -382,6 +384,40 @@ class WormsRoundProcessorTest {
 
         assertEquals(1, player1.consecutiveDoNothingsCount)
         assertEquals(1, player2.consecutiveDoNothingsCount)
+    }
+
+    @Test
+    fun processRound_banana() {
+        val player1Worms = listOf(AgentWorm.build(1, config, Point(0, 0)), CommandoWorm.build(2, config, Point(1, 1)))
+        val player1 = WormsPlayer.build(1, player1Worms, config)
+
+        val player2Worms = listOf(AgentWorm.build(1, config, Point(0, 2)), CommandoWorm.build(2, config, Point(2, 2)))
+        val player2 = WormsPlayer.build(2, player2Worms, config)
+
+        val map = buildMapWithCellType(listOf(player1, player2), 5, CellType.AIR)
+
+        roundProcessor.processRound(map, commandMap(player1, player2, BananaCommand(Point(1, 1), config), DoNothingCommand(config)))
+
+        assertEquals(2, player1.worms[0].bananas?.count)
+        assertEquals(3, player2.worms[0].bananas?.count)
+
+        val textRenderer = WormsRendererText(config)
+        val line1 = textRenderer.render(map, player1)
+        val line2 = textRenderer.render(map, player2)
+
+        assertTextRenderedBananaCount(line1, 2)
+        assertTextRenderedBananaCount(line2, 3)
+    }
+
+    private fun assertTextRenderedBananaCount(line1: String, expected: Int) {
+        val pattern = "Banana bombs count: (\\d)".toRegex()
+
+        val matchResult = pattern.findAll(line1).toList()
+
+        Assert.assertEquals(1, matchResult.size)
+
+        val (count) = matchResult[0].destructured
+        assertEquals(expected, count.toInt())
     }
 
     private fun commandMap(player1: WormsPlayer, player2: WormsPlayer, command1: WormsCommand, command2: WormsCommand = command1) =
