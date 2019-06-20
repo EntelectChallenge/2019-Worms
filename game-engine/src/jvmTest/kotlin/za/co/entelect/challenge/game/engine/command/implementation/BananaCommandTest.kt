@@ -30,7 +30,7 @@ class BananaCommandTest {
 
         val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 15, CellType.AIR)
 
-        val inRangeCoordinate = Point(config.agentWorms.bananas?.range!!, 0)
+        val inRangeCoordinate = Point(config.agentWorms.bananas?.range!!, 1)
         val testCommand = BananaCommand(inRangeCoordinate, config)
         val commandValidation = testCommand.validate(testMap, attacker)
         assertTrue(commandValidation.isValid, "Expected a valid banana command")
