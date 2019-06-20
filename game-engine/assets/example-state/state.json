@@ -17,7 +17,7 @@
         "health": 100,
         "position": {
           "x": 24,
-          "y": 29
+          "y": 28
         },
         "weapon": {
           "damage": 1,
@@ -47,7 +47,7 @@
         "health": 100,
         "position": {
           "x": 24,
-          "y": 3
+          "y": 4
         },
         "weapon": {
           "damage": 8,
@@ -87,8 +87,8 @@
           "id": 2,
           "health": 100,
           "position": {
-            "x": 9,
-            "y": 29
+            "x": 8,
+            "y": 28
           },
           "diggingRange": 1,
           "movementRange": 1,
@@ -99,7 +99,7 @@
           "health": 100,
           "position": {
             "x": 8,
-            "y": 3
+            "y": 4
           },
           "diggingRange": 1,
           "movementRange": 1,
@@ -320,7 +320,7 @@
       {
         "x": 8,
         "y": 1,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 9,
@@ -400,7 +400,7 @@
       {
         "x": 24,
         "y": 1,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 25,
@@ -482,17 +482,17 @@
       {
         "x": 7,
         "y": 2,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 8,
         "y": 2,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 9,
         "y": 2,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 10,
@@ -562,17 +562,17 @@
       {
         "x": 23,
         "y": 2,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 24,
         "y": 2,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 25,
         "y": 2,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 26,
@@ -654,6 +654,173 @@
       {
         "x": 8,
         "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 9,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 10,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 11,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 12,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 13,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 14,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 15,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 16,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 17,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 18,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 19,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 20,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 21,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 22,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 23,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 24,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 25,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 26,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 27,
+        "y": 3,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 28,
+        "y": 3,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 29,
+        "y": 3,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 30,
+        "y": 3,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 31,
+        "y": 3,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 32,
+        "y": 3,
+        "type": "DEEP_SPACE"
+      }
+    ],
+    [
+      {
+        "x": 0,
+        "y": 4,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "type": "DIRT"
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "type": "AIR"
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "type": "DIRT"
+      },
+      {
+        "x": 7,
+        "y": 4,
+        "type": "AIR"
+      },
+      {
+        "x": 8,
+        "y": 4,
         "type": "AIR",
         "occupier": {
           "id": 3,
@@ -661,7 +828,7 @@
           "health": 100,
           "position": {
             "x": 8,
-            "y": 3
+            "y": 4
           },
           "diggingRange": 1,
           "movementRange": 1,
@@ -670,82 +837,82 @@
       },
       {
         "x": 9,
-        "y": 3,
+        "y": 4,
         "type": "AIR"
       },
       {
         "x": 10,
-        "y": 3,
+        "y": 4,
         "type": "DIRT"
       },
       {
         "x": 11,
-        "y": 3,
-        "type": "DIRT"
+        "y": 4,
+        "type": "AIR"
       },
       {
         "x": 12,
-        "y": 3,
-        "type": "DIRT"
+        "y": 4,
+        "type": "AIR"
       },
       {
         "x": 13,
-        "y": 3,
+        "y": 4,
         "type": "AIR"
       },
       {
         "x": 14,
-        "y": 3,
-        "type": "AIR"
+        "y": 4,
+        "type": "DIRT"
       },
       {
         "x": 15,
-        "y": 3,
+        "y": 4,
         "type": "DIRT"
       },
       {
         "x": 16,
-        "y": 3,
-        "type": "AIR"
+        "y": 4,
+        "type": "DIRT"
       },
       {
         "x": 17,
-        "y": 3,
+        "y": 4,
         "type": "DIRT"
       },
       {
         "x": 18,
-        "y": 3,
-        "type": "AIR"
+        "y": 4,
+        "type": "DIRT"
       },
       {
         "x": 19,
-        "y": 3,
+        "y": 4,
         "type": "AIR"
       },
       {
         "x": 20,
-        "y": 3,
-        "type": "DIRT"
+        "y": 4,
+        "type": "AIR"
       },
       {
         "x": 21,
-        "y": 3,
-        "type": "DIRT"
+        "y": 4,
+        "type": "AIR"
       },
       {
         "x": 22,
-        "y": 3,
+        "y": 4,
         "type": "DIRT"
       },
       {
         "x": 23,
-        "y": 3,
+        "y": 4,
         "type": "AIR"
       },
       {
         "x": 24,
-        "y": 3,
+        "y": 4,
         "type": "AIR",
         "occupier": {
           "id": 3,
@@ -753,7 +920,7 @@
           "health": 100,
           "position": {
             "x": 24,
-            "y": 3
+            "y": 4
           },
           "weapon": {
             "damage": 8,
@@ -772,173 +939,6 @@
       },
       {
         "x": 25,
-        "y": 3,
-        "type": "AIR"
-      },
-      {
-        "x": 26,
-        "y": 3,
-        "type": "DIRT"
-      },
-      {
-        "x": 27,
-        "y": 3,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 28,
-        "y": 3,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 29,
-        "y": 3,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 30,
-        "y": 3,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 31,
-        "y": 3,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 32,
-        "y": 3,
-        "type": "DEEP_SPACE"
-      }
-    ],
-    [
-      {
-        "x": 0,
-        "y": 4,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 1,
-        "y": 4,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 2,
-        "y": 4,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 3,
-        "y": 4,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 4,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 5,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 6,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 7,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 8,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 9,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 10,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 11,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 12,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 13,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 14,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 15,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 16,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 17,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 18,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 19,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 20,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 21,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 22,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 23,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 24,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 25,
         "y": 4,
         "type": "AIR"
       },
@@ -1017,17 +1017,17 @@
       {
         "x": 7,
         "y": 5,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 8,
         "y": 5,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 9,
         "y": 5,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 10,
@@ -1097,17 +1097,17 @@
       {
         "x": 23,
         "y": 5,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 24,
         "y": 5,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 25,
         "y": 5,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 26,
@@ -1179,7 +1179,7 @@
       {
         "x": 6,
         "y": 6,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 7,
@@ -1279,7 +1279,7 @@
       {
         "x": 26,
         "y": 6,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 27,
@@ -4555,27 +4555,27 @@
       {
         "x": 6,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 7,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 8,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 9,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 10,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 11,
@@ -4635,27 +4635,27 @@
       {
         "x": 22,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 23,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 24,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 25,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 26,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 27,
@@ -4727,17 +4727,17 @@
       {
         "x": 7,
         "y": 27,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 8,
         "y": 27,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 9,
         "y": 27,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 10,
@@ -4807,17 +4807,17 @@
       {
         "x": 23,
         "y": 27,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 24,
         "y": 27,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 25,
         "y": 27,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 26,
@@ -4894,191 +4894,19 @@
       {
         "x": 7,
         "y": 28,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 8,
         "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 9,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 10,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 11,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 12,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 13,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 14,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 15,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 16,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 17,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 18,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 19,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 20,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 21,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 22,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 23,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 24,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 25,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 26,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 27,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 28,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 29,
-        "y": 28,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 30,
-        "y": 28,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 31,
-        "y": 28,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 32,
-        "y": 28,
-        "type": "DEEP_SPACE"
-      }
-    ],
-    [
-      {
-        "x": 0,
-        "y": 29,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 1,
-        "y": 29,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 2,
-        "y": 29,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 3,
-        "y": 29,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 4,
-        "y": 29,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 5,
-        "y": 29,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 6,
-        "y": 29,
-        "type": "DIRT"
-      },
-      {
-        "x": 7,
-        "y": 29,
-        "type": "DIRT"
-      },
-      {
-        "x": 8,
-        "y": 29,
-        "type": "AIR"
-      },
-      {
-        "x": 9,
-        "y": 29,
         "type": "AIR",
         "occupier": {
           "id": 2,
           "playerId": 2,
           "health": 100,
           "position": {
-            "x": 9,
-            "y": 29
+            "x": 8,
+            "y": 28
           },
           "diggingRange": 1,
           "movementRange": 1,
@@ -5086,78 +4914,83 @@
         }
       },
       {
-        "x": 10,
-        "y": 29,
+        "x": 9,
+        "y": 28,
         "type": "AIR"
       },
       {
+        "x": 10,
+        "y": 28,
+        "type": "DIRT"
+      },
+      {
         "x": 11,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 12,
-        "y": 29,
-        "type": "AIR"
+        "y": 28,
+        "type": "DIRT"
       },
       {
         "x": 13,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 14,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 15,
-        "y": 29,
+        "y": 28,
         "type": "AIR"
       },
       {
         "x": 16,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 17,
-        "y": 29,
+        "y": 28,
         "type": "AIR"
       },
       {
         "x": 18,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 19,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 20,
-        "y": 29,
-        "type": "AIR"
+        "y": 28,
+        "type": "DIRT"
       },
       {
         "x": 21,
-        "y": 29,
-        "type": "AIR"
+        "y": 28,
+        "type": "DIRT"
       },
       {
         "x": 22,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 23,
-        "y": 29,
+        "y": 28,
         "type": "AIR"
       },
       {
         "x": 24,
-        "y": 29,
+        "y": 28,
         "type": "AIR",
         "occupier": {
           "id": 1,
@@ -5165,7 +4998,7 @@
           "health": 100,
           "position": {
             "x": 24,
-            "y": 29
+            "y": 28
           },
           "weapon": {
             "damage": 1,
@@ -5178,175 +5011,342 @@
       },
       {
         "x": 25,
-        "y": 29,
+        "y": 28,
         "type": "AIR"
       },
       {
         "x": 26,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 27,
-        "y": 29,
-        "type": "DEEP_SPACE"
+        "y": 28,
+        "type": "DIRT"
       },
       {
         "x": 28,
-        "y": 29,
-        "type": "DEEP_SPACE"
+        "y": 28,
+        "type": "AIR"
       },
       {
         "x": 29,
-        "y": 29,
+        "y": 28,
         "type": "DEEP_SPACE"
       },
       {
         "x": 30,
-        "y": 29,
+        "y": 28,
         "type": "DEEP_SPACE"
       },
       {
         "x": 31,
-        "y": 29,
+        "y": 28,
         "type": "DEEP_SPACE"
       },
       {
         "x": 32,
-        "y": 29,
+        "y": 28,
         "type": "DEEP_SPACE"
       }
     ],
     [
       {
         "x": 0,
-        "y": 30,
+        "y": 29,
         "type": "DEEP_SPACE"
       },
       {
         "x": 1,
-        "y": 30,
+        "y": 29,
         "type": "DEEP_SPACE"
       },
       {
         "x": 2,
-        "y": 30,
+        "y": 29,
         "type": "DEEP_SPACE"
       },
       {
         "x": 3,
-        "y": 30,
+        "y": 29,
         "type": "DEEP_SPACE"
       },
       {
         "x": 4,
-        "y": 30,
+        "y": 29,
         "type": "DEEP_SPACE"
       },
       {
         "x": 5,
-        "y": 30,
+        "y": 29,
         "type": "DEEP_SPACE"
       },
       {
         "x": 6,
-        "y": 30,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 7,
-        "y": 30,
+        "y": 29,
         "type": "DIRT"
       },
       {
+        "x": 7,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
         "x": 8,
-        "y": 30,
+        "y": 29,
         "type": "AIR"
       },
       {
         "x": 9,
-        "y": 30,
+        "y": 29,
         "type": "AIR"
       },
       {
         "x": 10,
-        "y": 30,
-        "type": "AIR"
-      },
-      {
-        "x": 11,
-        "y": 30,
+        "y": 29,
         "type": "DIRT"
       },
       {
+        "x": 11,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
         "x": 12,
-        "y": 30,
+        "y": 29,
         "type": "AIR"
       },
       {
         "x": 13,
-        "y": 30,
+        "y": 29,
         "type": "DIRT"
       },
       {
         "x": 14,
-        "y": 30,
+        "y": 29,
         "type": "DIRT"
       },
       {
         "x": 15,
-        "y": 30,
+        "y": 29,
         "type": "AIR"
       },
       {
         "x": 16,
-        "y": 30,
-        "type": "AIR"
+        "y": 29,
+        "type": "DIRT"
       },
       {
         "x": 17,
-        "y": 30,
+        "y": 29,
         "type": "AIR"
       },
       {
         "x": 18,
-        "y": 30,
+        "y": 29,
         "type": "DIRT"
       },
       {
         "x": 19,
-        "y": 30,
+        "y": 29,
         "type": "DIRT"
       },
       {
         "x": 20,
-        "y": 30,
+        "y": 29,
         "type": "AIR"
       },
       {
         "x": 21,
-        "y": 30,
+        "y": 29,
         "type": "AIR"
       },
       {
         "x": 22,
-        "y": 30,
+        "y": 29,
         "type": "DIRT"
       },
       {
         "x": 23,
-        "y": 30,
+        "y": 29,
         "type": "AIR"
       },
       {
         "x": 24,
-        "y": 30,
+        "y": 29,
         "type": "AIR"
       },
       {
         "x": 25,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
+        "x": 26,
+        "y": 29,
+        "type": "DIRT"
+      },
+      {
+        "x": 27,
+        "y": 29,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 28,
+        "y": 29,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 29,
+        "y": 29,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 30,
+        "y": 29,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 31,
+        "y": 29,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 32,
+        "y": 29,
+        "type": "DEEP_SPACE"
+      }
+    ],
+    [
+      {
+        "x": 0,
+        "y": 30,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 1,
+        "y": 30,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 2,
+        "y": 30,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 3,
+        "y": 30,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 4,
+        "y": 30,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 5,
+        "y": 30,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 6,
+        "y": 30,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 7,
+        "y": 30,
+        "type": "DIRT"
+      },
+      {
+        "x": 8,
+        "y": 30,
+        "type": "DIRT"
+      },
+      {
+        "x": 9,
+        "y": 30,
+        "type": "DIRT"
+      },
+      {
+        "x": 10,
+        "y": 30,
+        "type": "DIRT"
+      },
+      {
+        "x": 11,
         "y": 30,
         "type": "AIR"
+      },
+      {
+        "x": 12,
+        "y": 30,
+        "type": "AIR"
+      },
+      {
+        "x": 13,
+        "y": 30,
+        "type": "DIRT"
+      },
+      {
+        "x": 14,
+        "y": 30,
+        "type": "DIRT"
+      },
+      {
+        "x": 15,
+        "y": 30,
+        "type": "AIR"
+      },
+      {
+        "x": 16,
+        "y": 30,
+        "type": "AIR"
+      },
+      {
+        "x": 17,
+        "y": 30,
+        "type": "AIR"
+      },
+      {
+        "x": 18,
+        "y": 30,
+        "type": "DIRT"
+      },
+      {
+        "x": 19,
+        "y": 30,
+        "type": "DIRT"
+      },
+      {
+        "x": 20,
+        "y": 30,
+        "type": "AIR"
+      },
+      {
+        "x": 21,
+        "y": 30,
+        "type": "AIR"
+      },
+      {
+        "x": 22,
+        "y": 30,
+        "type": "DIRT"
+      },
+      {
+        "x": 23,
+        "y": 30,
+        "type": "DIRT"
+      },
+      {
+        "x": 24,
+        "y": 30,
+        "type": "DIRT"
+      },
+      {
+        "x": 25,
+        "y": 30,
+        "type": "DIRT"
       },
       {
         "x": 26,
@@ -5428,7 +5428,7 @@
       {
         "x": 8,
         "y": 31,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 9,
@@ -5438,12 +5438,12 @@
       {
         "x": 10,
         "y": 31,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 11,
         "y": 31,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 12,
@@ -5498,7 +5498,7 @@
       {
         "x": 22,
         "y": 31,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 23,
@@ -5508,7 +5508,7 @@
       {
         "x": 24,
         "y": 31,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 25,
