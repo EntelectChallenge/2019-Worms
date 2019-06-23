@@ -11,7 +11,7 @@ object CommandoWorm {
         return Worm(id = id,
                 health = config.commandoWorms.initialHp,
                 position = position,
-                weapon = config.commandoWorms.weapon.copy(),
+                weapon = Weapon.fromWeapon(config.commandoWorms.weapon),
                 diggingRange = config.commandoWorms.diggingRange,
                 movementRange = config.commandoWorms.movementRage,
                 profession = config.commandoWorms.professionName)
@@ -21,7 +21,7 @@ object CommandoWorm {
     fun build(id: Int, config: GameConfig): Worm {
         return Worm(id = id,
                 health = config.commandoWorms.initialHp,
-                weapon = config.commandoWorms.weapon.copy(),
+                weapon = Weapon.fromWeapon(config.commandoWorms.weapon),
                 diggingRange = config.commandoWorms.diggingRange,
                 movementRange = config.commandoWorms.movementRage,
                 profession = config.commandoWorms.professionName)

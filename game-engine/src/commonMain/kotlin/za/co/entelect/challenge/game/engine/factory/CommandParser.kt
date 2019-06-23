@@ -55,7 +55,7 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
 
     private fun selectCommand(splitCommand: List<String>): WormsCommand {
         if (splitCommand.size != 2) {
-            return InvalidCommand("Cannot parse move command: Invalid length ${splitCommand.size}, expected 2")
+            return InvalidCommand("Cannot parse select command: Invalid length ${splitCommand.size}, expected 2")
         }
 
         val wormId = splitCommand[1].toIntOrNull()

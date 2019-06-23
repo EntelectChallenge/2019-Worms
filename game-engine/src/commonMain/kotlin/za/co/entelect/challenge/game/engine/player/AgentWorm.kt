@@ -11,8 +11,8 @@ object AgentWorm {
         return Worm(id = id,
                 health = config.agentWorms.initialHp,
                 position = position,
-                weapon = config.agentWorms.weapon.copy(),
-                bananas = config.agentWorms.bananas?.copy(),
+                weapon = Weapon.fromWeapon(config.agentWorms.weapon),
+                bananas = Bananas.fromBananas(config.agentWorms.bananas),
                 diggingRange = config.agentWorms.diggingRange,
                 movementRange = config.agentWorms.movementRage,
                 profession = config.agentWorms.professionName)
@@ -22,8 +22,8 @@ object AgentWorm {
     fun build(id: Int, config: GameConfig): Worm {
         return Worm(id = id,
                 health = config.agentWorms.initialHp,
-                weapon = config.agentWorms.weapon.copy(),
-                bananas = config.agentWorms.bananas?.copy(),
+                weapon = Weapon.fromWeapon(config.agentWorms.weapon),
+                bananas = Bananas.fromBananas(config.agentWorms.bananas),
                 diggingRange = config.agentWorms.diggingRange,
                 movementRange = config.agentWorms.movementRage,
                 profession = config.agentWorms.professionName)
