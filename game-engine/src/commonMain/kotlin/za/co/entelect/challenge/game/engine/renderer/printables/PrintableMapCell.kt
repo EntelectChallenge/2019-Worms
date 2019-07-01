@@ -18,7 +18,7 @@ class PrintableMapCell(cell: MapCell) {
         /**
          * Build a PrintableMapCell from @cell that is modified to fit the perspective of @perspectivePlayer
          */
-        fun buildForPerspectivePlayer(cell: MapCell, perspectivePlayer: WormsPlayer): PrintableMapCell {
+        fun buildForPerspectivePlayer(cell: MapCell, perspectivePlayer: WormsPlayer?): PrintableMapCell {
             val cellForPerspectivePlayer = PrintableMapCell(cell)
 
             if (cell.isOccupied() && !(cell.occupier!!.dead)) {

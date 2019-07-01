@@ -1,5 +1,6 @@
 package za.co.entelect.challenge.game.engine.map
 
+import za.co.entelect.challenge.game.delegate.factory.GameConfigFactory
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.getMapCenter
@@ -123,5 +124,21 @@ class WormsMapGeneratorTest {
         assertEquals(noise.n2d(-51.4, 128.9), 0.7977717117332975)
     }
 
+    @Test
+    fun test_small_map_symmetrical() {
+        val editConfig = GameConfigFactory.getConfig("src/jvmTest/resources/test-config-small-map.json")
+
+        val wormsMapGenerator = WormsMapGenerator(editConfig, 0)
+        val wormsMap = wormsMapGenerator.getMap(buildWormsPlayers(editConfig, 2, 3))
+
+        val visualMap = getAllPointsOfSquare(0, 12).map { wormsMap[it].type }
+                .chunked(13)
+                .joinToString(separator = "\n") { line -> line.joinToString(separator = "") { it.printable } }
+
+        println()
+    }
+
+    private fun getAllPointsOfSquare(start: Int, end: Int) =
+            (start..end).flatMap { x -> (start..end).map { y -> Point(x, y) } }
 
 }

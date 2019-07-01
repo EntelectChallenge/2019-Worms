@@ -114,7 +114,8 @@ task<JacocoCoverageVerification>("testCoverageVerification") {
                     "za.co.entelect.challenge.game.engine.player.Weapon",
                     "za.co.entelect.challenge.game.engine.processor.GameError",
                     "za.co.entelect.challenge.game.engine.renderer.WormsRenderer.Companion",
-                    "za.co.entelect.challenge.game.engine.**.logger.*"
+                    "za.co.entelect.challenge.game.engine.**.logger.*",
+                    "za.co.entelect.challenge.game.engine.renderer.printables.VisualizerEvent"
             )
             limit {
                 minimum = "0.75".toBigDecimal()

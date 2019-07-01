@@ -6,27 +6,28 @@ import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.renderer.printables.PrintableMapCell
 import za.co.entelect.challenge.game.engine.renderer.printables.PrintablePlayer
+import za.co.entelect.challenge.game.engine.renderer.printables.VisualizerEvent
 
-class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlayer) {
+class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlayer?) {
 
     val currentRound: Int = wormsMap.currentRound
     val maxRounds: Int = config.maxRounds
     val pushbackDamage: Int = config.pushbackDamage
-
     val mapSize: Int = wormsMap.size
-    val currentWormId: Int = player.currentWorm.id
-    val consecutiveDoNothingCount: Int = player.consecutiveDoNothingsCount
+    val currentWormId: Int? = player?.currentWorm?.id
+    val consecutiveDoNothingCount: Int? = player?.consecutiveDoNothingsCount
 
-    val myPlayer: PrintablePlayer = PrintablePlayer.buildForPerspectivePlayer(player, player)
+    val myPlayer: PrintablePlayer? = if (player != null) PrintablePlayer.buildForPerspectivePlayer(player, player) else null
     val opponents: List<PrintablePlayer> = wormsMap.players
             .filter { it != player }
             .map { PrintablePlayer.buildForPerspectivePlayer(it, player) }
     val map: List<List<PrintableMapCell>> = modifyCellsForPlayer(wormsMap.cells, player).chunked(wormsMap.size)
+    val visualizerEvents: List<VisualizerEvent> = wormsMap.getVisualizerEvents()
 
     /**
      * Remove/hide cells, values, properties that @player is not allowed to see
      */
-    private fun modifyCellsForPlayer(arrayMap: List<MapCell>, player: WormsPlayer): List<PrintableMapCell> {
+    private fun modifyCellsForPlayer(arrayMap: List<MapCell>, player: WormsPlayer?): List<PrintableMapCell> {
         return arrayMap.map { PrintableMapCell.buildForPerspectivePlayer(it, player) }
     }
 

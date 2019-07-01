@@ -7,6 +7,7 @@ import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
+import za.co.entelect.challenge.game.engine.renderer.printables.VisualizerEvent
 import kotlin.math.roundToInt
 
 /**
@@ -20,11 +21,20 @@ import kotlin.math.roundToInt
  * Not Directions, use coordinates
  * Friendly fire
  * Used to throws the banana bomb
+ *
+ * Command to throw a Banana Bomb
  */
 class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
 
     override val order: Int = 3
 
+    /**
+     * For a banana command to be valid:
+     * * The worm must be an Agent
+     * * The worm must have bananas to throw
+     * * Target must be in map bounds
+     * * The target cell must be within range
+     */
     override fun validate(gameMap: WormsMap, worm: Worm): CommandValidation {
         return when {
             (worm.bananas == null) -> CommandValidation.invalidMove("This worm is not trained to use Banana bombs")
@@ -43,12 +53,7 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
         wormBananas.count = wormBananas.count - 1
 
         if (gameMap[target].type == CellType.DEEP_SPACE) {
-            return BananaCommandFeedback(
-                    this.toString(),
-                    score = config.scores.missedAttack,
-                    playerId = worm.player.id,
-                    result = BananaResult.DEEP_SPACE,
-                    target = target)
+            return BananaCommandFeedback(toString(), worm, config.scores.missedAttack, BananaResult.DEEP_SPACE, target)
         }
 
         val damageRadius = wormBananas.damageRadius
@@ -99,12 +104,7 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
 
         val totalScore = (totalDirtDestroyed * config.scores.dig + totalDamageDone * config.scores.attack)
 
-        return BananaCommandFeedback(
-                this.toString(),
-                score = totalScore,
-                playerId = worm.player.id,
-                result = enemyWormHit,
-                target = target)
+        return BananaCommandFeedback(toString(), worm, totalScore, enemyWormHit, target)
     }
 
     override fun toString(): String {

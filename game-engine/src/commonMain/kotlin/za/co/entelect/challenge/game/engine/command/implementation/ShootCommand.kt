@@ -6,6 +6,7 @@ import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
 import za.co.entelect.challenge.game.engine.command.feedback.ShootCommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.ShootResult
 import za.co.entelect.challenge.game.engine.config.GameConfig
+import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
@@ -34,32 +35,41 @@ class ShootCommand(val direction: Direction, val config: GameConfig) : WormsComm
 
             logger.debug { "Executing shoot command: $worm at $cell" }
 
-            if (!cell.type.open) {
-                logger.debug { "Shot blocked: $worm $cell" }
-                return ShootCommandFeedback(this.toString(), score = config.scores.missedAttack, playerId = worm.player.id, result = ShootResult.BLOCKED, target = position)
+            when {
+                !cell.type.open -> return shotBlocked(worm, cell, position)
+                cell.isOccupied() -> return shotHitWorm(worm, cell, gameMap, position)
+                else -> position += direction.vector
             }
-
-            if (cell.isOccupied()) {
-                logger.debug { "Shot hit: $worm shooting $cell ${cell.occupier}" }
-                val occupier = cell.occupier!!
-                val damageScore = config.scores.attack * occupier.takeDamage(worm.weapon.damage, gameMap.currentRound, worm.player)
-
-                val isAllyWorm = occupier.player == worm.player
-                return when {
-                    isAllyWorm -> shootCommandHitFeedback(-damageScore, worm, position)
-                    else -> shootCommandHitFeedback(damageScore, worm, position)
-                }
-            }
-
-            position += direction.vector
         }
 
         logger.debug { "Shot out of range: $worm at $position" }
-        return ShootCommandFeedback(this.toString(), score = config.scores.missedAttack, playerId = worm.player.id, result = ShootResult.OUT_OF_RANGE, target = position)
+        return buildBasicShootCommandFeedback(worm, config.scores.missedAttack, ShootResult.OUT_OF_RANGE, position)
     }
 
-    private fun shootCommandHitFeedback(score: Int, worm: Worm, position: Point) =
-            ShootCommandFeedback(this.toString(), score = score, playerId = worm.player.id, result = ShootResult.HIT, target = position)
+    private fun buildBasicShootCommandFeedback(worm: Worm, score: Int, result: ShootResult, target: Point): ShootCommandFeedback
+            = ShootCommandFeedback(toString(), worm, score, result, target)
+
+    private fun shotHitWorm(worm: Worm,
+                            cell: MapCell,
+                            gameMap: WormsMap,
+                            position: Point): ShootCommandFeedback {
+        logger.debug { "Shot hit: $worm shooting $cell ${cell.occupier}" }
+        val occupier = cell.occupier!!
+        val damageScore = config.scores.attack * occupier.takeDamage(worm.weapon.damage, gameMap.currentRound, worm.player)
+
+        val isAllyWorm = occupier.player == worm.player
+        return when {
+            isAllyWorm -> buildBasicShootCommandFeedback(worm, -damageScore, ShootResult.HIT, position)
+            else -> buildBasicShootCommandFeedback(worm, damageScore, ShootResult.HIT, position)
+        }
+    }
+
+    private fun shotBlocked(worm: Worm,
+                            cell: MapCell,
+                            position: Point): ShootCommandFeedback {
+        logger.debug { "Shot blocked: $worm $cell" }
+        return buildBasicShootCommandFeedback(worm, config.scores.missedAttack, ShootResult.BLOCKED, position)
+    }
 
     override fun toString(): String = "shoot ${direction.shortCardinal}"
 
