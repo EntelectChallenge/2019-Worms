@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.renderer
 
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.feedback.StandardCommandFeedback
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory
 import za.co.entelect.challenge.game.engine.map.CellType
@@ -50,8 +51,8 @@ class WormsRendererCsvTest {
     fun testCommand() {
         val (player, map) = setupMap()
         map.currentRound = 1
-        map.addFeedback(StandardCommandFeedback(command = "select 1", score = 0, playerId = player.id))
-        map.addFeedback(StandardCommandFeedback(command = "move (22, 28)", score = 0, playerId = player.id))
+        map.addFeedback(StandardCommandFeedback(command = "${CommandStrings.SELECT.string} 1", score = 0, playerId = player.id))
+        map.addFeedback(StandardCommandFeedback(command = "${CommandStrings.MOVE.string} (22, 28)", score = 0, playerId = player.id))
 
         //Renderers get called at the beginning of a round
         map.currentRound = 2

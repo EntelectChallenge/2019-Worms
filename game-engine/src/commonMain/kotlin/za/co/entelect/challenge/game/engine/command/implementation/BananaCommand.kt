@@ -1,13 +1,14 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.feedback.*
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.CellType
+import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
-import za.co.entelect.challenge.game.engine.renderer.printables.VisualizerEvent
 import kotlin.math.roundToInt
 
 /**
@@ -53,7 +54,7 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
         wormBananas.count = wormBananas.count - 1
 
         if (gameMap[target].type == CellType.DEEP_SPACE) {
-            return BananaCommandFeedback(toString(), worm, config.scores.missedAttack, BananaResult.DEEP_SPACE, target)
+            return BananaCommandFeedback(toString(), worm, config.scores.missedAttack, BananaResult.DEEP_SPACE, target, null)
         }
 
         val damageRadius = wormBananas.damageRadius
@@ -65,6 +66,7 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
 
         val iOffset = target.x - damageRadius
         val jOffset = target.y - damageRadius
+        val affectedCells = mutableListOf<MapCell>()
 
         getAllPointsOfSquare(0, damageRadius * 2)
                 .map { it + Point(iOffset, jOffset) }
@@ -83,6 +85,7 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
                         cell.type = CellType.AIR
                         cell.destroyedInRound = gameMap.currentRound
                         totalDirtDestroyed += 1
+                        affectedCells.add(cell)
                     }
 
                     cell.powerup = null
@@ -104,11 +107,11 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
 
         val totalScore = (totalDirtDestroyed * config.scores.dig + totalDamageDone * config.scores.attack)
 
-        return BananaCommandFeedback(toString(), worm, totalScore, enemyWormHit, target)
+        return BananaCommandFeedback(toString(), worm, totalScore, enemyWormHit, target, affectedCells)
     }
 
     override fun toString(): String {
-        return "banana $target"
+        return "${CommandStrings.BANANA.string} $target"
     }
 
 }

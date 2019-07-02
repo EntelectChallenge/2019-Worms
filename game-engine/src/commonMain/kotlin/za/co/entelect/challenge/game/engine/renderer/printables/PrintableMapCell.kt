@@ -39,6 +39,7 @@ class PrintableMapCell(cell: MapCell) {
                 }
             }
         }
+
     }
 
 }

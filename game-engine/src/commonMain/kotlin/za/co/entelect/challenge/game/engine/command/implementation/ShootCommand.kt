@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
 import mu.KotlinLogging
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
 import za.co.entelect.challenge.game.engine.command.feedback.ShootCommandFeedback
@@ -71,7 +72,7 @@ class ShootCommand(val direction: Direction, val config: GameConfig) : WormsComm
         return buildBasicShootCommandFeedback(worm, config.scores.missedAttack, ShootResult.BLOCKED, position)
     }
 
-    override fun toString(): String = "shoot ${direction.shortCardinal}"
+    override fun toString(): String = "${CommandStrings.SHOOT.string} ${direction.shortCardinal}"
 
     companion object {
         private val logger = KotlinLogging.logger { }

@@ -1,5 +1,6 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
 import za.co.entelect.challenge.game.engine.command.feedback.TeleportCommandFeedback
@@ -72,6 +73,6 @@ class TeleportCommand(val target: Point, private val random: Random, val config:
         return TeleportCommandFeedback(toString(), worm, config.scores.move, TeleportResult.SWAPPED, worm.previousPosition, wormPosition)
     }
 
-    override fun toString(): String = "move $target"
+    override fun toString(): String = "${CommandStrings.MOVE.string} $target"
 
 }

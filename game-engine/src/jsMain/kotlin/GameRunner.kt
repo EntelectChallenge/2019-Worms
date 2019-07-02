@@ -1,5 +1,5 @@
 import za.co.entelect.challenge.game.engine.WormsEngine
-import za.co.entelect.challenge.game.engine.command.WormsCommand
+import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.factory.CommandParser
 import za.co.entelect.challenge.game.engine.map.WormsMap
@@ -51,6 +51,11 @@ class GameRunner(val seed: Int, val config: GameConfig, val playerCount: Int = 2
     @JsName("getAllErrorList")
     fun getAllErrorList(wormsMap: WormsMap): List<GameError> {
         return WormsRoundProcessor(config).getErrorList(wormsMap)
+    }
+
+    @JsName("getFeedback")
+    fun getFeedback(wormsMap: WormsMap): List<CommandFeedback> {
+        return wormsMap.getFeedback(wormsMap.currentRound)
     }
 
 }

@@ -1,7 +1,7 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.WormsCommand
-import za.co.entelect.challenge.game.engine.command.feedback.StandardCommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
 import za.co.entelect.challenge.game.engine.command.feedback.DoNothingCommandFeedback
 import za.co.entelect.challenge.game.engine.config.GameConfig
@@ -22,5 +22,5 @@ class DoNothingCommand(val config: GameConfig, private val reason: String = "Pla
     override fun execute(gameMap: WormsMap, worm: Worm): DoNothingCommandFeedback
             = DoNothingCommandFeedback(toString(), worm, config.scores.doNothing)
 
-    override fun toString(): String = "nothing \"$reason\""
+    override fun toString(): String = "${CommandStrings.NOTHING.string} \"$reason\""
 }

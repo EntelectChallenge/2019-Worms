@@ -52,8 +52,8 @@ class BananaCommandIntegrationTest {
 
         val roundProcessor = bootstrapper.roundProcessor
         roundProcessor.processRound(gameMap, mapOf(
-                players[0].gamePlayer to listOf(RawCommand("Select 3"), RawCommand("banana 24 5")),
-                players[1].gamePlayer to listOf(RawCommand("Move 30 17"))
+                players[0].gamePlayer to listOf(RawCommand("${CommandStrings.SELECT.string} 3"), RawCommand("${CommandStrings.BANANA.string} 24 5")),
+                players[1].gamePlayer to listOf(RawCommand("${CommandStrings.MOVE.string} 30 17"))
         ))
 
         val renderer = bootstrapper.getRenderer(rendererType = RendererType.TEXT)

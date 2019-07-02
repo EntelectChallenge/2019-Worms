@@ -1,5 +1,6 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
@@ -40,6 +41,6 @@ class SelectCommand(val wormId: Int) : WormsCommand {
         }
     }
 
-    override fun toString(): String = "select $wormId"
+    override fun toString(): String = "${CommandStrings.SELECT.string} $wormId"
 
 }

@@ -119,11 +119,6 @@ class WormsMap(override val players: List<WormsPlayer>,
         return allFeedback[round] ?: emptyList()
     }
 
-    @JsName("getFeedback")
-    fun getFeedback(): List<CommandFeedback> {
-        return getFeedback(currentRound);
-    }
-
     override fun removeDeadWorms() {
         players.flatMap { it.worms }
                 .filter { it.dead || it.player.disqualified }

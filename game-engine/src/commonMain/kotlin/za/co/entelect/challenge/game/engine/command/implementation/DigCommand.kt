@@ -1,5 +1,6 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.feedback.StandardCommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
@@ -42,6 +43,6 @@ class DigCommand(val target: Point, val config: GameConfig) : WormsCommand {
         return DigCommandFeedback(toString(), worm, config.scores.dig, target)
     }
 
-    override fun toString(): String = "dig $target"
+    override fun toString(): String = "${CommandStrings.DIG.string} $target"
 
 }
