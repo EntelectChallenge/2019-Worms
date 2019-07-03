@@ -74,8 +74,9 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
                         return@loop // equivalent to continue
                     }
 
-                    if (cell.type == CellType.DIRT) {
+                    if (cell.type == CellType.DIRT || cell.destroyedInRound == gameMap.currentRound) {
                         cell.type = CellType.AIR
+                        cell.destroyedInRound = gameMap.currentRound
                         totalDirtDestroyed += 1
                     }
 
