@@ -420,6 +420,29 @@ class WormsRoundProcessorTest {
         assertEquals(expected, count.toInt())
     }
 
+    @Test
+    fun test_banana_score_destroyed_dirt() {
+        val aliceWorm = AgentWorm.build(0, config, Point(3, 2))
+        val alice = WormsPlayer.build(0, listOf(aliceWorm), config)
+
+        val bobWorm = AgentWorm.build(0, config, Point(2, 2))
+        val bob = WormsPlayer.build(1, listOf(bobWorm), config)
+
+        val map = buildMapWithCellType(listOf(bob, alice), 10, CellType.DIRT)
+        roundProcessor.processRound(map, commandMap(bob, alice,
+                        BananaCommand(Point(6, 3), config),
+                        DoNothingCommand(config)))
+
+        assertEquals(52, bob.commandScore, "Expected to gain 52 score from banana destroyed dirt cells")
+
+        roundProcessor.processRound(map, commandMap(bob, alice,
+                BananaCommand(Point(2, 6), config),
+                BananaCommand(Point(2, 6), config)))
+
+        assertEquals(104, bob.commandScore, "Expected to gain 104 score from banana destroyed dirt cells")
+        assertEquals(52, alice.commandScore, "Expected to gain 52 score from banana destroyed dirt cells")
+    }
+
     private fun commandMap(player1: WormsPlayer, player2: WormsPlayer, command1: WormsCommand, command2: WormsCommand = command1) =
             mapOf(Pair(player1, listOf(command1)), Pair(player2, listOf(command2)))
 

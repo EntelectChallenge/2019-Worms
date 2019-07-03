@@ -85,6 +85,9 @@ The format of the Banana Bomb command is `banana x y`
     * You will be awarded score based on the damage done to all worms in this radius
   * The Banana bomb will destroy any dirt in the damage radius
     * You will be rewarded the same score as if you dug out all the affected dirt blocks
+    * If your opponent dug out 1 of these dirt blocks, your banana bomb will not get score for that block, since dig commands are executed before banana bomb commands 
+    * When both players throw a banana bomb onto the same area, both players will get score for the dirt blocks destroyed as if their banana bomb was the first to hit
+  * The Banana bomb will destroy any powerups in the damage radius
 * When a worm's health is 0 or lower, it will fall unconscious and be removed from the map 
 * Be careful! Friendly fire will damage your own worms
   *  You will be penalised with negative score based on the damage dealt
@@ -145,6 +148,7 @@ This implies the following regarding command interaction:
 * A worm can move into range of another worm's shot
 * A worm can move out of range of another worm's shot 
 * Two worms can dig open the same dirt cell in a single round
+* A worm can dig a block right before a banana bomb destroys that block
 
 ## Worm Profession
 
