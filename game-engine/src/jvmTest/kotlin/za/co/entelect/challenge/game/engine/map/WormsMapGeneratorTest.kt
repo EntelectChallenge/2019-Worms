@@ -7,6 +7,7 @@ import za.co.entelect.challenge.game.engine.factory.TestMapFactory.getMapCenter
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.standardDeviation
 import za.co.entelect.challenge.game.engine.factory.TestWormsPlayerFactory.buildWormsPlayers
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
+import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.simplexNoise.SimplexNoise
 import kotlin.math.abs
@@ -131,14 +132,27 @@ class WormsMapGeneratorTest {
         val wormsMapGenerator = WormsMapGenerator(editConfig, 0)
         val wormsMap = wormsMapGenerator.getMap(buildWormsPlayers(editConfig, 2, 3))
 
-        val visualMap = getAllPointsOfSquare(0, 12).map { wormsMap[it].type }
-                .chunked(13)
-                .joinToString(separator = "\n") { line -> line.joinToString(separator = "") { it.printable } }
-
-        println()
+        val allWorms = wormsMap.players.flatMap { it.worms }
+        allWorms.map { primaryWorm ->
+            Pair(primaryWorm,
+                    when {
+                        checkWormById(primaryWorm, 1, 2) -> allWorms.find { checkWormById(it, 2, 1) }
+                        checkWormById(primaryWorm, 2, 2) -> allWorms.find { checkWormById(it, 2, 3) }
+                        checkWormById(primaryWorm, 1, 1) -> allWorms.find { checkWormById(it, 1, 3) }
+                        else -> null
+                    }
+            )
+        }
+                .filter { (_, wormB) -> wormB != null }
+                .map { (wormA, wormB) -> Pair(wormA, wormB!!) }
+                .forEach { (wormA, wormB) ->
+                    assertTrue(wormA.position.x == wormB.position.x || wormA.position.y == wormB.position.y,
+                            "Expected worm pairs to be aligned by either x or y coordinates")
+                }
     }
 
-    private fun getAllPointsOfSquare(start: Int, end: Int) =
-            (start..end).flatMap { x -> (start..end).map { y -> Point(x, y) } }
+    private fun checkWormById(worm: Worm,
+                              playerId: Number,
+                              wormId: Number) = worm.player.id == playerId && worm.id == wormId
 
 }

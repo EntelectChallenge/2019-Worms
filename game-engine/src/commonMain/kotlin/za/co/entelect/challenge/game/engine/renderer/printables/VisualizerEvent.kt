@@ -6,9 +6,7 @@ import za.co.entelect.challenge.game.engine.player.Worm
 
 class VisualizerEvent(val type: String,
                       val result: String?,
-                      _wormCommanded: Worm,
+                      val wormCommanded: Worm,
                       val positionStart: Point?,
                       val positionEnd: Point?,
-                      val affectedCells: List<MapCell>?) {
-    val wormCommanded: PrintableWorm = PrintableWorm.buildForVisualizerEvent(_wormCommanded)
-}
+                      val affectedCells: List<MapCell>?)

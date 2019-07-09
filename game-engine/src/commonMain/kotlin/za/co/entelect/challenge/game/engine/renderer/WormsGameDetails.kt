@@ -6,7 +6,7 @@ import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.renderer.printables.PrintableMapCell
 import za.co.entelect.challenge.game.engine.renderer.printables.PrintablePlayer
-import za.co.entelect.challenge.game.engine.renderer.printables.VisualizerEvent
+import za.co.entelect.challenge.game.engine.renderer.printables.PrintableVisualizerEvent
 
 class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlayer?) {
 
@@ -25,7 +25,8 @@ class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlay
             .filter { it != player }
             .map { PrintablePlayer.buildForPerspectivePlayer(it, player) }
     val map: List<List<PrintableMapCell>> = modifyCellsForPlayer(wormsMap.cells, player).chunked(wormsMap.size)
-    val visualizerEvents: List<VisualizerEvent> = wormsMap.getVisualizerEvents()
+    val visualizerEvents: List<PrintableVisualizerEvent>
+            = wormsMap.getVisualizerEvents().map { PrintableVisualizerEvent(it) }
 
     /**
      * Remove/hide cells, values, properties that @player is not allowed to see

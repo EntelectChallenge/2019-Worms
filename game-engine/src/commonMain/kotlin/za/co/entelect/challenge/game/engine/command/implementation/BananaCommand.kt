@@ -54,7 +54,7 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
         wormBananas.count = wormBananas.count - 1
 
         if (gameMap[target].type == CellType.DEEP_SPACE) {
-            return BananaCommandFeedback(toString(), worm, config.scores.missedAttack, BananaResult.DEEP_SPACE, target, null)
+            return BananaCommandFeedback(toString(), worm, config.scores.missedAttack, BananaResult.DEEP_SPACE, target, emptyList())
         }
 
         val damageRadius = wormBananas.damageRadius

@@ -11,7 +11,7 @@ class BananaCommandFeedback(command: String,
                             score: Int,
                             val result: BananaResult,
                             val target: Point,
-                            val affectedCells: List<MapCell>?)
+                            affectedCells: List<MapCell>)
     : CommandFeedback(command = command, score = score, playerId = worm.player.id, success = result != BananaResult.DEEP_SPACE) {
     private val start: Point = worm.position
     override val message = "Banana hit $result at $target from $start"

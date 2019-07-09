@@ -213,7 +213,7 @@ class WormsRendererTest {
     @Test
     fun testNullPlayerJsonRender() {
         val wormsPlayers = buildWormsPlayerDefault(config)
-        val lastPlayer = wormsPlayers.last()
+//        val lastPlayer = wormsPlayers.last()
 
         val wormsMapGenerator = WormsMapGenerator(config, 0)
         val wormsMap = wormsMapGenerator.getMap(wormsPlayers)
