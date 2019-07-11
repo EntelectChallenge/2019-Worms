@@ -95,6 +95,11 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         gameResult.matchId = gameRunnerConfig.matchId;
 
         botExecutionContexts = Collections.synchronizedList(new ArrayList<>());
+
+        if (gameRunnerConfig.isTournamentMode) {
+            log.info("Delaying match start for bots to warm up");
+            Thread.sleep(5000);
+        }
     }
 
     @Override
