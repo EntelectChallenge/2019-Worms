@@ -164,6 +164,17 @@ public class GameEngineRunner implements LifecycleEngineRunner {
                 log.error("Failed to write round information", e);
             }
         }
+
+
+        try {
+            String roundDirectory = FileUtils.getRoundDirectory(gameMap.getCurrentRound());
+            String globalStateFile = String.format("%s/%s/GlobalState.json", gameRunnerConfig.gameName, roundDirectory);
+
+            String globalStateRender = rendererResolver.resolve(RendererType.JSON).render(gameMap, null);
+            FileUtils.writeToFile(globalStateFile, globalStateRender);
+        } catch (Exception e) {
+            log.error("Failed to write global round information", e);
+        }
     }
 
     @Override
