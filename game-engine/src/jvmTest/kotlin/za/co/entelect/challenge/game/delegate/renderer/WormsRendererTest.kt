@@ -26,6 +26,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStreamWriter
+import kotlin.math.max
 import kotlin.random.Random
 import kotlin.test.*
 
@@ -213,7 +214,6 @@ class WormsRendererTest {
     @Test
     fun testNullPlayerJsonRender() {
         val wormsPlayers = buildWormsPlayerDefault(config)
-//        val lastPlayer = wormsPlayers.last()
 
         val wormsMapGenerator = WormsMapGenerator(config, 0)
         val wormsMap = wormsMapGenerator.getMap(wormsPlayers)
@@ -226,25 +226,19 @@ class WormsRendererTest {
             val index = jsonFileString.lines().indexOfFirst { it.contains(prop) }
             index > -1
         }
-        assertTrue(propertiesFound.isEmpty(), "JSON state file(null perspective) should not have properties >> " +
+        assertTrue(propertiesFound.isEmpty(), "JSON state file(null perspective) should not have these properties >> " +
                 "[" + propertiesFound.joinToString(separator = ", ") + "]")
-//        Caused by:
-//        java.lang.UnsupportedOperationException: Interface can't be instantiated! Interface name: za.co.entelect.challenge.game.engine.powerups.Powerup
-/*        val gameDetails = Gson().fromJson(jsonFileString, WormsGameDetails::class.java)
-        assertEquals(gameDetails.opponents.size, 2,
-                "Expected all players to be in the opponent list")
 
-        assertTrue(gameDetails.opponents.first().worms.any { it.weapon != null },
-                "Expected to see opponent worm weapons in overview")
+        val indexResultOfTwoOpponents = listOf(
+                """"opponents":[{"id":1,"score":100,""",
+                """}]},{"id":2,"score":100""",
+                """}]}],"map":""")
+                .map { jsonFileString.indexOf(it) }
+                .fold(-1) { sum, c -> max(sum, c) }
 
-        assertTrue(gameDetails.map
-                .flatten()
-                .any {
-                    it.occupier != null
-                            && it.occupier!!.playerId == lastPlayer.id
-                            && it.occupier!!.weapon != null
-                },
-                "Expected to see opponent worm weapons in the map cells")*/
+        assertTrue(indexResultOfTwoOpponents > -1, "Expected all players to be in the opponent list")
+        assertTrue(jsonFileString.contains(""""weapon":{""""),
+                "Expected to see hidden attributes of opponents")
     }
 
     @Test

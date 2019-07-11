@@ -19,13 +19,17 @@ class WormsRendererCsv(val config: GameConfig) : WormsRenderer {
     }
 
     override fun render(wormsMap: WormsMap, player: WormsPlayer?): String {
+        if (player == null) {
+            throw UnsupportedOperationException("Cannot call CSV Render with a null player parameter")
+        }
+
         val header = if (wormsMap.currentRound == 1) {
-            val wormHeaders = player!!.worms.flatMap { listOf("Worm${it.id} Health", "Worm${it.id} x", "Worm${it.id} y") }
+            val wormHeaders = player.worms.flatMap { listOf("Worm${it.id} Health", "Worm${it.id} x", "Worm${it.id} y") }
             (standardHeaders + wormHeaders).joinToString(separator = config.csvSeparator, postfix = EOL)
         } else ""
 
         val command = wormsMap.getFeedback(wormsMap.currentRound - 1)
-                .firstOrNull { it.playerId == player!!.id && !it.command.startsWith("select") }?.command
+                .firstOrNull { it.playerId == player.id && !it.command.startsWith("select") }?.command
         val commandType = command?.run {
             val firstSpace = this.indexOf(' ')
             if (firstSpace != -1) {
@@ -33,7 +37,7 @@ class WormsRendererCsv(val config: GameConfig) : WormsRenderer {
             } else this
         }
 
-        val standardFields = listOf(wormsMap.currentRound, commandType, "\"$command\"", player!!.previousWorm.id, player.totalScore, player.health)
+        val standardFields = listOf(wormsMap.currentRound, commandType, "\"$command\"", player.previousWorm.id, player.totalScore, player.health)
         val wormFields = player.worms.flatMap { listOf(it.health, it.position.x, it.position.y) }
 
         val values = (standardFields + wormFields).joinToString(separator = config.csvSeparator)

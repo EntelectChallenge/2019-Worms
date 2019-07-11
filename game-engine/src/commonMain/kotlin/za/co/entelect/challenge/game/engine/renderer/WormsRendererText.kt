@@ -17,6 +17,10 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
     }
 
     override fun render(wormsMap: WormsMap, player: WormsPlayer?): String {
+        if (player == null) {
+            throw UnsupportedOperationException("Cannot call Text Render with a null player parameter")
+        }
+
         val wormGameDetails = WormsGameDetails(config, wormsMap, player)
 
         val matchDetails = """
@@ -113,10 +117,10 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
         return lines.joinToString(EOL)
     }
 
-    private fun getBasePlayerText(player: PrintablePlayer): String {
-        return """|Player id: ${player.id}
-                  |Score: ${player.score}
-                  |Selection Tokens: ${player.remainingWormSelections}"""
+    private fun getBasePlayerText(player: PrintablePlayer?): String {
+        return """|Player id: ${player?.id}
+                  |Score: ${player?.score}
+                  |Selection Tokens: ${player?.remainingWormSelections}"""
     }
 
     private fun getBaseWormText(worm: PrintableWorm): String {
