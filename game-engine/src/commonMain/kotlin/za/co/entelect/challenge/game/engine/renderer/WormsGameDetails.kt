@@ -13,6 +13,9 @@ class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlay
     val currentRound: Int = wormsMap.currentRound
     val maxRounds: Int = config.maxRounds
     val pushbackDamage: Int = config.pushbackDamage
+
+    val opponentsLastCommand: String = getOpponentsLastCommand(wormsMap, player)
+
     val mapSize: Int = wormsMap.size
     val currentWormId: Int? = player?.currentWorm?.id
     val consecutiveDoNothingCount: Int? = player?.consecutiveDoNothingsCount
@@ -33,6 +36,17 @@ class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlay
      */
     private fun modifyCellsForPlayer(arrayMap: List<MapCell>, player: WormsPlayer?): List<PrintableMapCell> {
         return arrayMap.map { PrintableMapCell.buildForPerspectivePlayer(it, player) }
+    }
+
+    private fun getOpponentsLastCommand(wormsMap: WormsMap, player: WormsPlayer): String {
+        val opponentFeedback = wormsMap
+            .getFeedback(currentRound - 1)
+            .filter { it.playerId != player.id }
+        return if (opponentFeedback.size == 0) {
+            "nothing"
+        } else {
+            opponentFeedback.get(0).command
+        }
     }
 
 }

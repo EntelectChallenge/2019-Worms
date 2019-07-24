@@ -2,6 +2,7 @@
   "currentRound": 0,
   "maxRounds": 200,
   "pushbackDamage": 4,
+  "opponentsLastCommand": "nothing",
   "mapSize": 33,
   "currentWormId": 1,
   "consecutiveDoNothingCount": 0,
