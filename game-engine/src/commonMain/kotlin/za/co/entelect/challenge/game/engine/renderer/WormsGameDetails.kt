@@ -1,7 +1,6 @@
 package za.co.entelect.challenge.game.engine.renderer
 
 import za.co.entelect.challenge.game.engine.config.GameConfig
-import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
@@ -16,8 +15,6 @@ class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlay
     val maxRounds: Int = config.maxRounds
     val pushbackDamage: Int = config.pushbackDamage
 
-    val opponentsLastCommand: String = getOpponentsLastCommand(wormsMap, player)
-
     val mapSize: Int = wormsMap.size
     val currentWormId: Int? = player?.currentWorm?.id
     val consecutiveDoNothingCount: Int? = player?.consecutiveDoNothingsCount
@@ -28,7 +25,7 @@ class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlay
     }
     val opponents: List<PrintablePlayer> = wormsMap.players
             .filter { it != player }
-            .map { PrintablePlayer.buildForPerspectivePlayer(it, player) }
+            .map { PrintablePlayer.buildForPerspectivePlayer(it, player, wormsMap) }
     val map: List<List<PrintableMapCell>> = modifyCellsForPlayer(wormsMap.cells, player).chunked(wormsMap.size)
     val visualizerEvents: List<PrintableVisualizerEvent>
             = wormsMap.getVisualizerEvents().map { PrintableVisualizerEvent(it) }
@@ -38,28 +35,6 @@ class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlay
      */
     private fun modifyCellsForPlayer(arrayMap: List<MapCell>, player: WormsPlayer?): List<PrintableMapCell> {
         return arrayMap.map { PrintableMapCell.buildForPerspectivePlayer(it, player) }
-    }
-
-    private fun getOpponentsLastCommand(wormsMap: WormsMap, player: WormsPlayer): String {
-        val opponentFeedback = wormsMap
-            .getFeedback(currentRound - 1)
-            .filter { it.playerId != player.id }
-        val feedbackCount = opponentFeedback.size
-        return when {
-            (feedbackCount == 1) -> opponentFeedback.get(0).command
-            (feedbackCount == 2) -> extractSelectCommand(opponentFeedback)
-            else                 -> CommandStrings.NOTHING
-        }
-    }
-
-    private fun extractSelectCommand(opponentFeedback: List<CommandFeedback>): String {
-        val selectCommand = opponentFeedback
-            .filter { it.command.startsWith("select") }
-            .get(0)
-        val otherCommand  = opponentFeedback
-            .filter { !it.command.startsWith("select") }
-            .get(0)
-        return "${selectCommand.command}; ${otherCommand.command}"
     }
 
 }

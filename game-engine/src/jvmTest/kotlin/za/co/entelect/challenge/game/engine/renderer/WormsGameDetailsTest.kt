@@ -41,7 +41,7 @@ class WormsGameDetailsTest {
         val gameDetailsForPlayer1 = WormsGameDetails(config, wormsMap, player1)
         val gameDetailsForPlayer2 = WormsGameDetails(config, wormsMap, player2)
 
-        assertEquals(gameDetailsForPlayer1.opponentsLastCommand, "select 2; move 20 3")
-        assertEquals(gameDetailsForPlayer2.opponentsLastCommand, "move 2 3")
+        assertEquals(gameDetailsForPlayer1.opponents.get(0).previousCommand, "select 2; move 20 3")
+        assertEquals(gameDetailsForPlayer2.opponents.get(0).previousCommand, "move 2 3")
     }
 }

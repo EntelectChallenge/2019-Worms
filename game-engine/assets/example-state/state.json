@@ -2,7 +2,6 @@
   "currentRound": 0,
   "maxRounds": 200,
   "pushbackDamage": 4,
-  "opponentsLastCommand": "nothing",
   "mapSize": 33,
   "currentWormId": 1,
   "consecutiveDoNothingCount": 0,
@@ -64,7 +63,8 @@
         "movementRange": 1,
         "profession": "Agent"
       }
-    ]
+    ],
+    "previousCommand": "nothing"
   },
   "opponents": [
     {
@@ -106,7 +106,8 @@
           "movementRange": 1,
           "profession": "Agent"
         }
-      ]
+      ],
+      "previousCommand": "nothing"
     }
   ],
   "map": [
