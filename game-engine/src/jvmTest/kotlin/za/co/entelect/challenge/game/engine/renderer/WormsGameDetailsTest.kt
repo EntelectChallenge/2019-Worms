@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.delegate.renderer
 
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.feedback.StandardCommandFeedback
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
@@ -31,9 +32,9 @@ class WormsGameDetailsTest {
         val lightPixel = CellType.AIR
         val wormsMap = buildMapWithCellType(wormsPlayers, config.mapSize, lightPixel)
 
-        wormsMap.addFeedback(StandardCommandFeedback("move 2 3", 5, player1.id, true))
-        wormsMap.addFeedback(StandardCommandFeedback("select 2", 5, player2.id, true))
-        wormsMap.addFeedback(StandardCommandFeedback("move 20 3", 5, player2.id, true))
+        wormsMap.addFeedback(StandardCommandFeedback("${CommandStrings.MOVE} 2 3", 5, player1.id, true))
+        wormsMap.addFeedback(StandardCommandFeedback("${CommandStrings.SELECT} 2", 5, player2.id, true))
+        wormsMap.addFeedback(StandardCommandFeedback("${CommandStrings.MOVE} 20 3", 5, player2.id, true))
 
         wormsMap.currentRound++
 

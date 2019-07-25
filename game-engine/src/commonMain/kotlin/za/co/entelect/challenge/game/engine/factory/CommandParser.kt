@@ -30,13 +30,13 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
         val splitCommand = rawCommand.split(" ", limit = 4)
 
         return when (splitCommand[0].toLowerCase()) {
-            CommandStrings.MOVE.string -> teleportCommand(splitCommand)
-            CommandStrings.DIG.string -> digCommand(splitCommand)
-            CommandStrings.SHOOT.string -> shootCommand(splitCommand)
-            CommandStrings.BANANA.string -> bananaCommand(splitCommand)
-            CommandStrings.SELECT.string -> selectCommand(splitCommand)
+            CommandStrings.MOVE.string    -> teleportCommand(splitCommand)
+            CommandStrings.DIG.string     -> digCommand(splitCommand)
+            CommandStrings.SHOOT.string   -> shootCommand(splitCommand)
+            CommandStrings.BANANA.string  -> bananaCommand(splitCommand)
+            CommandStrings.SELECT.string  -> selectCommand(splitCommand)
             CommandStrings.NOTHING.string -> DoNothingCommand(config)
-            else -> InvalidCommand("Unknown command: $rawCommand")
+            else                          -> InvalidCommand("Unknown command: $rawCommand")
         }
     }
 

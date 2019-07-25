@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.renderer
 
 import za.co.entelect.challenge.game.engine.config.GameConfig
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
@@ -47,7 +48,7 @@ class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlay
         return when {
             (feedbackCount == 1) -> opponentFeedback.get(0).command
             (feedbackCount == 2) -> extractSelectCommand(opponentFeedback)
-            else                 -> "nothing"
+            else                 -> CommandStrings.NOTHING
         }
     }
 
