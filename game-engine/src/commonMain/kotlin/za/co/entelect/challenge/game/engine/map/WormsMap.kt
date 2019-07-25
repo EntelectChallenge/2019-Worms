@@ -6,7 +6,8 @@ import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.processor.GameError
 import za.co.entelect.challenge.game.engine.renderer.printables.VisualizerEvent
-import kotlin.js.JsName
+import kotlin.math.PI
+import kotlin.math.sin
 
 interface GameMap {
     val players: List<WormsPlayer>
@@ -37,12 +38,12 @@ interface GameMap {
     fun getRefereeIssues(): List<String>
     fun setScoresForKilledWorms(config: GameConfig)
     fun getVisualizerEvents(): List<VisualizerEvent>
+    fun progressBattleRoyale(config: GameConfig)
 }
 
 class WormsMap(override val players: List<WormsPlayer>,
                val size: Int,
                cells: List<MapCell>) : GameMap {
-
     private val allFeedback = mutableMapOf<Int, MutableList<CommandFeedback>>()
 
     override var currentRound: Int = 0
@@ -188,6 +189,34 @@ class WormsMap(override val players: List<WormsPlayer>,
 
     override fun getVisualizerEvents(): List<VisualizerEvent> {
         return allFeedback[currentRound]?.mapNotNull { it.visualizerEvent } ?: emptyList()
+    }
+
+    override fun progressBattleRoyale(config: GameConfig) {
+        val center = (config.mapSize - 1) / 2.0
+        val mapCenter = Pair(center, center)
+
+        val brStartRound = config.maxRounds / 4
+        val brEndRound = config.maxRounds * 0.875
+        val currentProgress = (currentRound - brStartRound) / (brEndRound - brStartRound)
+        if (currentProgress < 0 || currentProgress > 1) {
+            return
+        }
+
+//        val a = 0.5
+//        val t = PI * currentProgress
+//        val h = PI / 2
+//        val k = 1
+//        val sineValue = a * (sin(t - h) + k)
+        val safeAreaRadius = (config.mapSize / 2) * (1 - currentProgress)
+
+        cells.filter {
+            it.type == CellType.AIR
+//            it.type != CellType.DEEP_SPACE
+//                    && it.type != CellType.LAVA
+//                    && it.type != CellType.DIRT
+                    && it.position.euclideanDistance(mapCenter) > safeAreaRadius + 1
+        }
+                .forEach { it.type = CellType.LAVA }
     }
 
 }

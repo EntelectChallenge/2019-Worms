@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.processor
 
 import org.junit.Assert
+import za.co.entelect.challenge.game.delegate.factory.GameConfigFactory
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.implementation.*
@@ -8,11 +9,14 @@ import za.co.entelect.challenge.game.engine.factory.TestMapFactory
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
+import za.co.entelect.challenge.game.engine.map.WormsMapGenerator
 import za.co.entelect.challenge.game.engine.player.AgentWorm
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
+import za.co.entelect.challenge.game.engine.renderer.WormsGameDetails
 import za.co.entelect.challenge.game.engine.renderer.WormsRendererText
+import za.co.entelect.challenge.game.engine.renderer.printables.PrintableMapCell
 import kotlin.random.Random
 import kotlin.test.*
 
@@ -448,4 +452,39 @@ class WormsRoundProcessorTest {
 
     private fun commandMap(player: WormsPlayer, vararg command: WormsCommand) =
             mapOf(Pair(player, command.asList()))
+
+    @Test
+    fun test_battle_royale_shrinking_map() {
+        val TEST_CONFIG_PATH = "default-config.json"
+        val TEST_CONFIG = GameConfigFactory.getConfig(TEST_CONFIG_PATH)
+
+
+        val aliceWorm = AgentWorm.build(0, TEST_CONFIG, Point(3, 2))
+        val alice = WormsPlayer.build(0, listOf(aliceWorm), TEST_CONFIG)
+
+        val bobWorm = AgentWorm.build(0, TEST_CONFIG, Point(2, 2))
+        val bob = WormsPlayer.build(1, listOf(bobWorm), TEST_CONFIG)
+
+        val processor = WormsRoundProcessor(TEST_CONFIG)
+        val mapGenerator = WormsMapGenerator(TEST_CONFIG, 0)
+        val map = mapGenerator.getMap(listOf(alice, bob))
+//                buildMapWithCellType(listOf(bob, alice), 10, CellType.DIRT)
+        var out = ""
+
+        (0..400).forEach {
+            map.currentRound = it
+
+            processor.processRound(map, commandMap(bob, alice,
+                    DoNothingCommand(TEST_CONFIG),
+                    DoNothingCommand(TEST_CONFIG)))
+
+            val details = WormsGameDetails(TEST_CONFIG, map, alice)
+            val a = PrintableMapCell.getStringMap(details.map)
+            out += "\n${map.currentRound}\n" + a
+        }
+
+
+
+        println()
+    }
 }
