@@ -181,7 +181,7 @@ class TeleportCommandTest {
     private fun validateOutRangeFeedback(x: Int, y: Int, testMap: WormsMap, worm: Worm) {
         val command = TeleportCommand(x, y, Random, TEST_CONFIG)
         assertFalse(command.validate(testMap, worm).isValid, "($x, $y) out of range")
-        assertEquals(command.toString(), "${CommandStrings.MOVE.string} ($x, $y)")
+        assertEquals(command.toString(), "${CommandStrings.MOVE.string} $x $y")
     }
 
 }
