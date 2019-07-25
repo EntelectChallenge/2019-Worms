@@ -7,6 +7,7 @@ import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.renderer.printables.PrintableMapCell
 import za.co.entelect.challenge.game.engine.renderer.printables.PrintablePlayer
 import za.co.entelect.challenge.game.engine.renderer.printables.PrintableVisualizerEvent
+import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
 
 class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlayer?) {
 
@@ -42,11 +43,22 @@ class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlay
         val opponentFeedback = wormsMap
             .getFeedback(currentRound - 1)
             .filter { it.playerId != player.id }
-        return if (opponentFeedback.size == 0) {
-            "nothing"
-        } else {
-            opponentFeedback.get(0).command
+        val feedbackCount = opponentFeedback.size
+        return when {
+            (feedbackCount == 1) -> opponentFeedback.get(0).command
+            (feedbackCount == 2) -> extractSelectCommand(opponentFeedback)
+            else                 -> "nothing"
         }
+    }
+
+    private fun extractSelectCommand(opponentFeedback: List<CommandFeedback>): String {
+        val selectCommand = opponentFeedback
+            .filter { it.command.startsWith("select") }
+            .get(0)
+        val otherCommand  = opponentFeedback
+            .filter { !it.command.startsWith("select") }
+            .get(0)
+        return "${selectCommand.command}; ${otherCommand.command}"
     }
 
 }
