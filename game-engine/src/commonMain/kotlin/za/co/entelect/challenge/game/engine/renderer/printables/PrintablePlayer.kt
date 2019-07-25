@@ -42,22 +42,22 @@ class PrintablePlayer(player: WormsPlayer) {
         }
 
         private fun getLastCommand(wormsMap: WormsMap, player: WormsPlayer): String {
-            val opponentFeedback = wormsMap
+            val feedback = wormsMap
                 .getFeedback(wormsMap.currentRound - 1)
                 .filter { it.playerId == player.id }
-            val feedbackCount = opponentFeedback.size
+            val feedbackCount = feedback.size
             return when {
-                (feedbackCount == 1) -> opponentFeedback.get(0).command
-                (feedbackCount == 2) -> extractSelectCommand(opponentFeedback)
+                (feedbackCount == 1) -> feedback.get(0).command
+                (feedbackCount == 2) -> extractSelectCommand(feedback)
                 else                 -> CommandStrings.NOTHING
             }
         }
 
-        private fun extractSelectCommand(opponentFeedback: List<CommandFeedback>): String {
-            val selectCommand = opponentFeedback
+        private fun extractSelectCommand(feedback: List<CommandFeedback>): String {
+            val selectCommand = feedback
                 .filter { it.command.startsWith("select") }
                 .get(0)
-            val otherCommand  = opponentFeedback
+            val otherCommand  = feedback
                 .filter { !it.command.startsWith("select") }
                 .get(0)
             return "${selectCommand.command}; ${otherCommand.command}"
