@@ -15,6 +15,7 @@
   * health → *The sum of all your worms' hitpoints*
   * currentWormId  → *The Id number of your worm that is currently in play. This is the same as the currentWormId above*
   * remainingWormSelections → *The amount of custom selections via the Select command that is available to the player*
+  * previousCommand → *The command which your bot supplied to the engine on the last round as a string.  e.g. 'move 20 9'.  Note that it doesn't contain 'C;\<number\>;'*
   * worms → *The list of all your worms. Worms in this list look like a **[default worm](#default-worm-properties)**, and in addition you can also see these extra attributes of your own worms:*
     * weapon → *The weapon that this worm is capable of using*
       * damage → *The number of hitpoints that this weapon can remove per shot*
@@ -30,6 +31,7 @@
   * id → *The Id number of this player*
   * score → *This player's score points currently acquired*
   * currentWormId  → *The Id number of the opponent player's worm that is currently in play*
+  * previousCommand → *The command which this opponent bot supplied to the engine on the last round as a string.  e.g. 'move 20 9'.  Note that it doesn't contain 'C;\<number\>;'*
   * worms → *A list of all the worms under this player's control. Worms in this list look like a **[default worm](#default-worm-properties)***
   
    
