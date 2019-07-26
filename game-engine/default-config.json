@@ -58,6 +58,7 @@
     "dig": 7,
     "move": 5,
     "powerup": 20,
+    "freeze": 17,
     "doNothing": 0,
     "invalidCommand": -4
   },

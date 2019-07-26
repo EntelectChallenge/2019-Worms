@@ -18,9 +18,6 @@ class BananaCommandTest {
 
     private val config: GameConfig = TEST_CONFIG
 
-    private fun getAllPointsOfSquare(start: Int, end: Int) =
-            (start..end).flatMap { x -> (start..end).map { y -> Point(x, y) } }
-
     @Test
     fun test_valid_close() {
         val targetPlayer = WormsPlayer.build(0, listOf(CommandoWorm.build(0, config, Point(1, 1))), config)
@@ -141,7 +138,7 @@ class BananaCommandTest {
         val testCommand = BananaCommand(targetCoordinate, config)
         val result = testCommand.execute(testMap, attacker)
 
-        val visualMap = getAllPointsOfSquare(0, 6).map { testMap[it].type }
+        val visualMap = Point.getAllPointsOfASquare(0, 6).map { testMap[it].type }
                 .chunked(7)
                 .joinToString(separator = "\n") { line -> line.joinToString(separator = "") { it.printable } }
         assertEquals(visualMap, """
