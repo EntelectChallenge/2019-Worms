@@ -45,11 +45,10 @@ class PrintablePlayer(player: WormsPlayer) {
             val feedback = wormsMap
                 .getFeedback(wormsMap.currentRound - 1)
                 .filter { it.playerId == player.id }
-            val feedbackCount = feedback.size
-            return when {
-                (feedbackCount == 1) -> feedback.get(0).command
-                (feedbackCount == 2) -> extractSelectCommand(feedback)
-                else                 -> CommandStrings.NOTHING
+            return when (feedback.size) {
+                1    -> feedback.get(0).command
+                2    -> extractSelectCommand(feedback)
+                else -> CommandStrings.NOTHING
             }
         }
 
