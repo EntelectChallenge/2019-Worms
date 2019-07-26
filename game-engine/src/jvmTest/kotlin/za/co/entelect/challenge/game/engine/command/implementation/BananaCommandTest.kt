@@ -73,9 +73,9 @@ class BananaCommandTest {
         assertTrue(commandValidation.isValid, "Expected a valid banana command")
 
         val result = testCommand.execute(testMap, attacker)
-        assertEquals(result.result, BananaResult.TERRAIN)
-        assertEquals(result.target, overTheWallCoordinate)
-        assertEquals(result.score, 8)
+        assertEquals(BananaResult.TERRAIN, result.result)
+        assertEquals(overTheWallCoordinate, result.target)
+        assertEquals(15, result.score)
         assertTrue(result.success)
     }
 
@@ -153,7 +153,7 @@ class BananaCommandTest {
                                 |▓▓▓▓▓▓░░▓▓▓▓▓▓
                                 |▓▓▓▓▓▓▓▓▓▓▓▓▓▓
                                 """.trimMargin())
-        assertEquals(result.score, 63)
+        assertEquals(result.score, 113)
     }
 
     @Test
@@ -173,7 +173,7 @@ class BananaCommandTest {
         val result = testCommand.execute(testMap, attacker)
         assertEquals(result.result, BananaResult.BULLSEYE)
 
-        val damages = allTargetWorms.map { Pair(it.position, config.agentWorms.initialHp - it.health) }
+        val damages = allTargetWorms.map { Pair(it.position, config.commandoWorms.initialHp - it.health) }
 
         val listOfExpectedDamages = listOf(
                 20, 13, 7, 0,

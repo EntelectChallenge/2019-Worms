@@ -29,7 +29,26 @@
     },
     "professionName": "Agent"
   },
+
+  "technologistWorms": {
+    "count": 1,
+    "initialHp": 100,
+    "movementRage": 1,
+    "diggingRange": 1,
+    "weapon": {
+      "damage": 8,
+      "range": 4
+    },
+    "snowballs": {
+      "freezeDuration": 5,
+      "range": 5,
+      "count": 3,
+      "freezeRadius": 1
+    },
+    "professionName": "Technologist"
+  },
   "pushbackDamage": 4,
+  "lavaDamage": 3,
   "mapSize": 13,
   "healthPackHp": 5,
   "totalHealthPacks": 2,

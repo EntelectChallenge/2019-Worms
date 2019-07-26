@@ -14,9 +14,7 @@ import za.co.entelect.challenge.game.engine.player.AgentWorm
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
-import za.co.entelect.challenge.game.engine.renderer.WormsGameDetails
 import za.co.entelect.challenge.game.engine.renderer.WormsRendererText
-import za.co.entelect.challenge.game.engine.renderer.printables.PrintableMapCell
 import kotlin.random.Random
 import kotlin.test.*
 
@@ -368,9 +366,9 @@ class WormsRoundProcessorTest {
         roundProcessor.processRound(testMap, commandMap)
 
         assertTrue(victimWorm.dead)
-        assertEquals(0, victimWorm.health)
-        assertEquals(41, attackingPlayer.commandScore)
-        assertEquals(-41, targetPlayer.commandScore)
+        assertEquals(-14, victimWorm.health)
+        assertEquals(56, attackingPlayer.commandScore)
+        assertEquals(-56, targetPlayer.commandScore)
 
     }
 
@@ -434,20 +432,23 @@ class WormsRoundProcessorTest {
 
         val map = buildMapWithCellType(listOf(bob, alice), 10, CellType.DIRT)
         roundProcessor.processRound(map, commandMap(bob, alice,
-                        BananaCommand(Point(6, 3), config),
-                        DoNothingCommand(config)))
+                BananaCommand(Point(6, 3), config),
+                DoNothingCommand(config)))
 
-        assertEquals(52, bob.commandScore, "Expected to gain 52 score from banana destroyed dirt cells")
+        assertEquals(91, bob.commandScore, "Expected to gain 91 score from banana destroyed dirt cells")
 
         roundProcessor.processRound(map, commandMap(bob, alice,
                 BananaCommand(Point(2, 6), config),
                 BananaCommand(Point(2, 6), config)))
 
-        assertEquals(104, bob.commandScore, "Expected to gain 104 score from banana destroyed dirt cells")
-        assertEquals(52, alice.commandScore, "Expected to gain 52 score from banana destroyed dirt cells")
+        assertEquals(182, bob.commandScore, "Expected to gain 182 score from banana destroyed dirt cells")
+        assertEquals(91, alice.commandScore, "Expected to gain 91 score from banana destroyed dirt cells")
     }
 
-    private fun commandMap(player1: WormsPlayer, player2: WormsPlayer, command1: WormsCommand, command2: WormsCommand = command1) =
+    private fun commandMap(player1: WormsPlayer,
+                           player2: WormsPlayer,
+                           command1: WormsCommand,
+                           command2: WormsCommand = command1) =
             mapOf(Pair(player1, listOf(command1)), Pair(player2, listOf(command2)))
 
     private fun commandMap(player: WormsPlayer, vararg command: WormsCommand) =
@@ -455,36 +456,31 @@ class WormsRoundProcessorTest {
 
     @Test
     fun test_battle_royale_shrinking_map() {
-        val TEST_CONFIG_PATH = "default-config.json"
-        val TEST_CONFIG = GameConfigFactory.getConfig(TEST_CONFIG_PATH)
+        val gameConfig = GameConfigFactory.getConfig("default-config.json")
 
+        val aliceWorm = AgentWorm.build(0, gameConfig, Point(3, 2))
+        val alice = WormsPlayer.build(0, listOf(aliceWorm), gameConfig)
 
-        val aliceWorm = AgentWorm.build(0, TEST_CONFIG, Point(3, 2))
-        val alice = WormsPlayer.build(0, listOf(aliceWorm), TEST_CONFIG)
+        val bobWorm = AgentWorm.build(0, gameConfig, Point(2, 2))
+        val bob = WormsPlayer.build(1, listOf(bobWorm), gameConfig)
 
-        val bobWorm = AgentWorm.build(0, TEST_CONFIG, Point(2, 2))
-        val bob = WormsPlayer.build(1, listOf(bobWorm), TEST_CONFIG)
-
-        val processor = WormsRoundProcessor(TEST_CONFIG)
-        val mapGenerator = WormsMapGenerator(TEST_CONFIG, 0)
+        val processor = WormsRoundProcessor(gameConfig)
+        val mapGenerator = WormsMapGenerator(gameConfig, 0)
         val map = mapGenerator.getMap(listOf(alice, bob))
-//                buildMapWithCellType(listOf(bob, alice), 10, CellType.DIRT)
-        var out = ""
+        val aliceCell = map[aliceWorm.position]
 
-        (0..400).forEach {
-            map.currentRound = it
+        map.currentRound = 99
+        processor.processRound(map, commandMap(bob, alice,
+                ShootCommand(Direction.UP, gameConfig),
+                ShootCommand(Direction.UP, gameConfig)))
+        assertTrue(aliceWorm.health > 0, "Worm $aliceWorm died unexpectedly")
+        assertNotEquals(aliceCell.type, CellType.LAVA, "Worm $aliceWorm should not yet be covered in Lava")
 
-            processor.processRound(map, commandMap(bob, alice,
-                    DoNothingCommand(TEST_CONFIG),
-                    DoNothingCommand(TEST_CONFIG)))
-
-            val details = WormsGameDetails(TEST_CONFIG, map, alice)
-            val a = PrintableMapCell.getStringMap(details.map)
-            out += "\n${map.currentRound}\n" + a
-        }
-
-
-
-        println()
+        map.currentRound = 135
+        processor.processRound(map, commandMap(bob, alice,
+                ShootCommand(Direction.UP, gameConfig),
+                ShootCommand(Direction.UP, gameConfig)))
+        assertTrue(aliceWorm.health in 1..99, "Worm $aliceWorm should be injured by Lava")
+        assertEquals(aliceCell.type, CellType.LAVA, "Worm $aliceWorm should now be covered in Lava")
     }
 }

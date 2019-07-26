@@ -78,6 +78,7 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
             |DEEP_SPACE: ${CellType.DEEP_SPACE.printable} ASCII:219
             |DIRT: ${CellType.DIRT.printable} ASCII:178
             |AIR: ${CellType.AIR.printable} ASCII:176
+            |LAVA: ${CellType.LAVA.printable}
             |HEALTH_PACK: ${HealthPack.PRINTABLE} ASCII:204, 185
             |WORM_MARKER: 13 Example for:Player1, Worm3
             """.trimMargin()

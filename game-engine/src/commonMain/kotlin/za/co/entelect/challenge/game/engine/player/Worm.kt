@@ -8,12 +8,21 @@ open class Worm(val id: Int,
                 var health: Int,
                 val weapon: Weapon,
                 var bananas: Bananas? = null,
+                var snowballs: Snowballs? = null,
                 val diggingRange: Int,
                 val movementRange: Int,
                 val profession: String) : Printable {
 
-    constructor(id: Int, health: Int, position: Point, weapon: Weapon, bananas: Bananas? = null, diggingRange: Int = 1, movementRange: Int = 1, profession: String)
-            : this(id, health, weapon, bananas, diggingRange, movementRange, profession) {
+    constructor(id: Int,
+                health: Int,
+                position: Point,
+                weapon: Weapon,
+                bananas: Bananas? = null,
+                snowballs: Snowballs? = null,
+                diggingRange: Int = 1,
+                movementRange: Int = 1,
+                profession: String)
+            : this(id, health, weapon, bananas, snowballs, diggingRange, movementRange, profession) {
         this.position = position
         this.previousPosition = position
     }

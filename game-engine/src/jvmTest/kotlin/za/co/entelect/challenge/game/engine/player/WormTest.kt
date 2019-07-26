@@ -41,9 +41,9 @@ class WormTest {
         val opponentResult = testCommand.execute(testMap, attackerWorm)
         val myPlayerResult = testCommand.execute(testMap, traitorWorm)
 
-        assertEquals(opponentResult.score, 20)
-        assertEquals(myPlayerResult.score, -20)
-        assertEquals(victimWorm.health, -39)
+        assertEquals(40, opponentResult.score)
+        assertEquals(-40, myPlayerResult.score)
+        assertEquals(-39, victimWorm.health)
     }
 
     @Test
@@ -68,9 +68,9 @@ class WormTest {
         val processor = WormsRoundProcessor(config)
         processor.processRound(testMap, commandMap) // processor does: detectRefereeIssues()
 
-        assertEquals(targetPlayer.commandScore, -60)
-        assertEquals(attackingPlayer.commandScore, 60)
-        assertEquals(victimWorm.health, -31)
+        assertEquals(-80, targetPlayer.commandScore)
+        assertEquals(80, attackingPlayer.commandScore)
+        assertEquals(-31, victimWorm.health)
     }
 
     @Test

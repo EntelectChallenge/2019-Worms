@@ -53,7 +53,8 @@ class BananaCommandIntegrationTest {
 
         val roundProcessor = bootstrapper.roundProcessor
         roundProcessor.processRound(gameMap, mapOf(
-                players[0].gamePlayer to listOf(RawCommand("${CommandStrings.SELECT.string} 3"), RawCommand("${CommandStrings.BANANA.string} 24 5")),
+                players[0].gamePlayer to listOf(RawCommand("${CommandStrings.SELECT.string} 2"),
+                        RawCommand("${CommandStrings.BANANA.string} 1 16")),
                 players[1].gamePlayer to listOf(RawCommand("${CommandStrings.MOVE.string} 30 17"))
         ))
 
@@ -71,7 +72,9 @@ class BananaCommandIntegrationTest {
         assertTrue(player is DelegatePlayer)
         val wormsPlayer = player.wormsPlayer
 
-        assertEquals(expected, wormsPlayer.worms[2].bananas?.count, "Player ${wormsPlayer.id} banana count correct")
+        val agentWorm = wormsPlayer.worms.first { it.bananas != null }
+        assertEquals(expected, agentWorm.bananas?.count,
+                "Player ${wormsPlayer.id} banana count is incorrect")
 
         val pattern = "Banana bombs count: (\\d)".toRegex()
 
@@ -80,7 +83,7 @@ class BananaCommandIntegrationTest {
         Assert.assertEquals(1, matchResult.size)
 
         val (count) = matchResult[0].destructured
-        assertEquals(expected, count.toInt(), "Player ${wormsPlayer.id} banana count rendered correct")
+        assertEquals(expected, count.toInt(), "Player ${wormsPlayer.id} banana count rendered incorrectly")
     }
 
 }

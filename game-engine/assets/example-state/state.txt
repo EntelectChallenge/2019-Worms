@@ -1,33 +1,32 @@
 @01 Match Details
 Section lines count: 10
 Current round: 0
-Max rounds: 200
+Max rounds: 400
 Map size: 33
 Current worm id: 1
 Consecutive do nothing count: 0
 Players count: 2
 Worms per player: 3
-Pushback damage: 4
+Pushback damage: 20
 
 @02 My Player
 Section lines count: 52
 Player id: 1
-Score: 100
-Selection Tokens: 1
-Previous Command: nothing
-Health: 300
+Score: 116
+Selection Tokens: 5
+Health: 350
 Current Worm: 1
 Worms: 
 
 Worm id: 1
-Health: 100
+Health: 150
 Position x: 24
 Position y: 28
 Digging range: 1
 Movement range: 1
 Profession: Commando
-Weapon damage: 1
-Weapon range: 3
+Weapon damage: 8
+Weapon range: 4
 Banana bomb damage: null
 Banana bomb range: null
 Banana bombs count: null
@@ -39,20 +38,6 @@ Position x: 1
 Position y: 16
 Digging range: 1
 Movement range: 1
-Profession: Commando
-Weapon damage: 1
-Weapon range: 3
-Banana bomb damage: null
-Banana bomb range: null
-Banana bombs count: null
-Banana bomb damage radius: null
-
-Worm id: 3
-Health: 100
-Position x: 24
-Position y: 4
-Digging range: 1
-Movement range: 1
 Profession: Agent
 Weapon damage: 8
 Weapon range: 4
@@ -60,19 +45,31 @@ Banana bomb damage: 20
 Banana bomb range: 5
 Banana bombs count: 3
 Banana bomb damage radius: 2
-Previous Command: nothing
+
+Worm id: 3
+Health: 100
+Position x: 24
+Position y: 4
+Digging range: 1
+Movement range: 1
+Profession: Technologist
+Weapon damage: 8
+Weapon range: 4
+Banana bomb damage: null
+Banana bomb range: null
+Banana bombs count: null
+Banana bomb damage radius: null
 
 @03 Opponents
 Section lines count: 34
 Player id: 2
-Score: 100
-Selection Tokens: 1
-Previous Command: nothing
+Score: 116
+Selection Tokens: 5
 Current Worm: 1
 Worms: 
 
 Worm id: 1
-Health: 100
+Health: 150
 Position x: 31
 Position y: 16
 Digging range: 1
@@ -85,7 +82,7 @@ Position x: 8
 Position y: 28
 Digging range: 1
 Movement range: 1
-Profession: Commando
+Profession: Agent
 
 Worm id: 3
 Health: 100
@@ -93,18 +90,19 @@ Position x: 8
 Position y: 4
 Digging range: 1
 Movement range: 1
-Profession: Agent
+Profession: Technologist
 
 
 @04 Special Items
 Section lines count: 3
-HEALTH_PACK: 5
+HEALTH_PACK: 10
 
 @05 Legend
-Section lines count: 7
+Section lines count: 8
 DEEP_SPACE: ██ ASCII:219
 DIRT: ▓▓ ASCII:178
 AIR: ░░ ASCII:176
+LAVA: XX
 HEALTH_PACK: ╠╣ ASCII:204, 185
 WORM_MARKER: 13 Example for:Player1, Worm3
 

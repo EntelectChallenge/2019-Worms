@@ -196,27 +196,21 @@ class WormsMap(override val players: List<WormsPlayer>,
         val mapCenter = Pair(center, center)
 
         val brStartRound = config.maxRounds / 4
-        val brEndRound = config.maxRounds * 0.875
-        val currentProgress = (currentRound - brStartRound) / (brEndRound - brStartRound)
-        if (currentProgress < 0 || currentProgress > 1) {
+        if (currentRound < brStartRound) {
             return
         }
+        val brEndRound = config.maxRounds * 0.875
+        val fullPercentageRange = (currentRound - brStartRound) / (brEndRound - brStartRound)
+        val currentProgress = fullPercentageRange.coerceIn(0.0, 1.0)
 
-//        val a = 0.5
-//        val t = PI * currentProgress
-//        val h = PI / 2
-//        val k = 1
-//        val sineValue = a * (sin(t - h) + k)
         val safeAreaRadius = (config.mapSize / 2) * (1 - currentProgress)
 
-        cells.filter {
-            it.type == CellType.AIR
-//            it.type != CellType.DEEP_SPACE
-//                    && it.type != CellType.LAVA
-//                    && it.type != CellType.DIRT
-                    && it.position.euclideanDistance(mapCenter) > safeAreaRadius + 1
-        }
+        cells.filter { it.type == CellType.AIR && it.position.euclideanDistance(mapCenter) > safeAreaRadius + 1 }
                 .forEach { it.type = CellType.LAVA }
+
+        livingPlayers.flatMap { it.livingWorms }
+                .filter { cells.any { cell -> cell.type == CellType.LAVA && cell.position == it.position } }
+                .forEach { worm -> worm.takeDamage(config.lavaDamage, currentRound) }
     }
 
 }

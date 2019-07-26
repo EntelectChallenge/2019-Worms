@@ -12,6 +12,6 @@ enum class CellType(val diggable: Boolean, val open: Boolean, override val print
     AIR(false, true, "░░"),
     DIRT(true, false, "▓▓"),
     DEEP_SPACE(false, false, "██"),
-    LAVA(false, true, "╬╬")
+    LAVA(false, true, "XX")
 
 }

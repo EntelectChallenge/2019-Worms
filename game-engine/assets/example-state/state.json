@@ -1,27 +1,27 @@
 {
   "currentRound": 0,
-  "maxRounds": 200,
-  "pushbackDamage": 4,
+  "maxRounds": 400,
+  "pushbackDamage": 20,
   "mapSize": 33,
   "currentWormId": 1,
   "consecutiveDoNothingCount": 0,
   "myPlayer": {
     "id": 1,
-    "score": 100,
-    "health": 300,
+    "score": 116,
+    "health": 350,
     "currentWormId": 1,
-    "remainingWormSelections": 1,
+    "remainingWormSelections": 5,
     "worms": [
       {
         "id": 1,
-        "health": 100,
+        "health": 150,
         "position": {
           "x": 24,
           "y": 28
         },
         "weapon": {
-          "damage": 1,
-          "range": 3
+          "damage": 8,
+          "range": 4
         },
         "diggingRange": 1,
         "movementRange": 1,
@@ -33,21 +33,6 @@
         "position": {
           "x": 1,
           "y": 16
-        },
-        "weapon": {
-          "damage": 1,
-          "range": 3
-        },
-        "diggingRange": 1,
-        "movementRange": 1,
-        "profession": "Commando"
-      },
-      {
-        "id": 3,
-        "health": 100,
-        "position": {
-          "x": 24,
-          "y": 4
         },
         "weapon": {
           "damage": 8,
@@ -62,6 +47,21 @@
         "diggingRange": 1,
         "movementRange": 1,
         "profession": "Agent"
+      },
+      {
+        "id": 3,
+        "health": 100,
+        "position": {
+          "x": 24,
+          "y": 4
+        },
+        "weapon": {
+          "damage": 8,
+          "range": 4
+        },
+        "diggingRange": 1,
+        "movementRange": 1,
+        "profession": "Technologist"
       }
     ],
     "previousCommand": "nothing"
@@ -69,13 +69,13 @@
   "opponents": [
     {
       "id": 2,
-      "score": 100,
+      "score": 116,
       "currentWormId": 1,
-      "remainingWormSelections": 1,
+      "remainingWormSelections": 5,
       "worms": [
         {
           "id": 1,
-          "health": 100,
+          "health": 150,
           "position": {
             "x": 31,
             "y": 16
@@ -93,7 +93,7 @@
           },
           "diggingRange": 1,
           "movementRange": 1,
-          "profession": "Commando"
+          "profession": "Agent"
         },
         {
           "id": 3,
@@ -104,7 +104,7 @@
           },
           "diggingRange": 1,
           "movementRange": 1,
-          "profession": "Agent"
+          "profession": "Technologist"
         }
       ],
       "previousCommand": "nothing"
@@ -834,7 +834,7 @@
           },
           "diggingRange": 1,
           "movementRange": 1,
-          "profession": "Agent"
+          "profession": "Technologist"
         }
       },
       {
@@ -928,15 +928,9 @@
             "damage": 8,
             "range": 4
           },
-          "bananaBombs": {
-            "damage": 20,
-            "range": 5,
-            "count": 3,
-            "damageRadius": 2
-          },
           "diggingRange": 1,
           "movementRange": 1,
-          "profession": "Agent"
+          "profession": "Technologist"
         }
       },
       {
@@ -2727,7 +2721,7 @@
         "type": "AIR",
         "powerup": {
           "type": "HEALTH_PACK",
-          "value": 5
+          "value": 10
         }
       },
       {
@@ -2840,12 +2834,18 @@
             "y": 16
           },
           "weapon": {
-            "damage": 1,
-            "range": 3
+            "damage": 8,
+            "range": 4
+          },
+          "bananaBombs": {
+            "damage": 20,
+            "range": 5,
+            "count": 3,
+            "damageRadius": 2
           },
           "diggingRange": 1,
           "movementRange": 1,
-          "profession": "Commando"
+          "profession": "Agent"
         }
       },
       {
@@ -3000,7 +3000,7 @@
         "occupier": {
           "id": 1,
           "playerId": 2,
-          "health": 100,
+          "health": 150,
           "position": {
             "x": 31,
             "y": 16
@@ -3113,7 +3113,7 @@
         "type": "AIR",
         "powerup": {
           "type": "HEALTH_PACK",
-          "value": 5
+          "value": 10
         }
       },
       {
@@ -4912,7 +4912,7 @@
           },
           "diggingRange": 1,
           "movementRange": 1,
-          "profession": "Commando"
+          "profession": "Agent"
         }
       },
       {
@@ -4997,14 +4997,14 @@
         "occupier": {
           "id": 1,
           "playerId": 1,
-          "health": 100,
+          "health": 150,
           "position": {
             "x": 24,
             "y": 28
           },
           "weapon": {
-            "damage": 1,
-            "range": 3
+            "damage": 8,
+            "range": 4
           },
           "diggingRange": 1,
           "movementRange": 1,
