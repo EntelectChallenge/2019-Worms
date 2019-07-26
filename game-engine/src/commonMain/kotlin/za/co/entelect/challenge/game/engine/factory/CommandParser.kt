@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.factory
 
 import mu.KotlinLogging
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.implementation.*
 import za.co.entelect.challenge.game.engine.config.GameConfig
@@ -29,12 +30,12 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
         val splitCommand = rawCommand.split(" ", limit = 4)
 
         return when (splitCommand[0].toLowerCase()) {
-            "move" -> teleportCommand(splitCommand)
-            "dig" -> digCommand(splitCommand)
-            "shoot" -> shootCommand(splitCommand)
-            "banana" -> bananaCommand(splitCommand)
-            "select" -> selectCommand(splitCommand)
-            "nothing" -> DoNothingCommand(config)
+            CommandStrings.MOVE.string -> teleportCommand(splitCommand)
+            CommandStrings.DIG.string -> digCommand(splitCommand)
+            CommandStrings.SHOOT.string -> shootCommand(splitCommand)
+            CommandStrings.BANANA.string -> bananaCommand(splitCommand)
+            CommandStrings.SELECT.string -> selectCommand(splitCommand)
+            CommandStrings.NOTHING.string -> DoNothingCommand(config)
             else -> InvalidCommand("Unknown command: $rawCommand")
         }
     }
@@ -55,7 +56,7 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
 
     private fun selectCommand(splitCommand: List<String>): WormsCommand {
         if (splitCommand.size != 2) {
-            return InvalidCommand("Cannot parse move command: Invalid length ${splitCommand.size}, expected 2")
+            return InvalidCommand("Cannot parse select command: Invalid length ${splitCommand.size}, expected 2")
         }
 
         val wormId = splitCommand[1].toIntOrNull()
@@ -112,6 +113,6 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
     }
 
     companion object {
-        private val logger = KotlinLogging.logger{}
+        private val logger = KotlinLogging.logger {}
     }
 }

@@ -15,10 +15,14 @@ class WormsRendererConsole(private val config: GameConfig) : WormsRenderer {
         return """Player ${wormsPlayer.id}, enter a command (move x y)/(dig x y)/(shoot $directionsString)/(nothing)"""
     }
 
-    override fun render(wormsMap: WormsMap, player: WormsPlayer): String {
+    override fun render(wormsMap: WormsMap, player: WormsPlayer?): String {
+        if (player == null) {
+            throw UnsupportedOperationException("Cannot call Console Render with a null player parameter")
+        }
+
         val wormPosition = player.currentWorm.position
         val wormGameDetails = WormsGameDetails(config, wormsMap, player)
-        val selfPlayer = "My Player:H=${wormGameDetails.myPlayer.consoleHealth} S=${wormGameDetails.myPlayer.score} " +
+        val selfPlayer = "My Player:H=${wormGameDetails.myPlayer?.consoleHealth} S=${wormGameDetails.myPlayer?.score} " +
                 "W=${wormGameDetails.currentWormId} X,Y=${wormPosition.x},${wormPosition.y}"
 
         val enemyPlayers = wormGameDetails.opponents.fold("") { sum, p ->

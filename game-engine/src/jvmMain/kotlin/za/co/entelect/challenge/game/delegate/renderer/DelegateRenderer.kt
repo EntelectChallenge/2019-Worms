@@ -33,6 +33,10 @@ class DelegateRenderer(config: GameConfig, rendererType: RendererType) : GameMap
             throw IllegalArgumentException("Unknown Map Class")
         }
 
+        if (player == null) {
+            return renderer.render(gameMap.wormsMap, null)
+        }
+
         if (player !is DelegatePlayer) {
             throw IllegalArgumentException("Unknown Player Class")
         }

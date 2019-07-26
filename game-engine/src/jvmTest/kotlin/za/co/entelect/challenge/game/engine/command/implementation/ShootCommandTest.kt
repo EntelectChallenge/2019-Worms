@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.feedback.ShootResult
 import za.co.entelect.challenge.game.engine.command.implementation.Direction.*
 import za.co.entelect.challenge.game.engine.config.GameConfig
@@ -55,7 +56,7 @@ class ShootCommandTest {
             assertEquals(expectedHp, targetWorms[index].health, "Health for worm in direction $direction")
             assertEquals(ShootResult.HIT, result.result, "Result correct for attack in direction $direction")
             assertEquals(config.scores.attack, result.score, "Score correct for attack in direction $direction")
-            assertEquals("shoot ${direction.shortCardinal}", testCommand.toString())
+            assertEquals("${CommandStrings.SHOOT.string} ${direction.shortCardinal}", testCommand.toString())
         }
 
         assertEquals(initialHp, attacker.health)

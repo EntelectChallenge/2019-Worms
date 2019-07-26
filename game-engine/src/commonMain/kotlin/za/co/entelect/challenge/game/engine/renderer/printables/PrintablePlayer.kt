@@ -19,13 +19,14 @@ class PrintablePlayer(player: WormsPlayer) {
         /**
          * Check if @player is actually the @perspectivePlayer
          */
-        fun isPerspectivePlayer(player: WormsPlayer, perspectivePlayer: WormsPlayer) = player == perspectivePlayer
+        fun isPerspectivePlayer(player: WormsPlayer, perspectivePlayer: WormsPlayer?) =
+                (player == perspectivePlayer) || (perspectivePlayer == null)
 
         /**
          * Build a PrintablePlayer from @player that is modified to fit the perspective of @perspectivePlayer
          * @perspectivePlayer is not allowed to see some details from other players
          */
-        fun buildForPerspectivePlayer(player: WormsPlayer, perspectivePlayer: WormsPlayer): PrintablePlayer {
+        fun buildForPerspectivePlayer(player: WormsPlayer, perspectivePlayer: WormsPlayer?): PrintablePlayer {
             val playerForPerspectivePlayer = PrintablePlayer(player)
             playerForPerspectivePlayer.worms = player.worms
                     .map { PrintableWorm.buildForDetailsPerspectivePlayer(it, perspectivePlayer) }

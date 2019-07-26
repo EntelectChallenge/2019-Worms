@@ -70,7 +70,7 @@ kotlin {
     }
 
     kotlin.js().compilation("main").kotlinOptions {
-        moduleKind = "commonjs"
+        moduleKind = "umd"
     }
 }
 
@@ -114,7 +114,8 @@ task<JacocoCoverageVerification>("testCoverageVerification") {
                     "za.co.entelect.challenge.game.engine.player.Weapon",
                     "za.co.entelect.challenge.game.engine.processor.GameError",
                     "za.co.entelect.challenge.game.engine.renderer.WormsRenderer.Companion",
-                    "za.co.entelect.challenge.game.engine.**.logger.*"
+                    "za.co.entelect.challenge.game.engine.**.logger.*",
+                    "za.co.entelect.challenge.game.engine.renderer.printables.VisualizerEvent"
             )
             limit {
                 minimum = "0.75".toBigDecimal()
@@ -146,6 +147,7 @@ task<ShadowJar>("shadowJarJs") {
 
     val compilation = kotlin.js().compilation("main")
 
+    exclude("**/*.kjsm", "**/*.kotlin_metadata")
     from(compilation.output)
 
     configurations = listOf(compilation.runtimeDependencyFiles as Configuration)
