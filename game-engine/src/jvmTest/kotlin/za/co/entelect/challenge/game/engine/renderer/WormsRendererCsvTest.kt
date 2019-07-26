@@ -52,7 +52,7 @@ class WormsRendererCsvTest {
         val (player, map) = setupMap()
         map.currentRound = 1
         map.addFeedback(StandardCommandFeedback(command = "${CommandStrings.SELECT.string} 1", score = 0, playerId = player.id))
-        map.addFeedback(StandardCommandFeedback(command = "${CommandStrings.MOVE.string} (22, 28)", score = 0, playerId = player.id))
+        map.addFeedback(StandardCommandFeedback(command = "${CommandStrings.MOVE.string} 22 28", score = 0, playerId = player.id))
 
         //Renderers get called at the beginning of a round
         map.currentRound = 2

@@ -14,7 +14,7 @@ class PrintablePlayer(player: WormsPlayer) {
     val currentWormId = player.currentWorm.id
     val remainingWormSelections = player.wormSelectionTokens
     var worms: List<PrintableWorm> = emptyList()
-    var previousCommand: String = CommandStrings.NOTHING
+    var previousCommand: String = CommandStrings.NOTHING.string
 
     @Transient
     val consoleHealth: Int = player.health
@@ -46,20 +46,18 @@ class PrintablePlayer(player: WormsPlayer) {
                 .getFeedback(wormsMap.currentRound - 1)
                 .filter { it.playerId == player.id }
             return when (feedback.size) {
-                1    -> feedback.get(0).command
+                1    -> feedback[0].command
                 2    -> extractSelectCommand(feedback)
-                else -> CommandStrings.NOTHING
+                else -> CommandStrings.NOTHING.string
             }
         }
 
         private fun extractSelectCommand(feedback: List<CommandFeedback>): String {
             val selectCommand = feedback
-                .filter { it.command.startsWith("select") }
-                .get(0)
+                .find { it.command.startsWith("select") }
             val otherCommand  = feedback
-                .filter { !it.command.startsWith("select") }
-                .get(0)
-            return "${selectCommand.command}; ${otherCommand.command}"
+                .find { !it.command.startsWith("select") }
+            return "${(selectCommand?.command)?:CommandStrings.NOTHING.string}; ${(otherCommand?.command)?:CommandStrings.NOTHING.string}"
         }
     }
 

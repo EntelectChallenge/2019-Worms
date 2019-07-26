@@ -19,7 +19,7 @@ class WormsGameDetailsTest {
     private val config: GameConfig = TEST_CONFIG
 
     @Test
-    fun test_single_last_move_added_correctly() {
+    fun test_last_move_added_correctly() {
         val wormsPlayers = buildWormsPlayerDefault(config)
         wormsPlayers.forEachIndexed { i, p ->
             p.worms.forEachIndexed { j, w ->
@@ -27,21 +27,21 @@ class WormsGameDetailsTest {
             }
         }
         val player1 = wormsPlayers.first()
-        val player2 = wormsPlayers.get(1)
+        val player2 = wormsPlayers[1]
 
         val lightPixel = CellType.AIR
         val wormsMap = buildMapWithCellType(wormsPlayers, config.mapSize, lightPixel)
 
-        wormsMap.addFeedback(StandardCommandFeedback("${CommandStrings.MOVE} 2 3", 5, player1.id, true))
-        wormsMap.addFeedback(StandardCommandFeedback("${CommandStrings.SELECT} 2", 5, player2.id, true))
-        wormsMap.addFeedback(StandardCommandFeedback("${CommandStrings.MOVE} 20 3", 5, player2.id, true))
+        wormsMap.addFeedback(StandardCommandFeedback("${CommandStrings.MOVE.string} 2 3", 5, player1.id, true))
+        wormsMap.addFeedback(StandardCommandFeedback("${CommandStrings.SELECT.string} 2", 5, player2.id, true))
+        wormsMap.addFeedback(StandardCommandFeedback("${CommandStrings.MOVE.string} 20 3", 5, player2.id, true))
 
         wormsMap.currentRound++
 
         val gameDetailsForPlayer1 = WormsGameDetails(config, wormsMap, player1)
         val gameDetailsForPlayer2 = WormsGameDetails(config, wormsMap, player2)
 
-        assertEquals(gameDetailsForPlayer1.opponents.get(0).previousCommand, "select 2; move 20 3")
-        assertEquals(gameDetailsForPlayer2.opponents.get(0).previousCommand, "move 2 3")
+        assertEquals("select 2; move 20 3", gameDetailsForPlayer1.opponents[0].previousCommand)
+        assertEquals("move 2 3", gameDetailsForPlayer2.opponents[0].previousCommand)
     }
 }

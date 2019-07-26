@@ -20,7 +20,7 @@ class WormsGameDetails(config: GameConfig, wormsMap: WormsMap, player: WormsPlay
     val consecutiveDoNothingCount: Int? = player?.consecutiveDoNothingsCount
 
     val myPlayer: PrintablePlayer? = when {
-        player != null -> PrintablePlayer.buildForPerspectivePlayer(player, player)
+        player != null -> PrintablePlayer.buildForPerspectivePlayer(player, player, wormsMap)
         else -> null
     }
     val opponents: List<PrintablePlayer> = wormsMap.players
