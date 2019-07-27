@@ -2,7 +2,7 @@
 
 let fs = require('fs');
 let readline = require('readline');
-const stateFileName = "state.json";
+const stateFileName = 'state.json';
 
 let myPlayer;
 let opponent;
@@ -50,7 +50,8 @@ let directions = [
 let surfaceTypes = {
     DEEP_SPACE: 'DEEP_SPACE',
     AIR: 'AIR',
-    DIRT: 'DIRT'
+    DIRT: 'DIRT',
+    LAVA: 'LAVA'
 };
 
 let consoleReader = readline.createInterface({
@@ -90,7 +91,28 @@ function initializeEntities(gameState) {
  * @return {string} The bot's command
  */
 function runStrategy() {
-    let cellAndTarget = getShootableOpponent();
+    let nearTarget = getApproachableOpponent();
+    let targetPosition = nearTarget.worm.position;
+
+    if (canBananaBombThem(nearTarget)) {
+        return `banana ${targetPosition.x} ${targetPosition.y}`;
+    } else if (canSnowballThem(nearTarget)) {
+        return `snowball ${targetPosition.x} ${targetPosition.y}`;
+    }
+
+    // If other worms are in danger, we could SELECT them and give them a fighting chance
+    if (myPlayer.remainingWormSelections > 0) {
+        let otherWorms = myPlayer.worms.filter(worm => worm !== myCurrentWorm);
+        for (let worm of otherWorms) {
+            let cellAndTarget = getShootableOpponent(worm);
+            if (cellAndTarget) {
+                return `select ${worm.id};shoot ${cellAndTarget.direction}`;
+            }
+        }
+    }
+
+    // If myCurrentWorm is in danger, defend yourself
+    let cellAndTarget = getShootableOpponent(myCurrentWorm);
     if (cellAndTarget) {
         return `shoot ${cellAndTarget.direction}`;
     }
@@ -100,6 +122,21 @@ function runStrategy() {
             return strategy.execute()
         }
     }
+}
+
+function canBananaBombThem(target) {
+    return myCurrentWorm.bananaBombs
+        && myCurrentWorm.bananaBombs.count > 0
+        && target.distance <= myCurrentWorm.bananaBombs.range
+        && target.distance > myCurrentWorm.bananaBombs.damageRadius * 0.75;
+}
+
+function canSnowballThem(target) {
+    return myCurrentWorm.snowballs
+        && myCurrentWorm.snowballs.count > 0
+        && target.worm.roundsUntilUnfrozen == 0
+        && target.distance <= myCurrentWorm.snowballs.range
+        && target.distance > myCurrentWorm.snowballs.freezeRadius * Math.sqrt(2);
 }
 
 function doNothingCommand() {
@@ -184,7 +221,6 @@ function huntStrategy(targetWormId) {
     }
 }
 
-
 /**
  * Returns a dig or move command towards the destination
  * @param destination {Point}
@@ -262,15 +298,15 @@ function sumCoordinates(coordinateA, coordinateB) {
 /**
  * Get any opponent worm that is in range and can be shot without being blocked
  */
-function getShootableOpponent() {
-    let center = myCurrentWorm.position;
+function getShootableOpponent(worm) {
+    let center = worm.position;
     let shootTemplates = getShootTemplates();
 
     for (let template of shootTemplates) {
         for (let deltaCoordinate of template.coordinates) {
             let coordinateToCheck = sumCoordinates(center, deltaCoordinate);
             if (coordinateIsOutOfBounds(coordinateToCheck)
-                || euclideanDistance(coordinateToCheck, center) > myCurrentWorm.weapon.range) {
+                || euclideanDistance(coordinateToCheck, center) > worm.weapon.range) {
                 break;
             }
             let cellToInspect = gameMap[coordinateToCheck.y][coordinateToCheck.x];
