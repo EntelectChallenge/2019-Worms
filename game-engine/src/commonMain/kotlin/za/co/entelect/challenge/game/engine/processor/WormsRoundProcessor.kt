@@ -12,10 +12,8 @@ import za.co.entelect.challenge.game.engine.player.WormsPlayer
 class WormsRoundProcessor(val config: GameConfig) {
 
     fun processRound(wormsMap: WormsMap, wormsCommands: Map<WormsPlayer, List<WormsCommand>>): Boolean {
-        val mutableCommandsMap = wormsCommands.toMutableMap()
-
         logger.info { "Processing round: Round=${wormsMap.currentRound}" }
-
+        val mutableCommandsMap = wormsCommands.toMutableMap()
         executeSelectCommands(mutableCommandsMap, wormsMap)
         executeOtherCommands(mutableCommandsMap, wormsMap)
 

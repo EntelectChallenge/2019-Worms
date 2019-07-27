@@ -1,9 +1,11 @@
 package za.co.entelect.challenge.game.engine.factory
 
 import mu.KotlinLogging
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.implementation.*
 import za.co.entelect.challenge.game.engine.config.GameConfig
+import za.co.entelect.challenge.game.engine.map.Point
 import kotlin.random.Random
 
 /**
@@ -28,18 +30,33 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
         val splitCommand = rawCommand.split(" ", limit = 4)
 
         return when (splitCommand[0].toLowerCase()) {
-            "move" -> teleportCommand(splitCommand)
-            "dig" -> digCommand(splitCommand)
-            "shoot" -> shootCommand(splitCommand)
-            "select" -> selectCommand(splitCommand)
-            "nothing" -> DoNothingCommand(config)
-            else -> InvalidCommand("Unknown command ${splitCommand[0]}")
+            CommandStrings.MOVE.string    -> teleportCommand(splitCommand)
+            CommandStrings.DIG.string     -> digCommand(splitCommand)
+            CommandStrings.SHOOT.string   -> shootCommand(splitCommand)
+            CommandStrings.BANANA.string  -> bananaCommand(splitCommand)
+            CommandStrings.SELECT.string  -> selectCommand(splitCommand)
+            CommandStrings.NOTHING.string -> DoNothingCommand(config)
+            else                          -> InvalidCommand("Unknown command: $rawCommand")
+        }
+    }
+
+    private fun bananaCommand(splitCommand: List<String>): WormsCommand {
+        if (splitCommand.size != 3) {
+            return InvalidCommand("Cannot parse banana command: Invalid length ${splitCommand.size}, expected 3")
+        }
+
+        val x = splitCommand[1].toIntOrNull()
+        val y = splitCommand[2].toIntOrNull()
+
+        return when {
+            x == null || y == null -> InvalidCommand("Cannot parse coordinates: Invalid coordinate x:$x y:$y")
+            else -> BananaCommand(Point(x, y), config)
         }
     }
 
     private fun selectCommand(splitCommand: List<String>): WormsCommand {
         if (splitCommand.size != 2) {
-            return InvalidCommand("Cannot parse move command: Invalid length ${splitCommand.size}, expected 2")
+            return InvalidCommand("Cannot parse select command: Invalid length ${splitCommand.size}, expected 2")
         }
 
         val wormId = splitCommand[1].toIntOrNull()
@@ -96,6 +113,6 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
     }
 
     companion object {
-        private val logger = KotlinLogging.logger{}
+        private val logger = KotlinLogging.logger {}
     }
 }

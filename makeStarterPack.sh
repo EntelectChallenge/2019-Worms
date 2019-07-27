@@ -9,7 +9,8 @@ cp default-config.json ../starter-pack/game-config.json
 cd ..
 
 cd game-runner
-cp makefile run.bat game-runner-config.json ../starter-pack
+cp makefile run.bat ../starter-pack
+cp starter-pack-runner-config.json ../starter-pack/game-runner-config.json
 cp target/*with-dependencies.jar ../starter-pack
 cd ..
 

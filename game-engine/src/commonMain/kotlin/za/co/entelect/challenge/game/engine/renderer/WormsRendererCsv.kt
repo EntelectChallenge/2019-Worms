@@ -18,14 +18,18 @@ class WormsRendererCsv(val config: GameConfig) : WormsRenderer {
         return "Not implemented for the csv state file"
     }
 
-    override fun render(wormsMap: WormsMap, player: WormsPlayer): String {
+    override fun render(wormsMap: WormsMap, player: WormsPlayer?): String {
+        if (player == null) {
+            throw UnsupportedOperationException("Cannot call CSV Render with a null player parameter")
+        }
+
         val header = if (wormsMap.currentRound == 1) {
             val wormHeaders = player.worms.flatMap { listOf("Worm${it.id} Health", "Worm${it.id} x", "Worm${it.id} y") }
             (standardHeaders + wormHeaders).joinToString(separator = config.csvSeparator, postfix = EOL)
         } else ""
 
         val command = wormsMap.getFeedback(wormsMap.currentRound - 1)
-                .firstOrNull { it.playerId == player.id }?.command
+                .firstOrNull { it.playerId == player.id && !it.command.startsWith("select") }?.command
         val commandType = command?.run {
             val firstSpace = this.indexOf(' ')
             if (firstSpace != -1) {

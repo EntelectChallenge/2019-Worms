@@ -1,10 +1,12 @@
 package za.co.entelect.challenge.game.engine.map
 
-import za.co.entelect.challenge.game.engine.command.feedback.CommandFeedback
+import za.co.entelect.challenge.game.engine.command.feedback.*
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.processor.GameError
+import za.co.entelect.challenge.game.engine.renderer.printables.VisualizerEvent
+import kotlin.js.JsName
 
 interface GameMap {
     val players: List<WormsPlayer>
@@ -34,7 +36,7 @@ interface GameMap {
     fun detectRefereeIssues()
     fun getRefereeIssues(): List<String>
     fun setScoresForKilledWorms(config: GameConfig)
-
+    fun getVisualizerEvents(): List<VisualizerEvent>
 }
 
 class WormsMap(override val players: List<WormsPlayer>,
@@ -184,6 +186,10 @@ class WormsMap(override val players: List<WormsPlayer>,
                             }
                     worm.lastAttackedBy.clear()
                 }
+    }
+
+    override fun getVisualizerEvents(): List<VisualizerEvent> {
+        return allFeedback[currentRound]?.mapNotNull { it.visualizerEvent } ?: emptyList()
     }
 
 }

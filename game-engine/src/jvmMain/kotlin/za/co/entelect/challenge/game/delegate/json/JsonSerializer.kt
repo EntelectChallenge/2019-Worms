@@ -9,4 +9,5 @@ actual class JsonSerializer {
     actual fun toJson(obj: Any): String {
         return gson.toJson(obj)
     }
+
 }

@@ -9,11 +9,10 @@ class MapCell(var x: Int = -1,
 
     constructor(cellType: CellType = CellType.AIR) : this(type = cellType)
 
+    var destroyedInRound: Int? = null
     var occupier: Worm? = null
     var powerup: Powerup? = null
-
     val ipInfo = ImageProcessingInfo()
-
     val position get() = Point(x, y)
 
     fun isOccupied(): Boolean {
