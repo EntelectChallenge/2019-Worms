@@ -21,6 +21,7 @@ The game is played on a grid of **33x33** cells. Every cell is one of the follow
 * Air - worms can move into and shoot through air cells
 * Dirt - worms cannot move into or shoot through dirt cells, it has be dug out first
 * Deep Space - worms cannot interact with deep space cells
+* Lava - worms can move and shoot into lava cells, worms will sustain damage every round that they are in a lava cell
 
 Cells can contain powerups. Powerups are picked up when a worm moves onto a cell. 
 * A Healthpack will immediately restore **10** health to the worm who picks it up. 
@@ -114,7 +115,7 @@ The format of the Banana Bomb command is `banana x y`
     * If your opponent dug out 1 of these dirt blocks, your banana bomb will not get score for that block, since dig commands are executed before banana bomb commands 
     * When both players throw a banana bomb onto the same area, both players will get score for the dirt blocks destroyed as if their banana bomb was the first to hit
   * The Banana bomb will destroy any powerups in the damage radius
-  * Lava inside the explosion radius will be blow away and ejected, leaving only deep space cells behind
+  * Lava inside the explosion radius will be blown away and ejected, leaving only deep space cells behind
     * Worms standing on top of this lava, will immediately be knocked unconscious
 * When a worm's health is 0 or lower, it will fall unconscious and be removed from the map 
 * Be careful! Friendly fire will damage your own worms

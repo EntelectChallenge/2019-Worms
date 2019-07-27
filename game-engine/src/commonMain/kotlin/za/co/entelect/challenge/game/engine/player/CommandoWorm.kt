@@ -10,7 +10,6 @@ object CommandoWorm : WormBuilder {
                 health = config.commandoWorms.initialHp,
                 position = position,
                 weapon = Weapon.fromWeapon(config.commandoWorms.weapon),
-                snowballs = null,
                 diggingRange = config.commandoWorms.diggingRange,
                 movementRange = config.commandoWorms.movementRage,
                 profession = config.commandoWorms.professionName)
@@ -20,7 +19,6 @@ object CommandoWorm : WormBuilder {
         return Worm(id = id,
                 health = config.commandoWorms.initialHp,
                 weapon = Weapon.fromWeapon(config.commandoWorms.weapon),
-                snowballs = null,
                 diggingRange = config.commandoWorms.diggingRange,
                 movementRange = config.commandoWorms.movementRage,
                 profession = config.commandoWorms.professionName)

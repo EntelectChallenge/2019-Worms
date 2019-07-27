@@ -11,7 +11,6 @@ object AgentWorm : WormBuilder {
                 position = position,
                 weapon = Weapon.fromWeapon(config.agentWorms.weapon),
                 bananas = Bananas.fromBananas(config.agentWorms.bananas),
-                snowballs = null,
                 diggingRange = config.agentWorms.diggingRange,
                 movementRange = config.agentWorms.movementRage,
                 profession = config.agentWorms.professionName)
@@ -22,7 +21,6 @@ object AgentWorm : WormBuilder {
                 health = config.agentWorms.initialHp,
                 weapon = Weapon.fromWeapon(config.agentWorms.weapon),
                 bananas = Bananas.fromBananas(config.agentWorms.bananas),
-                snowballs = null,
                 diggingRange = config.agentWorms.diggingRange,
                 movementRange = config.agentWorms.movementRage,
                 profession = config.agentWorms.professionName)

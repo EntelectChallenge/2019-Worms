@@ -74,7 +74,7 @@ class BananaCommandIntegrationTest {
 
         val agentWorm = wormsPlayer.worms.first { it.bananas != null }
         assertEquals(expected, agentWorm.bananas?.count,
-                "Player ${wormsPlayer.id} banana count is incorrect")
+                "Player ${wormsPlayer.id} banana count correct")
 
         val pattern = "Banana bombs count: (\\d)".toRegex()
 
@@ -83,7 +83,7 @@ class BananaCommandIntegrationTest {
         Assert.assertEquals(1, matchResult.size)
 
         val (count) = matchResult[0].destructured
-        assertEquals(expected, count.toInt(), "Player ${wormsPlayer.id} banana count rendered incorrectly")
+        assertEquals(expected, count.toInt(), "Player ${wormsPlayer.id} banana count rendered correct")
     }
 
 }
