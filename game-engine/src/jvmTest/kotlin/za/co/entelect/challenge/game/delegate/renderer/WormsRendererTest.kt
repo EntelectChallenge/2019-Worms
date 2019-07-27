@@ -237,8 +237,8 @@ class WormsRendererTest {
                 "[" + propertiesFound.joinToString(separator = ", ") + "]")
 
         val indexResultOfTwoOpponents = listOf(
-                """"opponents":[{"id":1,"score":100,""",
-                """}]},{"id":2,"score":100""",
+                """"opponents":[{"id":1,"score":116,""",
+                """}]},{"id":2,"score":116""",
                 """}]}],"map":""")
                 .map { jsonFileString.indexOf(it) }
                 .fold(-1) { sum, c -> max(sum, c) }

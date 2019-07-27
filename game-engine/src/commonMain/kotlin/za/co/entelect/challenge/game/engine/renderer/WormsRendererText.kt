@@ -52,7 +52,6 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
             |Health: ${wormGameDetails.myPlayer.health}
             |Current Worm: ${wormGameDetails.myPlayer.currentWormId}
             |Worms: $myPlayerWorms
-            |Previous Command: ${wormGameDetails.myPlayer.previousCommand}
             """.trimMargin()
 
         val opponentPlayers = wormGameDetails.opponents

@@ -11,10 +11,11 @@ Pushback damage: 20
 Lava damage: 3
 
 @02 My Player
-Section lines count: 65
+Section lines count: 66
 Player id: 1
 Score: 179
 Selection Tokens: 4
+Previous Command: nothing
 Health: 350
 Current Worm: 3
 Worms: 
@@ -77,10 +78,11 @@ Snowballs count: 3
 Snowballs freeze radius: 1
 
 @03 Opponents
-Section lines count: 36
+Section lines count: 37
 Player id: 2
 Score: 121
 Selection Tokens: 5
+Previous Command: nothing
 Current Worm: 2
 Worms: 
 
