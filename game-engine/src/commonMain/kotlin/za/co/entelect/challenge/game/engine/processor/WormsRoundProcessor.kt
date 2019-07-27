@@ -17,6 +17,9 @@ class WormsRoundProcessor(val config: GameConfig) {
         logger.info { "Progressing BattleRoyale" }
         wormsMap.progressBattleRoyale(config)
 
+        logger.info { "Ticking worm frozen timers" }
+        wormsMap.tickFrozenTimers()
+
         val mutableCommandsMap = wormsCommands.toMutableMap()
         executeSelectCommands(mutableCommandsMap, wormsMap)
         executeOtherCommands(mutableCommandsMap, wormsMap)

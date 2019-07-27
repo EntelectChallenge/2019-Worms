@@ -152,6 +152,35 @@ class BananaCommandTest {
                                 """.trimMargin())
         assertEquals(result.score, 113)
     }
+    
+    @Test
+    fun test_banana_on_lava_makes_deep_space() {
+        val targetWorm = CommandoWorm.build(0, config, Point(0, 1))
+        val targetPlayer = WormsPlayer.build(0, listOf(targetWorm), config)
+
+        val attacker = AgentWorm.build(0, config, Point(0, 0))
+        val attackingPlayer = WormsPlayer.build(1, listOf(attacker), config)
+
+        val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 15, CellType.LAVA)
+
+        val targetCoordinate = Point(3, 3)
+        val testCommand = BananaCommand(targetCoordinate, config)
+        val result = testCommand.execute(testMap, attacker)
+
+        val visualMap = Point.getAllPointsOfASquare(0, 6).map { testMap[it].type }
+                .chunked(7)
+                .joinToString(separator = "\n") { line -> line.joinToString(separator = "") { it.printable } }
+        assertEquals(visualMap, """
+                                |XXXXXXXXXXXXXX
+                                |XXXXXX██XXXXXX
+                                |XXXX██████XXXX
+                                |XX██████████XX
+                                |XXXX██████XXXX
+                                |XXXXXX██XXXXXX
+                                |XXXXXXXXXXXXXX
+                                """.trimMargin())
+        assertEquals(0, result.score)
+    }
 
     @Test
     fun test_banana_does_splash_damage() {

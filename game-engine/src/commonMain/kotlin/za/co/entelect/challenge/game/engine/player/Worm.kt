@@ -11,7 +11,7 @@ open class Worm(val id: Int,
                 var snowballs: Snowballs? = null,
                 val diggingRange: Int,
                 val movementRange: Int,
-                var roundsUntilUnfrozen: Int? = 0,
+                var roundsUntilUnfrozen: Int = 0,
                 val profession: String) : Printable {
 
     constructor(id: Int,
@@ -101,6 +101,10 @@ open class Worm(val id: Int,
 
     override fun toString(): String {
         return "Worm(player=${player.id}, id=$id)"
+    }
+
+    fun tickFrozenTimer() {
+        roundsUntilUnfrozen = (--roundsUntilUnfrozen).coerceAtLeast(0)
     }
 
 }

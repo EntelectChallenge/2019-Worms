@@ -7,8 +7,10 @@ import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithC
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
-import za.co.entelect.challenge.game.engine.player.*
-import za.co.entelect.challenge.game.engine.processor.WormsRoundProcessor
+import za.co.entelect.challenge.game.engine.player.CommandoWorm
+import za.co.entelect.challenge.game.engine.player.TechnologistWorm
+import za.co.entelect.challenge.game.engine.player.Worm
+import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -62,7 +64,6 @@ class SnowballCommandTest {
         assertTrue(result.success)
     }
 
-
     @Test
     fun test_validate_out_of_bounds() {
         val (attacker, _, testMap) = getBasicPlayersSetup(2)
@@ -93,17 +94,6 @@ class SnowballCommandTest {
         val beyondRangeCoordinate = Point(config.technologistWorms.snowballs?.range!! + 1, 0)
         val testCommand = SnowballCommand(beyondRangeCoordinate, config)
         assertFalse(testCommand.validate(testMap, attacker).isValid)
-    }
-
-    @Test
-    fun test_freeze_lifecycle() {
-        val (attacker, target, testMap) = getBasicPlayersSetup(8)
-
-        val beyondRangeCoordinate = Point(config.technologistWorms.snowballs?.range!! + 1, 0)
-        val testCommand = SnowballCommand(beyondRangeCoordinate, config)
-        assertFalse(testCommand.validate(testMap, attacker).isValid)
-
-        val roundProcessor = WormsRoundProcessor(config)
     }
 
     private fun getBasicPlayersSetup(mapSize: Int): Triple<Worm, Worm, WormsMap> {
@@ -142,6 +132,35 @@ class SnowballCommandTest {
                                 |▓▓▓▓▓▓▓▓▓▓▓▓▓▓
                                 |▓▓▓▓▓▓▓▓▓▓▓▓▓▓
                                 |▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+                                """.trimMargin())
+        assertEquals(0, result.score)
+    }
+
+    @Test
+    fun test_snowball_turns_lava_into_dirt() {
+        val targetWorm = CommandoWorm.build(0, config, Point(1, 1))
+        val targetPlayer = WormsPlayer.build(0, listOf(targetWorm), config)
+
+        val attacker = TechnologistWorm.build(0, config, Point(0, 0))
+        val attackingPlayer = WormsPlayer.build(1, listOf(attacker), config)
+
+        val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 15, CellType.LAVA)
+
+        val targetCoordinate = Point(3, 3)
+        val testCommand = SnowballCommand(targetCoordinate, config)
+        val result = testCommand.execute(testMap, attacker)
+
+        val visualMap = Point.getAllPointsOfASquare(0, 6).map { testMap[it].type }
+                .chunked(7)
+                .joinToString(separator = "\n") { line -> line.joinToString(separator = "") { it.printable } }
+        assertEquals(visualMap, """
+                                |XXXXXXXXXXXXXX
+                                |XXXXXXXXXXXXXX
+                                |XXXX▓▓▓▓▓▓XXXX
+                                |XXXX▓▓▓▓▓▓XXXX
+                                |XXXX▓▓▓▓▓▓XXXX
+                                |XXXXXXXXXXXXXX
+                                |XXXXXXXXXXXXXX
                                 """.trimMargin())
         assertEquals(0, result.score)
     }

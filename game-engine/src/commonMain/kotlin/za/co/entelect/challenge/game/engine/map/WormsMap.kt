@@ -39,6 +39,7 @@ interface GameMap {
     fun setScoresForKilledWorms(config: GameConfig)
     fun getVisualizerEvents(): List<VisualizerEvent>
     fun progressBattleRoyale(config: GameConfig)
+    fun tickFrozenTimers()
 }
 
 class WormsMap(override val players: List<WormsPlayer>,
@@ -211,6 +212,10 @@ class WormsMap(override val players: List<WormsPlayer>,
         livingPlayers.flatMap { it.livingWorms }
                 .filter { cells.any { cell -> cell.type == CellType.LAVA && cell.position == it.position } }
                 .forEach { worm -> worm.takeDamage(config.lavaDamage, currentRound) }
+    }
+
+    override fun tickFrozenTimers() {
+        this.livingPlayers.flatMap { it.livingWorms }.forEach { it.tickFrozenTimer() }
     }
 
 }

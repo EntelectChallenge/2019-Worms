@@ -161,9 +161,16 @@ class WormsRendererTest {
     fun test_print_example_map_files() {
         val wormsPlayers = buildWormsPlayerDefault(config)
         val player1 = wormsPlayers.first()
+        val player2 = wormsPlayers.last()
 
         val wormsMapGenerator = WormsMapGenerator(config, 0)
         val wormsMap = wormsMapGenerator.getMap(wormsPlayers)
+
+        val roundProcessor = WormsRoundProcessor(config)
+        wormsMap.currentRound=115
+        roundProcessor.processRound(wormsMap, mapOf(
+                Pair(player1, listOf(SelectCommand(2), BananaCommand(Point(1, 12), config))),
+                Pair(player2, listOf(TeleportCommand(31, 15, Random(0), config)))))
 
         val rendererText = WormsRendererText(config)
         val rendererJson = WormsRendererJson(config)
