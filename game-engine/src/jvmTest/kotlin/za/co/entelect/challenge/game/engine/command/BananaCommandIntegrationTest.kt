@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.command
 
 import org.junit.Assert
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.game.GamePlayer
 import za.co.entelect.challenge.game.contracts.map.GameMap

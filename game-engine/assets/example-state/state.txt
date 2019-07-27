@@ -10,10 +10,11 @@ Worms per player: 3
 Pushback damage: 4
 
 @02 My Player
-Section lines count: 50
+Section lines count: 52
 Player id: 1
 Score: 100
 Selection Tokens: 1
+Previous Command: nothing
 Health: 300
 Current Worm: 1
 Worms: 
@@ -59,12 +60,14 @@ Banana bomb damage: 20
 Banana bomb range: 5
 Banana bombs count: 3
 Banana bomb damage radius: 2
+Previous Command: nothing
 
 @03 Opponents
-Section lines count: 33
+Section lines count: 34
 Player id: 2
 Score: 100
 Selection Tokens: 1
+Previous Command: nothing
 Current Worm: 1
 Worms: 
 

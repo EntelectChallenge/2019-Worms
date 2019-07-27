@@ -19,7 +19,7 @@ class WormsRendererCsvTest {
             """|Round,LastCommandType,LastCommand,ActiveWorm,Score,Health,Worm1 Health,Worm1 x,Worm1 y,Worm2 Health,Worm2 x,Worm2 y,Worm3 Health,Worm3 x,Worm3 y
                |1,null,"null",1,35,60,10,0,1,20,2,3,30,4,5""".trimMargin()
 
-    private val round2Expected = """2,move,"move (22, 28)",1,35,60,10,0,1,20,2,3,30,4,5"""
+    private val round2Expected = """2,move,"move 22 28",1,35,60,10,0,1,20,2,3,30,4,5"""
 
     private val renderer = WormsRendererCsv(config)
 
@@ -52,7 +52,7 @@ class WormsRendererCsvTest {
         val (player, map) = setupMap()
         map.currentRound = 1
         map.addFeedback(StandardCommandFeedback(command = "${CommandStrings.SELECT.string} 1", score = 0, playerId = player.id))
-        map.addFeedback(StandardCommandFeedback(command = "${CommandStrings.MOVE.string} (22, 28)", score = 0, playerId = player.id))
+        map.addFeedback(StandardCommandFeedback(command = "${CommandStrings.MOVE.string} 22 28", score = 0, playerId = player.id))
 
         //Renderers get called at the beginning of a round
         map.currentRound = 2

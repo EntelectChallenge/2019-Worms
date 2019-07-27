@@ -50,6 +50,7 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
             |Health: ${wormGameDetails.myPlayer.health}
             |Current Worm: ${wormGameDetails.myPlayer.currentWormId}
             |Worms: $myPlayerWorms
+            |Previous Command: ${wormGameDetails.myPlayer.previousCommand}
             """.trimMargin()
 
         val opponentPlayers = wormGameDetails.opponents
@@ -120,7 +121,8 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
     private fun getBasePlayerText(player: PrintablePlayer?): String {
         return """|Player id: ${player?.id}
                   |Score: ${player?.score}
-                  |Selection Tokens: ${player?.remainingWormSelections}"""
+                  |Selection Tokens: ${player?.remainingWormSelections}
+                  |Previous Command: ${player?.previousCommand}"""
     }
 
     private fun getBaseWormText(worm: PrintableWorm): String {

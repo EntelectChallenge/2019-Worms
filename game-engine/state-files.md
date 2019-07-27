@@ -15,6 +15,7 @@
   * health → *The sum of all your worms' hitpoints*
   * currentWormId  → *The Id number of your worm that is currently in play. This is the same as the currentWormId above*
   * remainingWormSelections → *The amount of custom selections via the Select command that is available to the player*
+  * previousCommand → *The command which your bot supplied to the engine on the last round as a string.  e.g. 'move 20 9'.  Note that it doesn't contain 'C;\<number\>;'*
   * worms → *The list of all your worms. Worms in this list look like a **[default worm](#default-worm-properties)**, and in addition you can also see these extra attributes of your own worms:*
     * weapon → *The weapon that this worm is capable of using*
       * damage → *The number of hitpoints that this weapon can remove per shot*
@@ -30,6 +31,7 @@
   * id → *The Id number of this player*
   * score → *This player's score points currently acquired*
   * currentWormId  → *The Id number of the opponent player's worm that is currently in play*
+  * previousCommand → *The command which this opponent bot supplied to the engine on the last round as a string.  e.g. 'move 20 9'.  Note that it doesn't contain 'C;\<number\>;'*
   * worms → *A list of all the worms under this player's control. Worms in this list look like a **[default worm](#default-worm-properties)***
   
    
@@ -87,6 +89,7 @@ This file is encoded using UTF-8
     * Banana bomb range → *The distance to which this can be thrown* 
     * Banana bombs count → *The amount of Banana Bombs in this worm's inventory* 
     * Banana bomb damage radius → *The radius to which the impact will destroy dirt blocks and damage worms* 
+  * Previous Command → *The command which your bot supplied to the engine on the last round as a string.  e.g. 'move 20 9'.  Note that it doesn't contain 'C;\<number\>;'*
 
 
 * @&#8203;03 Opponents → *Section denoting the list of opponents in this match*
@@ -95,6 +98,7 @@ This file is encoded using UTF-8
   * Score → *This player's score points currently acquired*
   * Current worm id → *The Id number of the opponent player's worm that is currently in play*
   * Worms → *A list of all the worms under this player's control. Worms in this list look like a **[default worm](#default-text-worm-properties)***
+  * Previous Command → *The command which this opponent bot supplied to the engine on the last round as a string.  e.g. 'move 20 9'.  Note that it doesn't contain 'C;\<number\>;'*
 
 
 * @&#8203;04 Special Items → *Section denoting the special items in this match*

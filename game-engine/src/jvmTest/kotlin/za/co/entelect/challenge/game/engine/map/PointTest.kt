@@ -20,7 +20,7 @@ class PointTest {
         assertNotEquals(pointC.abs(), pointC)
         assertEquals(pointA.plus(pointB), pointB)
         assertEquals(pointA.minus(pointB), Point(-10, -10))
-        assertEquals(pointA.toString(), "(0, 0)")
+        assertEquals(pointA.toString(), "0 0")
     }
 
 }

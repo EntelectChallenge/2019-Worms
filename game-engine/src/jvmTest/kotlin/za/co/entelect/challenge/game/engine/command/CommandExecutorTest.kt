@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.command
 
 import com.nhaarman.mockitokotlin2.*
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.command.feedback.StandardCommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
@@ -42,7 +43,7 @@ class CommandExecutorTest {
     fun test_validMove() {
         val validCommand: WormsCommand = mock {
             on { validate(any(), any()) }.doReturn(CommandValidation.validMove())
-            on { execute(any(), any()) }.doReturn(StandardCommandFeedback("nothing", 10, 1))
+            on { execute(any(), any()) }.doReturn(StandardCommandFeedback(CommandStrings.NOTHING.string, 10, 1))
         }
 
         val executor = CommandExecutor(player, mockMap, validCommand, config)

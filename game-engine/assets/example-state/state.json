@@ -63,7 +63,8 @@
         "movementRange": 1,
         "profession": "Agent"
       }
-    ]
+    ],
+    "previousCommand": "nothing"
   },
   "opponents": [
     {
@@ -105,7 +106,8 @@
           "movementRange": 1,
           "profession": "Agent"
         }
-      ]
+      ],
+      "previousCommand": "nothing"
     }
   ],
   "map": [
