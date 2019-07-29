@@ -175,17 +175,15 @@ class WormsMap(override val players: List<WormsPlayer>,
     override fun setScoresForKilledWorms(config: GameConfig) {
         players.flatMap { it.worms }
                 .filter { it.dead && it.lastAttackedBy.any() }
-                .forEach { worm ->
-                    worm.lastAttackedBy
-                            .distinct()
-                            .forEach { attacker ->
-                                when (attacker) {
-                                    worm.player -> attacker.commandScore -= config.scores.killShot
-                                    else -> attacker.commandScore += config.scores.killShot
-                                }
-                            }
-                    worm.lastAttackedBy.clear()
+                .flatMap { worm -> worm.lastAttackedBy.distinct().map { attacker -> Pair(worm, attacker) } }
+                .forEach { (worm, attacker) ->
+                    when (attacker) {
+                        worm.player -> attacker.commandScore -= config.scores.killShot
+                        else -> attacker.commandScore += config.scores.killShot
+                    }
                 }
+
+        players.flatMap { it.worms }.forEach { it.lastAttackedBy.clear() }
     }
 
     override fun getVisualizerEvents(): List<VisualizerEvent> {
