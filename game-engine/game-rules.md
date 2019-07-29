@@ -115,8 +115,6 @@ The format of the Banana Bomb command is `banana x y`
     * If your opponent dug out 1 of these dirt blocks, your banana bomb will not get score for that block, since dig commands are executed before banana bomb commands 
     * When both players throw a banana bomb onto the same area, both players will get score for the dirt blocks destroyed as if their banana bomb was the first to hit
   * The Banana bomb will destroy any powerups in the damage radius
-  * Lava inside the explosion radius will be blown away and ejected, leaving only deep space cells behind
-    * Worms standing on top of this lava, will immediately be knocked unconscious
 * When a worm's health is 0 or lower, it will fall unconscious and be removed from the map 
 * Be careful! Friendly fire will damage your own worms
   *  You will be penalised with negative score based on the damage dealt
@@ -143,7 +141,6 @@ The format of the Snowball command is `snowball x y`
   * The Snowball hit at the "▓▓" cell.
     * Worms in the impact cell "▓▓", as well as those in the radius cells "██", are all frozen
     * You will be awarded **17** points for each worm you froze
-  * The Snowball will turn lava into dirt when within the effect radius
   * The Snowball will not destroy powerups
 * Be careful! Friendly fire will freeze your own worms
   *  You will be penalised with negative points based on the amount of worms frozen
@@ -158,8 +155,9 @@ The format of the select command is `select {worm id};{command}`
   * The following are examples for valid commands, hypothetically for round 5, selecting worm 1
     * ` C;5;select 1;move 1 1`
     * ` C;5;select 1;dig 1 1`
-    * ` C;5;select 1;banana 1 1`
     * ` C;5;select 1;shoot N`
+    * ` C;5;select 1;banana 1 1`
+    * ` C;5;select 1;snowball 1 1`
 * This will override the selected worm for your player, meaning that in the next round your 
 selected worm index will start cycling from this selected worm 
 

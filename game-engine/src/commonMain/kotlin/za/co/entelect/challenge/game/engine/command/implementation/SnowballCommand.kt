@@ -63,10 +63,6 @@ class SnowballCommand(val target: Point, val config: GameConfig) : WormsCommand 
                     }
 
                     affectedCells.add(cell)
-                    if (cell.type == CellType.LAVA) {
-                        cell.type = CellType.DIRT
-                    }
-
                     if (cell.isOccupied()) {
                         val occupier = cell.occupier!!
                         val isAlly = (occupier.player == worm.player)

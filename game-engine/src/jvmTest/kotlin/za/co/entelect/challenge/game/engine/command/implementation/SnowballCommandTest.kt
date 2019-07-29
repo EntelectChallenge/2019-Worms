@@ -137,36 +137,7 @@ class SnowballCommandTest {
     }
 
     @Test
-    fun test_snowball_turns_lava_into_dirt() {
-        val targetWorm = CommandoWorm.build(0, config, Point(1, 1))
-        val targetPlayer = WormsPlayer.build(0, listOf(targetWorm), config)
-
-        val attacker = TechnologistWorm.build(0, config, Point(0, 0))
-        val attackingPlayer = WormsPlayer.build(1, listOf(attacker), config)
-
-        val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 15, CellType.LAVA)
-
-        val targetCoordinate = Point(3, 3)
-        val testCommand = SnowballCommand(targetCoordinate, config)
-        val result = testCommand.execute(testMap, attacker)
-
-        val visualMap = Point.getAllPointsOfASquare(0, 6).map { testMap[it].type }
-                .chunked(7)
-                .joinToString(separator = "\n") { line -> line.joinToString(separator = "") { it.printable } }
-        assertEquals(visualMap, """
-                                |XXXXXXXXXXXXXX
-                                |XXXXXXXXXXXXXX
-                                |XXXX▓▓▓▓▓▓XXXX
-                                |XXXX▓▓▓▓▓▓XXXX
-                                |XXXX▓▓▓▓▓▓XXXX
-                                |XXXXXXXXXXXXXX
-                                |XXXXXXXXXXXXXX
-                                """.trimMargin())
-        assertEquals(0, result.score)
-    }
-
-    @Test
-    fun test_snowball_does_splash_damage() {
+    fun test_snowball_does_splash_freeze() {
         val targetWormsLineA = (2..5).map { CommandoWorm.build(0, config, Point(it, 0)) }
         val targetWormsLineB = (2..5).map { CommandoWorm.build(0, config, Point(it, 1)) }
         val allTargetWorms = targetWormsLineA + targetWormsLineB

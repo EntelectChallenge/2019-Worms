@@ -85,21 +85,6 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
                         affectedCells.add(cell)
                     }
 
-                    if (cell.type == CellType.LAVA) {
-                        cell.type = CellType.DEEP_SPACE
-                        // Worms on top of lava become instant killed by banana bombs
-                        if (cell.isOccupied()) {
-                            val occupier = cell.occupier!!
-                            occupier.takeDamage(occupier.health, gameMap.currentRound, worm.player)
-
-                            val isAlly = (occupier.player == worm.player)
-                            when {
-                                isAlly -> totalDamageDone -= occupier.health
-                                else -> totalDamageDone += occupier.health
-                            }
-                        }
-                    }
-
                     cell.powerup = null
 
                     if (cell.isOccupied()) {
