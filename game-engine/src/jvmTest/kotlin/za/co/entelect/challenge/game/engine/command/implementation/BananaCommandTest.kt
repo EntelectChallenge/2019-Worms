@@ -18,9 +18,6 @@ class BananaCommandTest {
 
     private val config: GameConfig = TEST_CONFIG
 
-    private fun getAllPointsOfSquare(start: Int, end: Int) =
-            (start..end).flatMap { x -> (start..end).map { y -> Point(x, y) } }
-
     @Test
     fun test_valid_close() {
         val targetPlayer = WormsPlayer.build(0, listOf(CommandoWorm.build(0, config, Point(1, 1))), config)
@@ -73,9 +70,9 @@ class BananaCommandTest {
         assertTrue(commandValidation.isValid, "Expected a valid banana command")
 
         val result = testCommand.execute(testMap, attacker)
-        assertEquals(result.result, BananaResult.TERRAIN)
-        assertEquals(result.target, overTheWallCoordinate)
-        assertEquals(result.score, 8)
+        assertEquals(BananaResult.TERRAIN, result.result)
+        assertEquals(overTheWallCoordinate, result.target)
+        assertEquals(15, result.score)
         assertTrue(result.success)
     }
 
@@ -141,7 +138,7 @@ class BananaCommandTest {
         val testCommand = BananaCommand(targetCoordinate, config)
         val result = testCommand.execute(testMap, attacker)
 
-        val visualMap = getAllPointsOfSquare(0, 6).map { testMap[it].type }
+        val visualMap = Point.getAllPointsOfASquare(0, 6).map { testMap[it].type }
                 .chunked(7)
                 .joinToString(separator = "\n") { line -> line.joinToString(separator = "") { it.printable } }
         assertEquals(visualMap, """
@@ -153,9 +150,9 @@ class BananaCommandTest {
                                 |▓▓▓▓▓▓░░▓▓▓▓▓▓
                                 |▓▓▓▓▓▓▓▓▓▓▓▓▓▓
                                 """.trimMargin())
-        assertEquals(result.score, 63)
+        assertEquals(result.score, 113)
     }
-
+    
     @Test
     fun test_banana_does_splash_damage() {
         val targetWormsLineA = (2..5).map { CommandoWorm.build(0, config, Point(it, 0)) }
@@ -173,7 +170,7 @@ class BananaCommandTest {
         val result = testCommand.execute(testMap, attacker)
         assertEquals(result.result, BananaResult.BULLSEYE)
 
-        val damages = allTargetWorms.map { Pair(it.position, config.agentWorms.initialHp - it.health) }
+        val damages = allTargetWorms.map { Pair(it.position, config.commandoWorms.initialHp - it.health) }
 
         val listOfExpectedDamages = listOf(
                 20, 13, 7, 0,

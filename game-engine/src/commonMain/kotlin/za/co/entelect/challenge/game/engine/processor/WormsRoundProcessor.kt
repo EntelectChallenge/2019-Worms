@@ -13,6 +13,13 @@ class WormsRoundProcessor(val config: GameConfig) {
 
     fun processRound(wormsMap: WormsMap, wormsCommands: Map<WormsPlayer, List<WormsCommand>>): Boolean {
         logger.info { "Processing round: Round=${wormsMap.currentRound}" }
+
+        logger.info { "Progressing BattleRoyale" }
+        wormsMap.progressBattleRoyale(config)
+
+        logger.info { "Ticking worm frozen timers" }
+        wormsMap.tickFrozenTimers()
+
         val mutableCommandsMap = wormsCommands.toMutableMap()
         executeSelectCommands(mutableCommandsMap, wormsMap)
         executeOtherCommands(mutableCommandsMap, wormsMap)

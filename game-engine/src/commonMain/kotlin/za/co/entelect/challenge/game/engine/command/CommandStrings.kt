@@ -5,6 +5,7 @@ enum class CommandStrings(val string: String) {
     DIG("dig"),
     SHOOT("shoot"),
     BANANA("banana"),
+    SNOWBALL("snowball"),
     SELECT("select"),
     NOTHING("nothing")
 }

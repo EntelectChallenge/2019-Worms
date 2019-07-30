@@ -1,11 +1,9 @@
 package za.co.entelect.challenge.game.delegate.renderer
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.command.implementation.BananaCommand
-import za.co.entelect.challenge.game.engine.command.implementation.DoNothingCommand
 import za.co.entelect.challenge.game.engine.command.implementation.SelectCommand
 import za.co.entelect.challenge.game.engine.command.implementation.TeleportCommand
 import za.co.entelect.challenge.game.engine.config.GameConfig
@@ -18,7 +16,6 @@ import za.co.entelect.challenge.game.engine.map.WormsMapGenerator
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
 import za.co.entelect.challenge.game.engine.processor.WormsRoundProcessor
-import za.co.entelect.challenge.game.engine.renderer.WormsGameDetails
 import za.co.entelect.challenge.game.engine.renderer.WormsRendererConsole
 import za.co.entelect.challenge.game.engine.renderer.WormsRendererJson
 import za.co.entelect.challenge.game.engine.renderer.WormsRendererText
@@ -28,7 +25,10 @@ import java.io.IOException
 import java.io.OutputStreamWriter
 import kotlin.math.max
 import kotlin.random.Random
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class WormsRendererTest {
 
@@ -161,9 +161,16 @@ class WormsRendererTest {
     fun test_print_example_map_files() {
         val wormsPlayers = buildWormsPlayerDefault(config)
         val player1 = wormsPlayers.first()
+        val player2 = wormsPlayers.last()
 
         val wormsMapGenerator = WormsMapGenerator(config, 0)
         val wormsMap = wormsMapGenerator.getMap(wormsPlayers)
+
+        val roundProcessor = WormsRoundProcessor(config)
+        wormsMap.currentRound=115
+        roundProcessor.processRound(wormsMap, mapOf(
+                Pair(player1, listOf(SelectCommand(2), BananaCommand(Point(1, 12), config))),
+                Pair(player2, listOf(TeleportCommand(31, 15, Random(0), config)))))
 
         val rendererText = WormsRendererText(config)
         val rendererJson = WormsRendererJson(config)
@@ -230,8 +237,8 @@ class WormsRendererTest {
                 "[" + propertiesFound.joinToString(separator = ", ") + "]")
 
         val indexResultOfTwoOpponents = listOf(
-                """"opponents":[{"id":1,"score":100,""",
-                """}]},{"id":2,"score":100""",
+                """"opponents":[{"id":1,"score":116,""",
+                """}]},{"id":2,"score":116""",
                 """}]}],"map":""")
                 .map { jsonFileString.indexOf(it) }
                 .fold(-1) { sum, c -> max(sum, c) }
