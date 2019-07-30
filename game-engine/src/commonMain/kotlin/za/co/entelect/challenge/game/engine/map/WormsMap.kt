@@ -196,11 +196,11 @@ class WormsMap(override val players: List<WormsPlayer>,
         val center = (config.mapSize - 1) / 2.0
         val mapCenter = Pair(center, center)
 
-        val brStartRound = config.maxRounds / 4
+        val brStartRound = config.maxRounds * config.battleRoyaleStart
         if (currentRound < brStartRound) {
             return
         }
-        val brEndRound = config.maxRounds * 0.875
+        val brEndRound = config.maxRounds * config.battleRoyaleEnd
         val fullPercentageRange = (currentRound - brStartRound) / (brEndRound - brStartRound)
         val currentProgress = fullPercentageRange.coerceIn(0.0, 1.0)
 

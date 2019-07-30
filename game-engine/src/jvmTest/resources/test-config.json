@@ -65,5 +65,7 @@
   "wormSelectTokens": {
     "count": 5
   },
-  "csvSeparator": ","
+  "csvSeparator": ",",
+  "battleRoyaleStart": 0.25,
+  "battleRoyaleEnd": 0.875
 }
