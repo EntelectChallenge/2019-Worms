@@ -95,6 +95,11 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         gameResult.matchId = gameRunnerConfig.matchId;
 
         botExecutionContexts = Collections.synchronizedList(new ArrayList<>());
+
+        if (gameRunnerConfig.isTournamentMode) {
+            log.info("Delaying match start for bots to warm up");
+            Thread.sleep(5000);
+        }
     }
 
     @Override
@@ -158,6 +163,17 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             } catch (Exception e) {
                 log.error("Failed to write round information", e);
             }
+        }
+
+
+        try {
+            String roundDirectory = FileUtils.getRoundDirectory(gameMap.getCurrentRound());
+            String globalStateFile = String.format("%s/%s/GlobalState.json", gameRunnerConfig.gameName, roundDirectory);
+
+            String globalStateRender = rendererResolver.resolve(RendererType.JSON).render(gameMap, null);
+            FileUtils.writeToFile(globalStateFile, globalStateRender);
+        } catch (Exception e) {
+            log.error("Failed to write global round information", e);
         }
     }
 
