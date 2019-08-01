@@ -102,7 +102,7 @@ function runStrategy() {
 
     // If other worms are in danger, we could SELECT them and give them a fighting chance
     if (myPlayer.remainingWormSelections > 0) {
-        let otherWorms = myPlayer.worms.filter(worm => worm !== myCurrentWorm);
+        let otherWorms = myPlayer.worms.filter(worm => worm !== myCurrentWorm && worm.health > 0);
         for (let worm of otherWorms) {
             let cellAndTarget = getShootableOpponent(worm);
             if (cellAndTarget) {
