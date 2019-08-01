@@ -6,12 +6,24 @@ import za.co.entelect.challenge.game.engine.map.WormsMap
 
 open class Worm(val id: Int,
                 var health: Int,
-                var weapon: Weapon,
+                val weapon: Weapon,
+                var bananas: Bananas? = null,
+                var snowballs: Snowballs? = null,
                 val diggingRange: Int,
-                val movementRange: Int) : Printable {
+                val movementRange: Int,
+                var roundsUntilUnfrozen: Int = 0,
+                val profession: String) : Printable {
 
-    constructor(id: Int, health: Int, position: Point, weapon: Weapon, diggingRange: Int = 1, movementRange: Int = 1)
-            : this(id, health, weapon, diggingRange, movementRange) {
+    constructor(id: Int,
+                health: Int,
+                position: Point,
+                weapon: Weapon,
+                bananas: Bananas? = null,
+                snowballs: Snowballs? = null,
+                diggingRange: Int = 1,
+                movementRange: Int = 1,
+                profession: String)
+            : this(id, health, weapon, bananas, snowballs, diggingRange, movementRange, 0, profession) {
         this.position = position
         this.previousPosition = position
     }
@@ -20,8 +32,10 @@ open class Worm(val id: Int,
         get() = "${player.id}$id"
 
     var roundMoved: Int = -1
+        private set
 
     var roundHit: Int = -1
+        private set
 
     lateinit var position: Point
         private set
@@ -33,6 +47,8 @@ open class Worm(val id: Int,
 
     val dead: Boolean
         get() = health <= 0
+
+    val lastAttackedBy: MutableList<WormsPlayer> = mutableListOf()
 
     /**
      * Set position and previous position to the same value
@@ -63,18 +79,32 @@ open class Worm(val id: Int,
 
         targetCell.occupier = this
 
-        /**
-         * Right now we only have single use powerups. If that changes,
-         * we can move the clearing logic into the powerup `applyTo` method
-         */
-        targetCell.powerup?.applyTo(this)
-        targetCell.powerup = null
     }
 
-
-    fun takeDamage(damage: Int, round: Int) {
+    /**
+     * Applies damage to worm, and returns the amount of damage that was done
+     */
+    fun takeDamage(damage: Int, round: Int, attacker: WormsPlayer? = null): Int {
         health -= damage
         roundHit = round
+
+        if (attacker != null) lastAttackedBy.add(attacker)
+        return damage
+    }
+
+    /**
+     * If this worm is given a command, they will *let it go* until they thaw out
+     */
+    fun setAsFrozen(freezeDuration: Int) {
+        roundsUntilUnfrozen = freezeDuration
+    }
+
+    override fun toString(): String {
+        return "Worm(player=${player.id}, id=$id)"
+    }
+
+    fun tickFrozenTimer() {
+        roundsUntilUnfrozen = (--roundsUntilUnfrozen).coerceAtLeast(0)
     }
 
 }

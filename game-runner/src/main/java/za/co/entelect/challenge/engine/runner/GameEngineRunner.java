@@ -1,11 +1,13 @@
 package za.co.entelect.challenge.engine.runner;
 
 import io.reactivex.subjects.BehaviorSubject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import za.co.entelect.challenge.config.GameRunnerConfig;
 import za.co.entelect.challenge.engine.exceptions.InvalidRunnerState;
 import za.co.entelect.challenge.game.contracts.command.RawCommand;
+import za.co.entelect.challenge.game.contracts.common.RefereeMessage;
 import za.co.entelect.challenge.game.contracts.exceptions.TimeoutException;
 import za.co.entelect.challenge.game.contracts.game.*;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
@@ -22,12 +24,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameEngineRunner implements LifecycleEngineRunner {
 
     private static final Logger log = LogManager.getLogger(GameEngineRunner.class);
+    private static final String COMMAND_DELIMITER = ";";
 
     private GameRunnerConfig gameRunnerConfig;
 
@@ -37,13 +42,13 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
     private GameMap gameMap;
     private List<Player> players;
+    private RunnerReferee referee;
     private RunnerRoundProcessor roundProcessor;
 
     private GameResult gameResult;
     private GameEngine gameEngine;
     private GameMapGenerator gameMapGenerator;
     private GameRoundProcessor gameRoundProcessor;
-    private GameReferee referee;
 
     private RendererResolver rendererResolver;
     private List<BotExecutionContext> botExecutionContexts;
@@ -90,6 +95,11 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         gameResult.matchId = gameRunnerConfig.matchId;
 
         botExecutionContexts = Collections.synchronizedList(new ArrayList<>());
+
+        if (gameRunnerConfig.isTournamentMode) {
+            log.info("Delaying match start for bots to warm up");
+            Thread.sleep(5000);
+        }
     }
 
     @Override
@@ -120,13 +130,22 @@ public class GameEngineRunner implements LifecycleEngineRunner {
                 BotExecutionContext botExecutionContext = currentPlayer.executeBot(gameMap);
 
                 botExecutionContexts.add(botExecutionContext);
-                roundProcessor.addPlayerCommand(player, new RawCommand(botExecutionContext.command));
+                roundProcessor.addPlayerCommand(player, splitPlayerCommands(botExecutionContext.command));
+                referee.trackExecution(player, botExecutionContext);
             });
             thread.start();
             thread.join();
         }
-        roundProcessor.processRound(addToConsoleOutput);
+        roundProcessor.processRound();
         players.forEach(p -> p.roundComplete(gameMap, gameMap.getCurrentRound()));
+    }
+
+    private List<RawCommand> splitPlayerCommands(String commands) {
+        return Arrays.stream(commands.split(COMMAND_DELIMITER))
+                .map(String::trim)
+                .filter(StringUtils::isNotEmpty)
+                .map(RawCommand::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -145,6 +164,17 @@ public class GameEngineRunner implements LifecycleEngineRunner {
                 log.error("Failed to write round information", e);
             }
         }
+
+
+        try {
+            String roundDirectory = FileUtils.getRoundDirectory(gameMap.getCurrentRound());
+            String globalStateFile = String.format("%s/%s/GlobalState.json", gameRunnerConfig.gameName, roundDirectory);
+
+            String globalStateRender = rendererResolver.resolve(RendererType.JSON).render(gameMap, null);
+            FileUtils.writeToFile(globalStateFile, globalStateRender);
+        } catch (Exception e) {
+            log.error("Failed to write global round information", e);
+        }
     }
 
     @Override
@@ -161,16 +191,26 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             gameResult.winner = winner.getPlayerId();
         }
 
-        players.stream()
-                .map(player -> (BasePlayer) player)
-                .forEach(player -> gameResult.addPlayerResult(player.getPlayerId(),
-                        player.getGamePlayer().getScore()));
+        gameResult.playerAId = gameRunnerConfig.playerAId;
+        gameResult.playerBId = gameRunnerConfig.playerBId;
+
+        for (Player player : players) {
+            BasePlayer basePlayer = (BasePlayer) player;
+            if (basePlayer.getPlayerId().equals(gameRunnerConfig.playerAId)) {
+                gameResult.playerOnePoints = basePlayer.getGamePlayer().getScore();
+            } else if (basePlayer.getPlayerId().equals(gameRunnerConfig.playerBId)) {
+                gameResult.playerTwoPoints = basePlayer.getGamePlayer().getScore();
+            }
+        }
 
         gameResult.roundsPlayed = gameMap.getCurrentRound();
         gameResult.isComplete = true;
-        gameResult.verificationRequired = referee.isMatchValid();
+        gameResult.isSuccessful = true;
 
-        writeEndGameFile(winner);
+        RefereeMessage refereeMessage = referee.isMatchValid(gameMap);
+        gameResult.verificationRequired = !refereeMessage.isValid;
+
+        writeEndGameFile(winner, refereeMessage);
 
         for (Player player : players) {
             player.gameEnded(gameMap);
@@ -181,7 +221,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
         return gameEngine.isGameComplete(gameMap);
     }
 
-    private void writeEndGameFile(Player winner) {
+    private void writeEndGameFile(Player winner, RefereeMessage refereeMessage) {
         StringBuilder winnerStringBuilder = new StringBuilder();
 
         for (Player player : players) {
@@ -219,9 +259,16 @@ public class GameEngineRunner implements LifecycleEngineRunner {
 
             winnerStringBuilder.insert(0, "Match seed: " + gameRunnerConfig.seed + "\n\n");
 
-//            if (!matchSuccessful) {
-//                winnerStringBuilder.insert(0, "Bot did nothing too many consecutive rounds" + "\n\n");
-//            }
+            if (!refereeMessage.isValid) {
+                winnerStringBuilder.append("=======================================\n");
+                winnerStringBuilder.append("Referee messages\n");
+                winnerStringBuilder.append("=======================================\n");
+
+                for (String reason : refereeMessage.reasons) {
+                    winnerStringBuilder.append(reason);
+                    winnerStringBuilder.append("\n");
+                }
+            }
 
             bufferedWriter.write(winnerStringBuilder.toString());
             bufferedWriter.flush();
@@ -250,73 +297,6 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             ((BasePlayer) player).instantiateRenderers(rendererResolver);
             ((BasePlayer) player).gameStarted();
         }
-    }
-
-    private void publishGameComplete(boolean matchDidNotTimeout) throws Exception {
-//        GamePlayer winningPlayer = gameMap.getWinningPlayer();
-//
-//        gameResult.winner = 0;
-//
-//        for (Player player : players) {
-//            player.gameEnded(gameMap);
-//
-//            int score = player.getGamePlayer().getScore();
-//
-//            if (player.getName().substring(0, 1).equals("A")) {
-//                gameResult.playerOnePoints = score;
-//
-//                if (winningPlayer != null && winningPlayer.getScore() == score) {
-//                    gameResult.winner = 1;
-//                }
-//            } else {
-//                gameResult.playerTwoPoints = score;
-//
-//                if (winningPlayer != null && winningPlayer.getScore() == score) {
-//                    gameResult.winner = 2;
-//                }
-//            }
-//        }
-//
-//        gameResult.roundsPlayed = gameMap.getCurrentRound();
-//        gameResult.isComplete = true;
-//        gameResult.isSuccessful = matchDidNotTimeout;
-//
-//        if (!matchDidNotTimeout) {
-//            gameResult.verificationRequired = true;
-//            throw new MatchFailedException("Match timed out");
-//        }
-
-//        int minExpectRounds = 36;
-//        if (gameResult.roundsPlayed < minExpectRounds) {
-//            gameResult.verificationRequired = true;
-//            throw new MatchFailedException("Match duration was " + gameResult.roundsPlayed +
-//                    " rounds, still less than the expected " + minExpectRounds + " rounds");
-//        }
-//
-//        int minExpectScore = gameResult.roundsPlayed * GameConfig.getRoundIncomeEnergy() * GameConfig.getEnergyScoreMultiplier();
-//        if (gameResult.playerOnePoints <= minExpectScore) {
-//            gameResult.verificationRequired = true;
-//            throw new MatchFailedException("BotPlayer One scored only" + gameResult.playerOnePoints +
-//                    " points, not even the expected " + minExpectScore + " points");
-//        }
-//        if (gameResult.playerTwoPoints <= minExpectScore) {
-//            gameResult.verificationRequired = true;
-//            throw new MatchFailedException("BotPlayer Two scored only" + gameResult.playerTwoPoints +
-//                    " points, not even the expected " + minExpectScore + " points");
-//        }
-//
-//        int minExpectTimeouts = 0;
-//        int playerOneTimeOuts = players.get(0).getTimeoutCounts();
-//        if (playerOneTimeOuts > minExpectTimeouts) {
-//            gameResult.verificationRequired = true;
-//            throw new MatchFailedException("BotPlayer One timed out " + playerOneTimeOuts + " times");
-//        }
-//        int playerTwoTimeOuts = players.get(1).getTimeoutCounts();
-//        if (playerTwoTimeOuts > minExpectTimeouts) {
-//            gameResult.verificationRequired = true;
-//            throw new MatchFailedException("BotPlayer Two timed out " + playerTwoTimeOuts + " times");
-//        }
-
     }
 
     public static class Builder {
@@ -372,7 +352,7 @@ public class GameEngineRunner implements LifecycleEngineRunner {
             gameEngineRunner.gameMapGenerator = gameMapGenerator;
             gameEngineRunner.gameRoundProcessor = roundProcessor;
             gameEngineRunner.players = players;
-            gameEngineRunner.referee = referee;
+            gameEngineRunner.referee = new RunnerReferee(referee, gameRunnerConfig, players);
             gameEngineRunner.rendererResolver = rendererResolver;
 
             return gameEngineRunner;

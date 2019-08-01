@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.map.CellType
@@ -180,24 +181,7 @@ class TeleportCommandTest {
     private fun validateOutRangeFeedback(x: Int, y: Int, testMap: WormsMap, worm: Worm) {
         val command = TeleportCommand(x, y, Random, TEST_CONFIG)
         assertFalse(command.validate(testMap, worm).isValid, "($x, $y) out of range")
-        assertEquals(command.toString(), "move ($x, $y)")
+        assertEquals(command.toString(), "${CommandStrings.MOVE.string} $x $y")
     }
-
-    @Test
-    fun test_powerup() {
-        val mockPowerup: Powerup = mock { }
-        val worm = CommandoWorm.build(0, config, Point(2, 2))
-        val player = WormsPlayer.build(0, listOf(worm), config)
-        val testMap = buildMapWithCellType(listOf(player), 5, CellType.AIR)
-
-        val target = Point(1, 2)
-        val command = TeleportCommand(target, Random, config)
-        testMap[target].powerup = mockPowerup
-
-        command.execute(testMap, worm)
-
-        verify(mockPowerup).applyTo(worm)
-    }
-
 
 }

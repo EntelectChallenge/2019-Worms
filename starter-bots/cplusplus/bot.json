@@ -1,0 +1,8 @@
+{
+    "author": "John Doe",
+    "email": "john.doe@example.com",
+    "nickName": "Bill",
+    "botLocation": "/bin/",
+    "botFileName": "cppbot.exe",
+    "botLanguage": "cplusplus"
+}

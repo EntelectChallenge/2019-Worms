@@ -1,5 +1,6 @@
 package za.co.entelect.challenge.player;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import za.co.entelect.challenge.game.contracts.map.GameMap;
@@ -13,10 +14,12 @@ public class ConsolePlayer extends BasePlayer {
     private static final Logger log = LogManager.getLogger(ConsolePlayer.class);
 
     private Scanner scanner;
+    private StopWatch stopWatch;
 
     public ConsolePlayer(String name) {
         super(name);
-        scanner = new Scanner(System.in);
+        this.scanner = new Scanner(System.in);
+        this.stopWatch = new StopWatch();
     }
 
     @Override
@@ -25,7 +28,7 @@ public class ConsolePlayer extends BasePlayer {
     }
 
     @Override
-    public String getCommand(BotExecutionContext botExecutionContext) {
+    public void setExecutionResult(BotExecutionContext botExecutionContext) {
 
         String output = botExecutionContext.consoleState;
         log.info(output);
@@ -33,7 +36,12 @@ public class ConsolePlayer extends BasePlayer {
         String inputPrompt = consoleRenderer.commandPrompt(getGamePlayer());
         log.info(inputPrompt);
 
-        return scanner.nextLine();
+        stopWatch.reset();
+        stopWatch.start();
+        botExecutionContext.command =  scanner.nextLine();
+
+        stopWatch.stop();
+        botExecutionContext.executionTime = stopWatch.getTime();
     }
 
     @Override

@@ -13,7 +13,7 @@ import za.co.entelect.challenge.player.BotPlayer;
 import za.co.entelect.challenge.player.ConsolePlayer;
 import za.co.entelect.challenge.player.TournamentPlayer;
 import za.co.entelect.challenge.storage.AzureBlobStorageService;
-import za.co.entelect.challenge.utils.EnvironmentVariable;
+import za.co.entelect.challenge.enums.EnvironmentVariable;
 import za.co.entelect.challenge.utils.ZipUtils;
 
 import java.io.File;
@@ -68,20 +68,21 @@ public class PlayerBootstrapper {
         if (playerConfig.equals("console")) {
             player = new ConsolePlayer(String.format("BotPlayer %s", playerNumber));
         } else {
-            LOGGER.info(playerConfig);
+            LOGGER.info("Config for player {} : {}", playerNumber, playerConfig);
             BotMetaData botConfig = BotMetaData.load(playerConfig);
-            BotRunner botRunner = BotRunnerFactory.createBotRunner(botConfig, gameRunnerConfig.maximumBotRuntimeMilliSeconds);
-
-            LOGGER.info(botConfig.getBotLocation());
-            File botFile = new File(botConfig.getBotDirectory());
-            if (!botFile.exists()) {
-                throw new FileNotFoundException(String.format("Could not find %s bot file for %s(%s)", botConfig.getBotLanguage(), botConfig.getAuthor(), botConfig.getNickName()));
-            }
 
             if (gameRunnerConfig.isTournamentMode)
                 player = new TournamentPlayer(gameRunnerConfig, String.format("%s - %s", playerNumber, botConfig.getNickName()), apiPort, botZip);
-            else
+            else {
+                LOGGER.info(botConfig.getBotLocation());
+                File botFile = new File(botConfig.getBotDirectory());
+                if (!botFile.exists()) {
+                    throw new FileNotFoundException(String.format("Could not find %s bot file for %s(%s)", botConfig.getBotLanguage(), botConfig.getAuthor(), botConfig.getNickName()));
+                }
+
+                BotRunner botRunner = BotRunnerFactory.createBotRunner(botConfig, gameRunnerConfig.maximumBotRuntimeMilliSeconds);
                 player = new BotPlayer(String.format("%s - %s", playerNumber, botConfig.getNickName()), botRunner);
+            }
         }
 
         player.setPlayerId(playerId);

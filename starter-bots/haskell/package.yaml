@@ -1,0 +1,51 @@
+name:                haskell-bot
+version:             0.1.0.0
+github:              "EntelectChallenge/2019-Worms"
+author:              "Edward John Steere & Louis Lotter"
+maintainer:          "edward.steere@gmail.com;louis.lotter.za@gmail.com"
+copyright:           "2019 Edward John Steere & Louis Lotter"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/githubuser/haskell-bot#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- aeson >= 1.4.2.0
+- vector >= 0.12.0.2
+- bytestring >= 0.10.8.2
+- utf8-string >= 1.0.1.1
+- random >= 1.1
+
+library:
+  source-dirs: src
+
+executables:
+  haskell-bot-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - haskell-bot
+
+tests:
+  haskell-bot-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - haskell-bot

@@ -1,0 +1,73 @@
+-- This file has been generated from package.yaml by hpack version 0.28.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 580676d656b9ff39e6a53304e8132ad64b5a9029189b1c478b8bef4d74a30da0
+
+name:           haskell-bot
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/haskell-bot#readme>
+homepage:       https://github.com/EntelectChallenge/2019-Worms#readme
+bug-reports:    https://github.com/EntelectChallenge/2019-Worms/issues
+author:         Edward John Steere & Louis Lotter
+maintainer:     edward.steere@gmail.com;louis.lotter.za@gmail.com
+copyright:      2019 Edward John Steere & Louis Lotter
+build-type:     Simple
+cabal-version:  >= 1.10
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/EntelectChallenge/2019-Worms
+
+library
+  exposed-modules:
+      Bot
+  other-modules:
+      Paths_haskell_bot
+  hs-source-dirs:
+      src
+  build-depends:
+      aeson >=1.4.2.0
+    , base >=4.7 && <5
+    , bytestring >=0.10.8.2
+    , random >=1.1
+    , utf8-string >=1.0.1.1
+    , vector >=0.12.0.2
+  default-language: Haskell2010
+
+executable haskell-bot-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_haskell_bot
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson >=1.4.2.0
+    , base >=4.7 && <5
+    , bytestring >=0.10.8.2
+    , haskell-bot
+    , random >=1.1
+    , utf8-string >=1.0.1.1
+    , vector >=0.12.0.2
+  default-language: Haskell2010
+
+test-suite haskell-bot-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_haskell_bot
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson >=1.4.2.0
+    , base >=4.7 && <5
+    , bytestring >=0.10.8.2
+    , haskell-bot
+    , random >=1.1
+    , utf8-string >=1.0.1.1
+    , vector >=0.12.0.2
+  default-language: Haskell2010

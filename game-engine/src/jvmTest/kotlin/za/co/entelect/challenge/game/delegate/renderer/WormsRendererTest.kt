@@ -3,14 +3,19 @@ package za.co.entelect.challenge.game.delegate.renderer
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
+import za.co.entelect.challenge.game.engine.command.implementation.BananaCommand
+import za.co.entelect.challenge.game.engine.command.implementation.SelectCommand
+import za.co.entelect.challenge.game.engine.command.implementation.TeleportCommand
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
+import za.co.entelect.challenge.game.engine.factory.TestWormsPlayerFactory.buildWormsPlayerDefault
 import za.co.entelect.challenge.game.engine.factory.TestWormsPlayerFactory.buildWormsPlayers
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMapGenerator
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
+import za.co.entelect.challenge.game.engine.processor.WormsRoundProcessor
 import za.co.entelect.challenge.game.engine.renderer.WormsRendererConsole
 import za.co.entelect.challenge.game.engine.renderer.WormsRendererJson
 import za.co.entelect.challenge.game.engine.renderer.WormsRendererText
@@ -18,6 +23,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStreamWriter
+import kotlin.math.max
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -29,7 +36,7 @@ class WormsRendererTest {
 
     @Test
     fun test_rendered_output_matches() {
-        val wormsPlayers = buildWormsPlayers(config, 3, 3)
+        val wormsPlayers = buildWormsPlayerDefault(config)
         val player1 = wormsPlayers.first()
 
         wormsPlayers.forEachIndexed { i, p ->
@@ -42,10 +49,10 @@ class WormsRendererTest {
         val darkPixel = CellType.DEEP_SPACE
         val wormsMap = buildMapWithCellType(wormsPlayers, config.mapSize, lightPixel)
 
-        wormsMap[3, 0].type = CellType.AIR
-        wormsMap[3, 1].type = CellType.DIRT
-        wormsMap[3, 2].type = CellType.DEEP_SPACE
-        wormsMap[3, 3].powerup = HealthPack(config.healthPackHp)
+        wormsMap[2, 0].type = CellType.AIR
+        wormsMap[2, 1].type = CellType.DIRT
+        wormsMap[2, 2].type = CellType.DEEP_SPACE
+        wormsMap[2, 3].powerup = HealthPack(config.healthPackHp)
 
         // Shows the real "up" side of the map
         val i = lightPixel.printable
@@ -76,9 +83,9 @@ class WormsRendererTest {
 
         val mapLines = textFileString.lines()
         val mapHeaderLineNumber = mapLines.indexOfFirst { it.contains("@06") }
-        assertTrue(mapLines[mapHeaderLineNumber + 2].startsWith("112131" + CellType.AIR.printable)
-                && mapLines[mapHeaderLineNumber + 3].startsWith("122232" + CellType.DIRT.printable)
-                && mapLines[mapHeaderLineNumber + 4].startsWith("132333" + CellType.DEEP_SPACE.printable)
+        assertTrue(mapLines[mapHeaderLineNumber + 2].startsWith("1121" + CellType.AIR.printable)
+                && mapLines[mapHeaderLineNumber + 3].startsWith("1222" + CellType.DIRT.printable)
+                && mapLines[mapHeaderLineNumber + 4].startsWith("1323" + CellType.DEEP_SPACE.printable)
                 && mapLines[mapHeaderLineNumber + 5].contains(HealthPack.PRINTABLE),
                 "Text state file has a bad map render. " +
                         "Printed map does not contain the expected worm markers, cell types and powerups")
@@ -93,17 +100,30 @@ class WormsRendererTest {
         val jsonPropertiesShouldExist = listOf(
                 "currentRound",
                 "maxRounds",
+                "pushbackDamage",
                 "mapSize",
                 "currentWormId",
+                "consecutiveDoNothingCount",
                 "myPlayer",
-                "score",
                 "id",
+                "score",
+                "health",
+                "worms",
                 "position",
                 "x",
                 "y",
                 "health",
                 "diggingRange",
                 "movementRange",
+                "profession",
+                "bananaBombs",
+                "damage",
+                "range",
+                "count",
+                "damageRadius",
+                "powerup",
+                "type",
+                "value",
                 CellType.AIR.name,
                 CellType.DIRT.name,
                 CellType.DEEP_SPACE.name)
@@ -111,8 +131,8 @@ class WormsRendererTest {
             val index = jsonFileString.lines().indexOfFirst { it.contains(prop) }
             index == -1
         }
-        assertTrue(propertiesNotFound.isEmpty(), "JSON state file is missing some properties. " +
-                propertiesNotFound.fold("These were not found: ") { sum, s -> "$sum$s, " })
+        assertTrue(propertiesNotFound.isEmpty(), "JSON state file is missing some properties >> " +
+                "[" + propertiesNotFound.joinToString(separator = ", ") + "]")
 
         assertTrue(consoleFileString.lines().size > wormsMap.size, "Console state file is too short. " +
                 "Check if the rendered map is missing")
@@ -139,11 +159,18 @@ class WormsRendererTest {
      */
     @Test
     fun test_print_example_map_files() {
-        val wormsPlayers = buildWormsPlayers(config, 2, 3)
+        val wormsPlayers = buildWormsPlayerDefault(config)
         val player1 = wormsPlayers.first()
+        val player2 = wormsPlayers.last()
 
         val wormsMapGenerator = WormsMapGenerator(config, 0)
         val wormsMap = wormsMapGenerator.getMap(wormsPlayers)
+
+        val roundProcessor = WormsRoundProcessor(config)
+        wormsMap.currentRound=115
+        roundProcessor.processRound(wormsMap, mapOf(
+                Pair(player1, listOf(SelectCommand(2), BananaCommand(Point(1, 12), config))),
+                Pair(player2, listOf(TeleportCommand(31, 15, Random(0), config)))))
 
         val rendererText = WormsRendererText(config)
         val rendererJson = WormsRendererJson(config)
@@ -189,6 +216,61 @@ class WormsRendererTest {
         assertTrue(rendererText.commandPrompt(wormsPlayer).toLowerCase().contains("not supported"))
         assertTrue(rendererJson.commandPrompt(wormsPlayer).toLowerCase().contains("not supported"))
         assertFalse(rendererConsole.commandPrompt(wormsPlayer).toLowerCase().contains("not supported"))
+    }
+
+    @Test
+    fun testNullPlayerJsonRender() {
+        val wormsPlayers = buildWormsPlayerDefault(config)
+
+        val wormsMapGenerator = WormsMapGenerator(config, 0)
+        val wormsMap = wormsMapGenerator.getMap(wormsPlayers)
+
+        val rendererJson = WormsRendererJson(config)
+        val jsonFileString = rendererJson.render(wormsMap, null)
+
+        val jsonPropertiesShouldNotExist = listOf("consecutiveDoNothingCount", "myPlayer")
+        val propertiesFound = jsonPropertiesShouldNotExist.filter { prop ->
+            val index = jsonFileString.lines().indexOfFirst { it.contains(prop) }
+            index > -1
+        }
+        assertTrue(propertiesFound.isEmpty(), "JSON state file(null perspective) should not have these properties >> " +
+                "[" + propertiesFound.joinToString(separator = ", ") + "]")
+
+        val indexResultOfTwoOpponents = listOf(
+                """"opponents":[{"id":1,"score":116,""",
+                """}]},{"id":2,"score":116""",
+                """}]}],"map":""")
+                .map { jsonFileString.indexOf(it) }
+                .fold(-1) { sum, c -> max(sum, c) }
+
+        assertTrue(indexResultOfTwoOpponents > -1, "Expected all players to be in the opponent list")
+        assertTrue(jsonFileString.contains(""""weapon":{""""),
+                "Expected to see hidden attributes of opponents")
+    }
+
+    @Test
+    fun testVisualizerEventsPrinted() {
+        val wormsPlayers = buildWormsPlayerDefault(config)
+
+        val player1 = wormsPlayers[0]
+        val player2 = wormsPlayers[1]
+        val p1AgentWorm = player1.worms.first { it.bananas != null }
+
+        val wormsMapGenerator = WormsMapGenerator(config, 0)
+        val wormsMap = wormsMapGenerator.getMap(wormsPlayers)
+
+        val roundProcessor = WormsRoundProcessor(config)
+        roundProcessor.processRound(wormsMap, mapOf(
+                Pair(player1, listOf(SelectCommand(p1AgentWorm.id), BananaCommand(Point(19, 5), config))),
+                Pair(player2, listOf(TeleportCommand(31, 15, Random(0), config)))))
+
+        val rendererJson = WormsRendererJson(config)
+        val jsonFileString = rendererJson.render(wormsMap, null)
+
+        val propIndex = jsonFileString.lines().indexOfFirst { it.contains("visualizerEvents") }
+        assertTrue(propIndex > -1, "Expected to see a visualizerEvents property")
+        assertTrue(jsonFileString.lines()[0].length > propIndex + 600,
+                "Expected to see at least 600 chars in the visualizerEvents property")
     }
 
 }

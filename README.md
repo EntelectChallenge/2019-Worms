@@ -36,16 +36,17 @@ This project can be used to get a better understanding of the rules and to help 
 
 Improvements and enhancements will be made to the game engine code over time.  The game engine will also evolve during the competition after every battle, so be prepared. Any changes made to the game engine or rules will be updated here, so check in here now and then to see the latest changes and updates.
 
-The game engine has been made available to the community for peer review and bug fixes, so if you find any bugs or have any concerns, please [e-mail us](challenge@entelect.co.za) or discuss it with us on the [Challenge forum](http://forum.entelect.co.za/), alternatively submit a pull request on Github and we will review it.
+The game engine has been made available to the community for peer review and bug fixes, so if you find any bugs or have any concerns, please [e-mail us](mailto:challenge@entelect.co.za) or discuss it with us on the [Challenge forum](http://forum.entelect.co.za/), alternatively submit a pull request on Github and we will review it.
 
 ## Starter Pack
-The starter pack will provide you with everything that you'll need to run your first bot and compete in this year's challenge. To get the starter pack, simply download the latest release found [here](github/releases).
+The starter pack will provide you with everything that you'll need to run your first bot and compete in this year's challenge. To get the starter pack, simply download the latest release found [here](https://github.com/EntelectChallenge/2019-Worms/releases/latest).
 
 A more in-depth explaination of the concepts below can be found [here](./game-runner/README.md).
 
+Before you run your first match you need ensure your environment is correct. The game-runner was built in Java, therefore, please ensure you have [Java installed](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). By default, the starter-pack runs Javascript bots, please make sure you have [Nodejs installed](https://nodejs.org/en/download/).
+
 ### Step 1
 Let's start off by running your very first match:
-(Because we are going to run Java files, please make sure you have java installed [http://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html])
 
 We included some 'run' files for various operating systems to run a match.
 
@@ -55,12 +56,12 @@ We included some 'run' files for various operating systems to run a match.
     On Linux:
         Open the terminal in the starter pack's root directory and run the "make run" command.
 
-You should now see some text whizz by in the console/terminal. If this is not the case, your match didn't run as it should. If the error message isn't clear, you can ask for help on our forum [forum.entelect.co.za].
+You should now see some text whizz by in the console/terminal. If this is not the case, your match didn't run as it should. If the error message isn't clear, you can ask for help on [our forum](https://forum.entelect.co.za).
 
 ### Step 2
-Now let's change things up a little bit. The previous match we ran, was between the Reference bot and the Java starter bot. Let's change the match to be between the Reference bot and a starter bot of your choice. To change this we need to edit the "game-runner-config.json" file.
+Now let's change things up a little bit. The previous match we ran, was between the Reference bot and the Javascript starter bot. Let's change the match to be between the Reference bot and a starter bot of your choice. To change this we need to edit the "game-runner-config.json" file.
 
-The most improtant fields in the 'game-runner-config.json' for running a match locally is as follows:
+The most important fields in the 'game-runner-config.json' for running a match locally is as follows:
 
     "round-state-output-location" => This is the path to where you want the match folder in which each round's folder with its respective logs will be saved.
 

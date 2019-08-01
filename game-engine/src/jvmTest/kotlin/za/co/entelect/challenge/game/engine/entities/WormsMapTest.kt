@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.entities
 
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
+import za.co.entelect.challenge.game.engine.command.implementation.DoNothingCommand
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapCells
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.map.CellType
@@ -8,6 +9,7 @@ import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import za.co.entelect.challenge.game.engine.processor.WormsRoundProcessor
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -229,5 +231,40 @@ class WormsMapTest {
 
         assertFalse(map.cells.any { it.occupier == worm1 }, "Worm 1 removed")
         assertEquals(worm2, map[worm2.position].occupier, "Worm 2 not removed")
+    }
+
+    /**
+     * Referee issues are logged and retrievable
+     */
+    @Test
+    fun test_referee_issues_set_and_get() {
+        val wormsFor0 = listOf(CommandoWorm.build(0, config, Point(0, 0)))
+        val wormsFor1 = listOf(CommandoWorm.build(0, config, Point(1, 0)))
+        val player0 = WormsPlayer.build(0, wormsFor0, config)
+        val player1 = WormsPlayer.build(1, wormsFor1, config)
+
+        val map = buildMapWithCellType(listOf(player0, player1), 3, CellType.AIR)
+        val processor = WormsRoundProcessor(config)
+
+        val doNothingCommand = DoNothingCommand(config)
+        val commandMap = mapOf(Pair(player0, listOf(doNothingCommand)), Pair(player1, listOf(doNothingCommand)))
+
+        val refereeIssuesPerRound = mutableListOf<List<String>>()
+        repeat(4) {
+            processor.processRound(map, commandMap) // processor does: detectRefereeIssues()
+            refereeIssuesPerRound.add(map.getRefereeIssues().map { it })
+
+            map.currentRound++
+        }
+
+        assertEquals(refereeIssuesPerRound.toString(),
+                "[[], " +
+                        "[], " +
+                        "[DoNothingsCount for @Player(0) reached a count of 3 @Round(2), " +
+                        "DoNothingsCount for @Player(1) reached a count of 3 @Round(2)], " +
+                        "[DoNothingsCount for @Player(0) reached a count of 3 @Round(2), " +
+                        "DoNothingsCount for @Player(1) reached a count of 3 @Round(2)]]",
+                "Referee did not output the expected results")
+
     }
 }

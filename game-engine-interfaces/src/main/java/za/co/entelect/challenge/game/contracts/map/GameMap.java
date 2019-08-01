@@ -1,5 +1,6 @@
 package za.co.entelect.challenge.game.contracts.map;
 
+import za.co.entelect.challenge.game.contracts.common.RefereeMessage;
 import za.co.entelect.challenge.game.contracts.game.GamePlayer;
 
 public interface GameMap {
@@ -12,4 +13,6 @@ public interface GameMap {
     void setCurrentRound(int i);
 
     GamePlayer getWinningPlayer();
+
+    RefereeMessage getRefereeIssues();
 }

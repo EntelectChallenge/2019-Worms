@@ -1,27 +1,34 @@
 {
-  "currentRound": 0,
-  "maxRounds": 200,
+  "currentRound": 115,
+  "maxRounds": 400,
+  "pushbackDamage": 20,
+  "lavaDamage": 3,
   "mapSize": 33,
-  "currentWormId": 1,
+  "currentWormId": 3,
   "consecutiveDoNothingCount": 0,
   "myPlayer": {
     "id": 1,
-    "score": 100,
-    "health": 300,
+    "score": 179,
+    "health": 350,
+    "currentWormId": 3,
+    "remainingWormSelections": 4,
+    "previousCommand": "nothing",
     "worms": [
       {
         "id": 1,
-        "health": 100,
+        "health": 150,
         "position": {
           "x": 24,
-          "y": 29
+          "y": 28
         },
         "weapon": {
-          "damage": 1,
-          "range": 3
+          "damage": 8,
+          "range": 4
         },
         "diggingRange": 1,
-        "movementRange": 1
+        "movementRange": 1,
+        "roundsUntilUnfrozen": 0,
+        "profession": "Commando"
       },
       {
         "id": 2,
@@ -31,62 +38,87 @@
           "y": 16
         },
         "weapon": {
-          "damage": 1,
-          "range": 3
+          "damage": 8,
+          "range": 4
+        },
+        "bananaBombs": {
+          "damage": 20,
+          "range": 5,
+          "count": 2,
+          "damageRadius": 2
         },
         "diggingRange": 1,
-        "movementRange": 1
+        "movementRange": 1,
+        "roundsUntilUnfrozen": 0,
+        "profession": "Agent"
       },
       {
         "id": 3,
         "health": 100,
         "position": {
           "x": 24,
-          "y": 3
+          "y": 4
         },
         "weapon": {
-          "damage": 1,
-          "range": 3
+          "damage": 8,
+          "range": 4
+        },
+        "snowballs": {
+          "freezeDuration": 5,
+          "range": 5,
+          "count": 3,
+          "freezeRadius": 1
         },
         "diggingRange": 1,
-        "movementRange": 1
+        "movementRange": 1,
+        "roundsUntilUnfrozen": 0,
+        "profession": "Technologist"
       }
     ]
   },
   "opponents": [
     {
       "id": 2,
-      "score": 100,
+      "score": 121,
+      "currentWormId": 2,
+      "remainingWormSelections": 5,
+      "previousCommand": "nothing",
       "worms": [
         {
           "id": 1,
-          "health": 100,
+          "health": 150,
           "position": {
             "x": 31,
-            "y": 16
+            "y": 15
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "roundsUntilUnfrozen": 0,
+          "profession": "Commando"
         },
         {
           "id": 2,
           "health": 100,
           "position": {
-            "x": 9,
-            "y": 29
+            "x": 8,
+            "y": 28
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "roundsUntilUnfrozen": 0,
+          "profession": "Agent"
         },
         {
           "id": 3,
           "health": 100,
           "position": {
             "x": 8,
-            "y": 3
+            "y": 4
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "roundsUntilUnfrozen": 0,
+          "profession": "Technologist"
         }
       ]
     }
@@ -151,17 +183,17 @@
       {
         "x": 11,
         "y": 0,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 12,
         "y": 0,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 13,
         "y": 0,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 14,
@@ -191,17 +223,17 @@
       {
         "x": 19,
         "y": 0,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 20,
         "y": 0,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 21,
         "y": 0,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 22,
@@ -303,7 +335,7 @@
       {
         "x": 8,
         "y": 1,
-        "type": "DIRT"
+        "type": "LAVA"
       },
       {
         "x": 9,
@@ -383,7 +415,7 @@
       {
         "x": 24,
         "y": 1,
-        "type": "DIRT"
+        "type": "LAVA"
       },
       {
         "x": 25,
@@ -465,17 +497,17 @@
       {
         "x": 7,
         "y": 2,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 8,
         "y": 2,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 9,
         "y": 2,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 10,
@@ -545,17 +577,17 @@
       {
         "x": 23,
         "y": 2,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 24,
         "y": 2,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 25,
         "y": 2,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 26,
@@ -637,6 +669,173 @@
       {
         "x": 8,
         "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 9,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 10,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 11,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 12,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 13,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 14,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 15,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 16,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 17,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 18,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 19,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 20,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 21,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 22,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 23,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 24,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 25,
+        "y": 3,
+        "type": "AIR"
+      },
+      {
+        "x": 26,
+        "y": 3,
+        "type": "DIRT"
+      },
+      {
+        "x": 27,
+        "y": 3,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 28,
+        "y": 3,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 29,
+        "y": 3,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 30,
+        "y": 3,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 31,
+        "y": 3,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 32,
+        "y": 3,
+        "type": "DEEP_SPACE"
+      }
+    ],
+    [
+      {
+        "x": 0,
+        "y": 4,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "type": "DIRT"
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "type": "LAVA"
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "type": "DIRT"
+      },
+      {
+        "x": 7,
+        "y": 4,
+        "type": "AIR"
+      },
+      {
+        "x": 8,
+        "y": 4,
         "type": "AIR",
         "occupier": {
           "id": 3,
@@ -644,90 +843,92 @@
           "health": 100,
           "position": {
             "x": 8,
-            "y": 3
+            "y": 4
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "roundsUntilUnfrozen": 0,
+          "profession": "Technologist"
         }
       },
       {
         "x": 9,
-        "y": 3,
+        "y": 4,
         "type": "AIR"
       },
       {
         "x": 10,
-        "y": 3,
+        "y": 4,
         "type": "DIRT"
       },
       {
         "x": 11,
-        "y": 3,
-        "type": "DIRT"
+        "y": 4,
+        "type": "AIR"
       },
       {
         "x": 12,
-        "y": 3,
-        "type": "DIRT"
+        "y": 4,
+        "type": "AIR"
       },
       {
         "x": 13,
-        "y": 3,
+        "y": 4,
         "type": "AIR"
       },
       {
         "x": 14,
-        "y": 3,
-        "type": "AIR"
+        "y": 4,
+        "type": "DIRT"
       },
       {
         "x": 15,
-        "y": 3,
+        "y": 4,
         "type": "DIRT"
       },
       {
         "x": 16,
-        "y": 3,
-        "type": "AIR"
+        "y": 4,
+        "type": "DIRT"
       },
       {
         "x": 17,
-        "y": 3,
+        "y": 4,
         "type": "DIRT"
       },
       {
         "x": 18,
-        "y": 3,
-        "type": "AIR"
+        "y": 4,
+        "type": "DIRT"
       },
       {
         "x": 19,
-        "y": 3,
+        "y": 4,
         "type": "AIR"
       },
       {
         "x": 20,
-        "y": 3,
-        "type": "DIRT"
+        "y": 4,
+        "type": "AIR"
       },
       {
         "x": 21,
-        "y": 3,
-        "type": "DIRT"
+        "y": 4,
+        "type": "AIR"
       },
       {
         "x": 22,
-        "y": 3,
+        "y": 4,
         "type": "DIRT"
       },
       {
         "x": 23,
-        "y": 3,
+        "y": 4,
         "type": "AIR"
       },
       {
         "x": 24,
-        "y": 3,
+        "y": 4,
         "type": "AIR",
         "occupier": {
           "id": 3,
@@ -735,185 +936,26 @@
           "health": 100,
           "position": {
             "x": 24,
-            "y": 3
+            "y": 4
           },
           "weapon": {
-            "damage": 1,
-            "range": 3
+            "damage": 8,
+            "range": 4
+          },
+          "snowballs": {
+            "freezeDuration": 5,
+            "range": 5,
+            "count": 3,
+            "freezeRadius": 1
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "roundsUntilUnfrozen": 0,
+          "profession": "Technologist"
         }
       },
       {
         "x": 25,
-        "y": 3,
-        "type": "AIR"
-      },
-      {
-        "x": 26,
-        "y": 3,
-        "type": "DIRT"
-      },
-      {
-        "x": 27,
-        "y": 3,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 28,
-        "y": 3,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 29,
-        "y": 3,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 30,
-        "y": 3,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 31,
-        "y": 3,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 32,
-        "y": 3,
-        "type": "DEEP_SPACE"
-      }
-    ],
-    [
-      {
-        "x": 0,
-        "y": 4,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 1,
-        "y": 4,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 2,
-        "y": 4,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 3,
-        "y": 4,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 4,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 5,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 6,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 7,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 8,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 9,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 10,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 11,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 12,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 13,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 14,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 15,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 16,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 17,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 18,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 19,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 20,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 21,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 22,
-        "y": 4,
-        "type": "DIRT"
-      },
-      {
-        "x": 23,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 24,
-        "y": 4,
-        "type": "AIR"
-      },
-      {
-        "x": 25,
         "y": 4,
         "type": "AIR"
       },
@@ -925,7 +967,7 @@
       {
         "x": 27,
         "y": 4,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 28,
@@ -992,17 +1034,17 @@
       {
         "x": 7,
         "y": 5,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 8,
         "y": 5,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 9,
         "y": 5,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 10,
@@ -1072,17 +1114,17 @@
       {
         "x": 23,
         "y": 5,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 24,
         "y": 5,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 25,
         "y": 5,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 26,
@@ -1154,7 +1196,7 @@
       {
         "x": 6,
         "y": 6,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 7,
@@ -1254,7 +1296,7 @@
       {
         "x": 26,
         "y": 6,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 27,
@@ -1463,7 +1505,7 @@
       {
         "x": 1,
         "y": 8,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 2,
@@ -1613,7 +1655,7 @@
       {
         "x": 31,
         "y": 8,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 32,
@@ -1630,7 +1672,7 @@
       {
         "x": 1,
         "y": 9,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 2,
@@ -1780,7 +1822,7 @@
       {
         "x": 31,
         "y": 9,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 32,
@@ -1797,7 +1839,7 @@
       {
         "x": 1,
         "y": 10,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 2,
@@ -1959,17 +2001,17 @@
       {
         "x": 0,
         "y": 11,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 1,
         "y": 11,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 2,
         "y": 11,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 3,
@@ -2126,7 +2168,7 @@
       {
         "x": 0,
         "y": 12,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 1,
@@ -2136,12 +2178,12 @@
       {
         "x": 2,
         "y": 12,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 3,
         "y": 12,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 4,
@@ -2293,7 +2335,7 @@
       {
         "x": 0,
         "y": 13,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 1,
@@ -2303,7 +2345,7 @@
       {
         "x": 2,
         "y": 13,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 3,
@@ -2453,7 +2495,7 @@
       {
         "x": 32,
         "y": 13,
-        "type": "AIR"
+        "type": "LAVA"
       }
     ],
     [
@@ -2465,7 +2507,7 @@
       {
         "x": 1,
         "y": 14,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 2,
@@ -2700,7 +2742,7 @@
         "type": "AIR",
         "powerup": {
           "type": "HEALTH_PACK",
-          "value": 5
+          "value": 10
         }
       },
       {
@@ -2786,7 +2828,20 @@
       {
         "x": 31,
         "y": 15,
-        "type": "AIR"
+        "type": "AIR",
+        "occupier": {
+          "id": 1,
+          "playerId": 2,
+          "health": 150,
+          "position": {
+            "x": 31,
+            "y": 15
+          },
+          "diggingRange": 1,
+          "movementRange": 1,
+          "roundsUntilUnfrozen": 0,
+          "profession": "Commando"
+        }
       },
       {
         "x": 32,
@@ -2813,11 +2868,19 @@
             "y": 16
           },
           "weapon": {
-            "damage": 1,
-            "range": 3
+            "damage": 8,
+            "range": 4
+          },
+          "bananaBombs": {
+            "damage": 20,
+            "range": 5,
+            "count": 2,
+            "damageRadius": 2
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "roundsUntilUnfrozen": 0,
+          "profession": "Agent"
         }
       },
       {
@@ -2968,18 +3031,7 @@
       {
         "x": 31,
         "y": 16,
-        "type": "AIR",
-        "occupier": {
-          "id": 1,
-          "playerId": 2,
-          "health": 100,
-          "position": {
-            "x": 31,
-            "y": 16
-          },
-          "diggingRange": 1,
-          "movementRange": 1
-        }
+        "type": "AIR"
       },
       {
         "x": 32,
@@ -3084,7 +3136,7 @@
         "type": "AIR",
         "powerup": {
           "type": "HEALTH_PACK",
-          "value": 5
+          "value": 10
         }
       },
       {
@@ -3329,7 +3381,7 @@
       {
         "x": 0,
         "y": 19,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 1,
@@ -3489,7 +3541,7 @@
       {
         "x": 32,
         "y": 19,
-        "type": "AIR"
+        "type": "LAVA"
       }
     ],
     [
@@ -3835,7 +3887,7 @@
       {
         "x": 1,
         "y": 22,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 2,
@@ -3985,7 +4037,7 @@
       {
         "x": 31,
         "y": 22,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 32,
@@ -4002,7 +4054,7 @@
       {
         "x": 1,
         "y": 23,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 2,
@@ -4152,7 +4204,7 @@
       {
         "x": 31,
         "y": 23,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 32,
@@ -4169,12 +4221,12 @@
       {
         "x": 1,
         "y": 24,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 2,
         "y": 24,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 3,
@@ -4314,12 +4366,12 @@
       {
         "x": 30,
         "y": 24,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 31,
         "y": 24,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 32,
@@ -4341,7 +4393,7 @@
       {
         "x": 2,
         "y": 25,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 3,
@@ -4481,7 +4533,7 @@
       {
         "x": 30,
         "y": 25,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 31,
@@ -4528,27 +4580,27 @@
       {
         "x": 6,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 7,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 8,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 9,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 10,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 11,
@@ -4608,27 +4660,27 @@
       {
         "x": 22,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 23,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 24,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 25,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 26,
         "y": 26,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 27,
@@ -4685,7 +4737,7 @@
       {
         "x": 4,
         "y": 27,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 5,
@@ -4700,17 +4752,17 @@
       {
         "x": 7,
         "y": 27,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 8,
         "y": 27,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 9,
         "y": 27,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 10,
@@ -4780,17 +4832,17 @@
       {
         "x": 23,
         "y": 27,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 24,
         "y": 27,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 25,
         "y": 27,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 26,
@@ -4805,7 +4857,7 @@
       {
         "x": 28,
         "y": 27,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 29,
@@ -4852,7 +4904,7 @@
       {
         "x": 4,
         "y": 28,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 5,
@@ -4867,288 +4919,292 @@
       {
         "x": 7,
         "y": 28,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 8,
         "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 9,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 10,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 11,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 12,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 13,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 14,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 15,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 16,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 17,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 18,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 19,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 20,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 21,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 22,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 23,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 24,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 25,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 26,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 27,
-        "y": 28,
-        "type": "DIRT"
-      },
-      {
-        "x": 28,
-        "y": 28,
-        "type": "AIR"
-      },
-      {
-        "x": 29,
-        "y": 28,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 30,
-        "y": 28,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 31,
-        "y": 28,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 32,
-        "y": 28,
-        "type": "DEEP_SPACE"
-      }
-    ],
-    [
-      {
-        "x": 0,
-        "y": 29,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 1,
-        "y": 29,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 2,
-        "y": 29,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 3,
-        "y": 29,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 4,
-        "y": 29,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 5,
-        "y": 29,
-        "type": "DEEP_SPACE"
-      },
-      {
-        "x": 6,
-        "y": 29,
-        "type": "DIRT"
-      },
-      {
-        "x": 7,
-        "y": 29,
-        "type": "DIRT"
-      },
-      {
-        "x": 8,
-        "y": 29,
-        "type": "AIR"
-      },
-      {
-        "x": 9,
-        "y": 29,
         "type": "AIR",
         "occupier": {
           "id": 2,
           "playerId": 2,
           "health": 100,
           "position": {
-            "x": 9,
-            "y": 29
+            "x": 8,
+            "y": 28
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "roundsUntilUnfrozen": 0,
+          "profession": "Agent"
         }
       },
       {
-        "x": 10,
-        "y": 29,
+        "x": 9,
+        "y": 28,
         "type": "AIR"
       },
       {
+        "x": 10,
+        "y": 28,
+        "type": "DIRT"
+      },
+      {
         "x": 11,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 12,
-        "y": 29,
-        "type": "AIR"
+        "y": 28,
+        "type": "DIRT"
       },
       {
         "x": 13,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 14,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 15,
-        "y": 29,
+        "y": 28,
         "type": "AIR"
       },
       {
         "x": 16,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 17,
-        "y": 29,
+        "y": 28,
         "type": "AIR"
       },
       {
         "x": 18,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 19,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 20,
-        "y": 29,
-        "type": "AIR"
+        "y": 28,
+        "type": "DIRT"
       },
       {
         "x": 21,
-        "y": 29,
-        "type": "AIR"
+        "y": 28,
+        "type": "DIRT"
       },
       {
         "x": 22,
-        "y": 29,
+        "y": 28,
         "type": "DIRT"
       },
       {
         "x": 23,
-        "y": 29,
+        "y": 28,
         "type": "AIR"
       },
       {
         "x": 24,
-        "y": 29,
+        "y": 28,
         "type": "AIR",
         "occupier": {
           "id": 1,
           "playerId": 1,
-          "health": 100,
+          "health": 150,
           "position": {
             "x": 24,
-            "y": 29
+            "y": 28
           },
           "weapon": {
-            "damage": 1,
-            "range": 3
+            "damage": 8,
+            "range": 4
           },
           "diggingRange": 1,
-          "movementRange": 1
+          "movementRange": 1,
+          "roundsUntilUnfrozen": 0,
+          "profession": "Commando"
         }
       },
       {
         "x": 25,
+        "y": 28,
+        "type": "AIR"
+      },
+      {
+        "x": 26,
+        "y": 28,
+        "type": "DIRT"
+      },
+      {
+        "x": 27,
+        "y": 28,
+        "type": "DIRT"
+      },
+      {
+        "x": 28,
+        "y": 28,
+        "type": "LAVA"
+      },
+      {
+        "x": 29,
+        "y": 28,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 30,
+        "y": 28,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 31,
+        "y": 28,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 32,
+        "y": 28,
+        "type": "DEEP_SPACE"
+      }
+    ],
+    [
+      {
+        "x": 0,
+        "y": 29,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 1,
+        "y": 29,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 2,
+        "y": 29,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 3,
+        "y": 29,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 4,
+        "y": 29,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 5,
+        "y": 29,
+        "type": "DEEP_SPACE"
+      },
+      {
+        "x": 6,
+        "y": 29,
+        "type": "DIRT"
+      },
+      {
+        "x": 7,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
+        "x": 8,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
+        "x": 9,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
+        "x": 10,
+        "y": 29,
+        "type": "DIRT"
+      },
+      {
+        "x": 11,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
+        "x": 12,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
+        "x": 13,
+        "y": 29,
+        "type": "DIRT"
+      },
+      {
+        "x": 14,
+        "y": 29,
+        "type": "DIRT"
+      },
+      {
+        "x": 15,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
+        "x": 16,
+        "y": 29,
+        "type": "DIRT"
+      },
+      {
+        "x": 17,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
+        "x": 18,
+        "y": 29,
+        "type": "DIRT"
+      },
+      {
+        "x": 19,
+        "y": 29,
+        "type": "DIRT"
+      },
+      {
+        "x": 20,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
+        "x": 21,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
+        "x": 22,
+        "y": 29,
+        "type": "DIRT"
+      },
+      {
+        "x": 23,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
+        "x": 24,
+        "y": 29,
+        "type": "AIR"
+      },
+      {
+        "x": 25,
         "y": 29,
         "type": "AIR"
       },
@@ -5232,22 +5288,22 @@
       {
         "x": 8,
         "y": 30,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 9,
         "y": 30,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 10,
         "y": 30,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 11,
         "y": 30,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 12,
@@ -5307,17 +5363,17 @@
       {
         "x": 23,
         "y": 30,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 24,
         "y": 30,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 25,
         "y": 30,
-        "type": "AIR"
+        "type": "DIRT"
       },
       {
         "x": 26,
@@ -5399,7 +5455,7 @@
       {
         "x": 8,
         "y": 31,
-        "type": "DIRT"
+        "type": "LAVA"
       },
       {
         "x": 9,
@@ -5409,12 +5465,12 @@
       {
         "x": 10,
         "y": 31,
-        "type": "DIRT"
+        "type": "LAVA"
       },
       {
         "x": 11,
         "y": 31,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 12,
@@ -5469,7 +5525,7 @@
       {
         "x": 22,
         "y": 31,
-        "type": "DIRT"
+        "type": "LAVA"
       },
       {
         "x": 23,
@@ -5479,7 +5535,7 @@
       {
         "x": 24,
         "y": 31,
-        "type": "DIRT"
+        "type": "LAVA"
       },
       {
         "x": 25,
@@ -5591,12 +5647,12 @@
       {
         "x": 13,
         "y": 32,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 14,
         "y": 32,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 15,
@@ -5616,12 +5672,12 @@
       {
         "x": 18,
         "y": 32,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 19,
         "y": 32,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 20,
@@ -5689,5 +5745,93 @@
         "type": "DEEP_SPACE"
       }
     ]
+  ],
+  "visualizerEvents": [
+    {
+      "type": "select",
+      "wormCommanded": {
+        "id": 2,
+        "playerId": 1
+      }
+    },
+    {
+      "type": "move",
+      "result": "MOVED",
+      "positionStart": {
+        "x": 31,
+        "y": 16
+      },
+      "positionEnd": {
+        "x": 31,
+        "y": 15
+      },
+      "wormCommanded": {
+        "id": 1,
+        "playerId": 2
+      }
+    },
+    {
+      "type": "banana",
+      "result": "TERRAIN",
+      "positionStart": {
+        "x": 1,
+        "y": 16
+      },
+      "positionEnd": {
+        "x": 1,
+        "y": 12
+      },
+      "wormCommanded": {
+        "id": 2,
+        "playerId": 1
+      },
+      "affectedCells": [
+        {
+          "x": 0,
+          "y": 11,
+          "type": "AIR"
+        },
+        {
+          "x": 0,
+          "y": 12,
+          "type": "AIR"
+        },
+        {
+          "x": 1,
+          "y": 10,
+          "type": "AIR"
+        },
+        {
+          "x": 1,
+          "y": 11,
+          "type": "AIR"
+        },
+        {
+          "x": 1,
+          "y": 14,
+          "type": "AIR"
+        },
+        {
+          "x": 2,
+          "y": 11,
+          "type": "AIR"
+        },
+        {
+          "x": 2,
+          "y": 12,
+          "type": "AIR"
+        },
+        {
+          "x": 2,
+          "y": 13,
+          "type": "AIR"
+        },
+        {
+          "x": 3,
+          "y": 12,
+          "type": "AIR"
+        }
+      ]
+    }
   ]
 }

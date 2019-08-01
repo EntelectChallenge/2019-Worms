@@ -11,6 +11,7 @@ class WormsPlayer private constructor(val id: Int,
         private set
 
     var previousWorm: Worm = worms[0]
+        private set
 
     init {
         this.worms.forEach { it.player = this }
@@ -23,7 +24,7 @@ class WormsPlayer private constructor(val id: Int,
         get() = worms.all { it.dead }
 
 
-    private val livingWorms
+    val livingWorms
         get() = worms.filter { !it.dead }
 
     var commandScore: Int = 0
@@ -39,19 +40,24 @@ class WormsPlayer private constructor(val id: Int,
     val disqualified
         get() = consecutiveDoNothingsCount > config.maxDoNothings
 
+    var wormSelectionTokens = config.wormSelectTokens.count
 
     fun selectNextWorm() {
         //Assign living worms to a local variable since it is a computed property
         val livingWorms = this.livingWorms
         if (livingWorms.isNotEmpty()) {
             val nextIndex = (livingWorms.indexOf(currentWorm) + 1) % livingWorms.size
-            previousWorm = currentWorm
-            currentWorm = livingWorms[nextIndex]
+            updateCurrentWorm(livingWorms[nextIndex])
         }
     }
 
+    fun updateCurrentWorm(newWorm: Worm) {
+        previousWorm = currentWorm
+        currentWorm = newWorm
+    }
+
     override fun toString(): String {
-        return "WormsPlayer $id"
+        return "WormsPlayer(id=$id)"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -77,10 +83,13 @@ class WormsPlayer private constructor(val id: Int,
          */
         @JsName("build")
         fun build(id: Int, config: GameConfig): WormsPlayer {
-            val commandoWorms = (0 until config.commandoWorms.count)
-                    .map { i -> CommandoWorm.build(i + 1, config) }
+            val worms = listOf(Pair(CommandoWorm, config.commandoWorms),
+                    Pair(AgentWorm, config.agentWorms),
+                    Pair(TechnologistWorm, config.technologistWorms))
+                    .flatMap { (builder, details) -> (0 until details.count).map { builder } }
+                    .mapIndexed { index, builder -> builder.build(index + 1, config) }
 
-            return WormsPlayer(id, commandoWorms, config)
+            return WormsPlayer(id, worms, config)
         }
 
         @JsName("buildWithWorms")

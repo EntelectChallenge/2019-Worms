@@ -1,10 +1,14 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
+import mu.KotlinLogging
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
 import za.co.entelect.challenge.game.engine.command.feedback.ShootCommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.ShootResult
 import za.co.entelect.challenge.game.engine.config.GameConfig
+import za.co.entelect.challenge.game.engine.map.MapCell
+import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
 
@@ -15,7 +19,7 @@ import za.co.entelect.challenge.game.engine.player.Worm
  */
 class ShootCommand(val direction: Direction, val config: GameConfig) : WormsCommand {
 
-    override val order: Int = 3
+    override val order: Int = 4
 
     override fun validate(gameMap: WormsMap, worm: Worm): CommandValidation {
         return CommandValidation.validMove()
@@ -24,33 +28,53 @@ class ShootCommand(val direction: Direction, val config: GameConfig) : WormsComm
     override fun execute(gameMap: WormsMap, worm: Worm): ShootCommandFeedback {
         var position = worm.position + direction.vector
 
+        logger.info { "Starting shoot command: $worm at ${worm.position} shooting ${direction.shortCardinal}" }
+
         while (position in gameMap
                 && position.shootingDistance(worm.position) <= worm.weapon.range) {
             val cell = gameMap[position]
 
-            if (!cell.type.open) {
-                return ShootCommandFeedback(this.toString(), score = config.scores.missedAttack, playerId = worm.player.id, result = ShootResult.BLOCKED, target = position)
+            logger.debug { "Executing shoot command: $worm at $cell" }
+
+            when {
+                !cell.type.open -> return shotBlocked(worm, cell, position)
+                cell.isOccupied() -> return shotHitWorm(worm, cell, gameMap, position)
+                else -> position += direction.vector
             }
-
-            if (cell.isOccupied()) {
-                val occupier = cell.occupier!!
-                occupier.takeDamage(worm.weapon.damage, gameMap.currentRound)
-
-                return when {
-                    occupier.dead -> ShootCommandFeedback(this.toString(), score = config.scores.killShot, playerId = worm.player.id, result = ShootResult.HIT, target = position)
-                    occupier.player == worm.player -> ShootCommandFeedback(this.toString(), score = config.scores.friendlyFire, playerId = worm.player.id, result = ShootResult.HIT, target = position)
-                    else -> ShootCommandFeedback(this.toString(), score = config.scores.attack, playerId = worm.player.id, result = ShootResult.HIT, target = position)
-                }
-            }
-
-            position += direction.vector
         }
 
-        return ShootCommandFeedback(this.toString(), score = config.scores.missedAttack, playerId = worm.player.id, result = ShootResult.OUT_OF_RANGE, target = position)
+        logger.debug { "Shot out of range: $worm at $position" }
+        return buildBasicShootCommandFeedback(worm, config.scores.missedAttack, ShootResult.OUT_OF_RANGE, position)
     }
 
-    override fun toString(): String {
-        return "shoot ${direction.shortCardinal}"
+    private fun buildBasicShootCommandFeedback(worm: Worm, score: Int, result: ShootResult, target: Point): ShootCommandFeedback
+            = ShootCommandFeedback(toString(), worm, score, result, target)
+
+    private fun shotHitWorm(worm: Worm,
+                            cell: MapCell,
+                            gameMap: WormsMap,
+                            position: Point): ShootCommandFeedback {
+        logger.debug { "Shot hit: $worm shooting $cell ${cell.occupier}" }
+        val occupier = cell.occupier!!
+        val damageScore = config.scores.attack * occupier.takeDamage(worm.weapon.damage, gameMap.currentRound, worm.player)
+
+        val isAllyWorm = occupier.player == worm.player
+        return when {
+            isAllyWorm -> buildBasicShootCommandFeedback(worm, -damageScore, ShootResult.HIT, position)
+            else -> buildBasicShootCommandFeedback(worm, damageScore, ShootResult.HIT, position)
+        }
     }
 
+    private fun shotBlocked(worm: Worm,
+                            cell: MapCell,
+                            position: Point): ShootCommandFeedback {
+        logger.debug { "Shot blocked: $worm $cell" }
+        return buildBasicShootCommandFeedback(worm, config.scores.missedAttack, ShootResult.BLOCKED, position)
+    }
+
+    override fun toString(): String = "${CommandStrings.SHOOT.string} ${direction.shortCardinal}"
+
+    companion object {
+        private val logger = KotlinLogging.logger { }
+    }
 }

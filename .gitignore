@@ -1,6 +1,16 @@
 .idea/
+.gradle
 .iml
 build/
 target/
 out/
 
+starter-pack
+
+starter-bots/c++/vs/
+starter-bots/cplusplus/vs/
+starter-bots/cplusplus/cppbot.o
+starter-bots/cplusplus/bin/cppbot.out
+starter-bots/cplusplus/bin/cppbot.pdb
+starter-bots/cplusplus/bin/cppbot.ilk
+starter-bots/cplusplus/bin/cppbot.exe
