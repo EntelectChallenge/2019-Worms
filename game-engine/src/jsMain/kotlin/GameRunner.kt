@@ -24,9 +24,7 @@ class GameRunner(val seed: Int, val config: GameConfig, val playerCount: Int = 2
     }
 
     @JsName("isGameComplete")
-    fun isGameComplete(wormsMap: WormsMap): Boolean {
-        return WormsEngine(config).isGameComplete(wormsMap)
-    }
+    fun isGameComplete(wormsMap: WormsMap) = WormsEngine(config).isGameComplete(wormsMap)
 
     @JsName("processRound")
     fun processRound(wormsMap: WormsMap, vararg commandList: Pair<WormsPlayer, String>): Boolean {
@@ -39,9 +37,7 @@ class GameRunner(val seed: Int, val config: GameConfig, val playerCount: Int = 2
     }
 
     @JsName("renderJson")
-    fun renderJson(map: WormsMap, player: WormsPlayer): String {
-        return rendererJson.render(map, player)
-    }
+    fun renderJson(map: WormsMap, player: WormsPlayer) = rendererJson.render(map, player)
 
     @JsName("getErrorList")
     fun getErrorList(wormsMap: WormsMap, wormsPlayer: WormsPlayer): List<GameError> {
@@ -49,13 +45,17 @@ class GameRunner(val seed: Int, val config: GameConfig, val playerCount: Int = 2
     }
 
     @JsName("getAllErrorList")
-    fun getAllErrorList(wormsMap: WormsMap): List<GameError> {
-        return WormsRoundProcessor(config).getErrorList(wormsMap)
-    }
+    fun getAllErrorList(wormsMap: WormsMap) = WormsRoundProcessor(config).getErrorList(wormsMap)
 
     @JsName("getFeedback")
-    fun getFeedback(wormsMap: WormsMap): List<CommandFeedback> {
-        return wormsMap.getFeedback(wormsMap.currentRound)
+    fun getFeedback(wormsMap: WormsMap) = wormsMap.getFeedback(wormsMap.currentRound)
+
+    @JsName("getAllFeedback")
+    fun getAllFeedback(wormsMap: WormsMap) = wormsMap.getAllFeedback().map { it.value }
+
+    @JsName("setCurrentRound")
+    fun setCurrentRound(wormsMap: WormsMap, newValue: Int) {
+        wormsMap.currentRound = newValue
     }
 
 }

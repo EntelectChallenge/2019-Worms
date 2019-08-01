@@ -40,6 +40,7 @@ interface GameMap {
     fun getVisualizerEvents(): List<VisualizerEvent>
     fun progressBattleRoyale(config: GameConfig)
     fun tickFrozenTimers()
+    fun getAllFeedback(): MutableMap<Int, MutableList<CommandFeedback>>
 }
 
 class WormsMap(override val players: List<WormsPlayer>,
@@ -120,6 +121,8 @@ class WormsMap(override val players: List<WormsPlayer>,
     override fun getFeedback(round: Int): List<CommandFeedback> {
         return allFeedback[round] ?: emptyList()
     }
+
+    override fun getAllFeedback() = allFeedback
 
     override fun removeDeadWorms() {
         players.flatMap { it.worms }
