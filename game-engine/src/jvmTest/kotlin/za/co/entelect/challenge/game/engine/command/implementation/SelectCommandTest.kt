@@ -7,6 +7,7 @@ import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory
 import za.co.entelect.challenge.game.engine.map.CellType
+import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import kotlin.test.assertEquals
@@ -34,7 +35,8 @@ class SelectCommandTest {
     }
 
     private fun setupPlayer(): WormsPlayer {
-        val worms = listOf(CommandoWorm.build(0, config), CommandoWorm.build(1, config))
+        val worms = listOf(CommandoWorm.build(0, config, Point(1, 1)),
+                CommandoWorm.build(1, config, Point(1, 2)))
         return WormsPlayer.build(0, worms, config)
     }
 
@@ -75,7 +77,7 @@ class SelectCommandTest {
         command.execute(map, worms[0])
 
         assertEquals(worms[1], player.currentWorm)
-        assertEquals(0, player.wormSelectionTokens)
+        assertEquals(4, player.wormSelectionTokens)
     }
 
 

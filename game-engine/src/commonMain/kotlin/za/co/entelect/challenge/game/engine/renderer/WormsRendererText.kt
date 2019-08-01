@@ -16,7 +16,11 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
         return "Not supported in Text state file"
     }
 
-    override fun render(wormsMap: WormsMap, player: WormsPlayer): String {
+    override fun render(wormsMap: WormsMap, player: WormsPlayer?): String {
+        if (player == null) {
+            throw UnsupportedOperationException("Cannot call Text Render with a null player parameter")
+        }
+
         val wormGameDetails = WormsGameDetails(config, wormsMap, player)
 
         val matchDetails = """
@@ -29,14 +33,16 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
             |Players count: ${wormsMap.players.size}
             |Worms per player: ${wormsMap.players.first().worms.size}
             |Pushback damage: ${wormGameDetails.pushbackDamage}
+            |Lava damage: ${wormGameDetails.lavaDamage}
             """.trimMargin()
 
-        val myPlayerWorms = wormGameDetails.myPlayer.worms
+        val myPlayerWorms = wormGameDetails.myPlayer!!.worms
                 .fold("") { sum, worm ->
                     sum + """
                         ${getBaseWormText(worm)}
                         ${getWormWeaponDetails(worm)}
                         ${getWormBananasDetails(worm)}
+                        ${getWormSnowballsDetails(worm)}
                         """.trimMargin()
                 }
 
@@ -73,6 +79,7 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
             |DEEP_SPACE: ${CellType.DEEP_SPACE.printable} ASCII:219
             |DIRT: ${CellType.DIRT.printable} ASCII:178
             |AIR: ${CellType.AIR.printable} ASCII:176
+            |LAVA: ${CellType.LAVA.printable}
             |HEALTH_PACK: ${HealthPack.PRINTABLE} ASCII:204, 185
             |WORM_MARKER: 13 Example for:Player1, Worm3
             """.trimMargin()
@@ -106,6 +113,12 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
                             |Banana bombs count: ${worm.bananaBombs?.count}
                             |Banana bomb damage radius: ${worm.bananaBombs?.damageRadius}"""
 
+    private fun getWormSnowballsDetails(worm: PrintableWorm) =
+            """|Snowballs freeze duration: ${worm.snowballs?.freezeDuration}
+                |Snowballs range: ${worm.snowballs?.range}
+                |Snowballs count: ${worm.snowballs?.count}
+                |Snowballs freeze radius: ${worm.snowballs?.freezeRadius}"""
+
     private fun addLinesCount(section: String): String {
         val lines = section.split(EOL).toMutableList()
         lines.add(1, "Section lines count: ${lines.size + 1}")
@@ -113,10 +126,11 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
         return lines.joinToString(EOL)
     }
 
-    private fun getBasePlayerText(player: PrintablePlayer): String {
-        return """|Player id: ${player.id}
-                  |Score: ${player.score}
-                  |Selection Tokens: ${player.remainingWormSelections}"""
+    private fun getBasePlayerText(player: PrintablePlayer?): String {
+        return """|Player id: ${player?.id}
+                  |Score: ${player?.score}
+                  |Selection Tokens: ${player?.remainingWormSelections}
+                  |Previous Command: ${player?.previousCommand}"""
     }
 
     private fun getBaseWormText(worm: PrintableWorm): String {
@@ -127,6 +141,7 @@ class WormsRendererText(private val config: GameConfig) : WormsRenderer {
                   |Position y: ${worm.position?.y}
                   |Digging range: ${worm.diggingRange}
                   |Movement range: ${worm.movementRange}
+                  |Rounds until unfrozen: ${worm.roundsUntilUnfrozen}
                   |Profession: ${worm.profession}"""
     }
 

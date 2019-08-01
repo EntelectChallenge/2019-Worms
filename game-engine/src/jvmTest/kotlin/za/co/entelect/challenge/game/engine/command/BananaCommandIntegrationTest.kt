@@ -1,6 +1,7 @@
 package za.co.entelect.challenge.game.engine.command
 
 import org.junit.Assert
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.contracts.command.RawCommand
 import za.co.entelect.challenge.game.contracts.game.GamePlayer
 import za.co.entelect.challenge.game.contracts.map.GameMap
@@ -52,8 +53,9 @@ class BananaCommandIntegrationTest {
 
         val roundProcessor = bootstrapper.roundProcessor
         roundProcessor.processRound(gameMap, mapOf(
-                players[0].gamePlayer to listOf(RawCommand("Select 3"), RawCommand("banana 24 5")),
-                players[1].gamePlayer to listOf(RawCommand("Move 30 17"))
+                players[0].gamePlayer to listOf(RawCommand("${CommandStrings.SELECT.string} 2"),
+                        RawCommand("${CommandStrings.BANANA.string} 1 16")),
+                players[1].gamePlayer to listOf(RawCommand("${CommandStrings.MOVE.string} 30 17"))
         ))
 
         val renderer = bootstrapper.getRenderer(rendererType = RendererType.TEXT)
@@ -70,7 +72,9 @@ class BananaCommandIntegrationTest {
         assertTrue(player is DelegatePlayer)
         val wormsPlayer = player.wormsPlayer
 
-        assertEquals(expected, wormsPlayer.worms[2].bananas?.count, "Player ${wormsPlayer.id} banana count correct")
+        val agentWorm = wormsPlayer.worms.first { it.bananas != null }
+        assertEquals(expected, agentWorm.bananas?.count,
+                "Player ${wormsPlayer.id} banana count correct")
 
         val pattern = "Banana bombs count: (\\d)".toRegex()
 

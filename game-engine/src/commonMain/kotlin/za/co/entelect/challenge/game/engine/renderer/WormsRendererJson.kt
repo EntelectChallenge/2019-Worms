@@ -13,7 +13,7 @@ class WormsRendererJson(private val config: GameConfig) : WormsRenderer {
         return "Not supported in JSON state file"
     }
 
-    override fun render(wormsMap: WormsMap, player: WormsPlayer): String {
+    override fun render(wormsMap: WormsMap, player: WormsPlayer?): String {
         val wormGameDetails = WormsGameDetails(config, wormsMap, player)
 
         return json.toJson(wormGameDetails)

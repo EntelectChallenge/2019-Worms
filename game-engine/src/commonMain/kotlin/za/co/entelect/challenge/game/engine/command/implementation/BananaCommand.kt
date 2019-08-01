@@ -1,9 +1,11 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.feedback.*
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.CellType
+import za.co.entelect.challenge.game.engine.map.MapCell
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.map.WormsMap
 import za.co.entelect.challenge.game.engine.player.Worm
@@ -20,11 +22,20 @@ import kotlin.math.roundToInt
  * Not Directions, use coordinates
  * Friendly fire
  * Used to throws the banana bomb
+ *
+ * Command to throw a Banana Bomb
  */
 class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
 
     override val order: Int = 3
 
+    /**
+     * For a banana command to be valid:
+     * * The worm must be an Agent
+     * * The worm must have bananas to throw
+     * * Target must be in map bounds
+     * * The target cell must be within range
+     */
     override fun validate(gameMap: WormsMap, worm: Worm): CommandValidation {
         return when {
             (worm.bananas == null) -> CommandValidation.invalidMove("This worm is not trained to use Banana bombs")
@@ -35,20 +46,12 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
         }
     }
 
-    private fun getAllPointsOfSquare(start: Int, end: Int) =
-            (start..end).flatMap { x -> (start..end).map { y -> Point(x, y) } }
-
     override fun execute(gameMap: WormsMap, worm: Worm): BananaCommandFeedback {
         val wormBananas = worm.bananas!!
         wormBananas.count = wormBananas.count - 1
 
         if (gameMap[target].type == CellType.DEEP_SPACE) {
-            return BananaCommandFeedback(
-                    this.toString(),
-                    score = config.scores.missedAttack,
-                    playerId = worm.player.id,
-                    result = BananaResult.DEEP_SPACE,
-                    target = target)
+            return BananaCommandFeedback(toString(), worm, config.scores.missedAttack, BananaResult.DEEP_SPACE, target, emptyList())
         }
 
         val damageRadius = wormBananas.damageRadius
@@ -60,8 +63,9 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
 
         val iOffset = target.x - damageRadius
         val jOffset = target.y - damageRadius
+        val affectedCells = mutableListOf<MapCell>()
 
-        getAllPointsOfSquare(0, damageRadius * 2)
+        Point.getAllPointsOfASquare(0, damageRadius * 2)
                 .map { it + Point(iOffset, jOffset) }
                 .forEach loop@{
                     if (it !in gameMap) {
@@ -74,9 +78,11 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
                         return@loop // equivalent to continue
                     }
 
-                    if (cell.type == CellType.DIRT) {
+                    if (cell.type == CellType.DIRT || cell.destroyedInRound == gameMap.currentRound) {
                         cell.type = CellType.AIR
+                        cell.destroyedInRound = gameMap.currentRound
                         totalDirtDestroyed += 1
+                        affectedCells.add(cell)
                     }
 
                     cell.powerup = null
@@ -98,16 +104,11 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
 
         val totalScore = (totalDirtDestroyed * config.scores.dig + totalDamageDone * config.scores.attack)
 
-        return BananaCommandFeedback(
-                this.toString(),
-                score = totalScore,
-                playerId = worm.player.id,
-                result = enemyWormHit,
-                target = target)
+        return BananaCommandFeedback(toString(), worm, totalScore, enemyWormHit, target, affectedCells)
     }
 
     override fun toString(): String {
-        return "banana $target"
+        return "${CommandStrings.BANANA.string} $target"
     }
 
 }

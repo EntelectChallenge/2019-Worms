@@ -14,9 +14,13 @@ class WormsPlayerTest {
     fun test_playerBuild() {
         val player = WormsPlayer.build(0, config)
 
-        val allWormsCount = config.commandoWorms.count + config.agentWorms.count
+        val allWormsCount = config.commandoWorms.count + config.agentWorms.count + config.technologistWorms.count
         assertEquals(allWormsCount, player.worms.size)
-        assertEquals(allWormsCount * config.commandoWorms.initialHp, player.health)
+        assertEquals(
+                config.commandoWorms.initialHp * config.commandoWorms.count +
+                        config.agentWorms.initialHp * config.agentWorms.count +
+                        config.technologistWorms.initialHp * config.technologistWorms.count,
+                player.health)
         assertFalse(player.dead)
         assertEquals(player.worms[0], player.currentWorm)
 
@@ -30,10 +34,12 @@ class WormsPlayerTest {
         val player = WormsPlayer.build(0, config)
         player.worms[1].health = 0
 
-        val allWormsCount = config.commandoWorms.count + config.agentWorms.count
+        val allWormsCount = config.commandoWorms.count + config.agentWorms.count + config.technologistWorms.count
         assertEquals(allWormsCount, player.worms.size)
-        assertEquals((config.commandoWorms.count - 1) * config.commandoWorms.initialHp
-                + config.agentWorms.count * config.agentWorms.initialHp, player.health)
+        assertEquals(config.commandoWorms.count * config.commandoWorms.initialHp
+                + (config.agentWorms.count - 1) * config.agentWorms.initialHp
+                + config.technologistWorms.count * config.technologistWorms.initialHp,
+                player.health)
         assertFalse(player.dead)
 
         player.selectNextWorm()
@@ -48,7 +54,7 @@ class WormsPlayerTest {
         val player = WormsPlayer.build(0, config)
         player.worms.forEachIndexed { i, worm -> worm.health = -i }
 
-        val allWormsCount = config.commandoWorms.count + config.agentWorms.count
+        val allWormsCount = config.commandoWorms.count + config.agentWorms.count + config.technologistWorms.count
         assertEquals(allWormsCount, player.worms.size)
         assertEquals(0, player.health)
         assertTrue(player.dead)

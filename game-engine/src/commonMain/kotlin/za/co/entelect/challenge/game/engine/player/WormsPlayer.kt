@@ -83,12 +83,13 @@ class WormsPlayer private constructor(val id: Int,
          */
         @JsName("build")
         fun build(id: Int, config: GameConfig): WormsPlayer {
-            val commandoWorms = (0 until config.commandoWorms.count)
-                    .map { i -> CommandoWorm.build(i + 1, config) }
-            val agentWorms = (0 until config.agentWorms.count)
-                    .map { i -> AgentWorm.build(i + 3, config) }
+            val worms = listOf(Pair(CommandoWorm, config.commandoWorms),
+                    Pair(AgentWorm, config.agentWorms),
+                    Pair(TechnologistWorm, config.technologistWorms))
+                    .flatMap { (builder, details) -> (0 until details.count).map { builder } }
+                    .mapIndexed { index, builder -> builder.build(index + 1, config) }
 
-            return WormsPlayer(id, commandoWorms + agentWorms, config)
+            return WormsPlayer(id, worms, config)
         }
 
         @JsName("buildWithWorms")

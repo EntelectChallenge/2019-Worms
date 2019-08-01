@@ -1,30 +1,33 @@
 {
-  "currentRound": 0,
-  "maxRounds": 200,
-  "pushbackDamage": 4,
+  "currentRound": 115,
+  "maxRounds": 400,
+  "pushbackDamage": 20,
+  "lavaDamage": 3,
   "mapSize": 33,
-  "currentWormId": 1,
+  "currentWormId": 3,
   "consecutiveDoNothingCount": 0,
   "myPlayer": {
     "id": 1,
-    "score": 100,
-    "health": 300,
-    "currentWormId": 1,
-    "remainingWormSelections": 1,
+    "score": 179,
+    "health": 350,
+    "currentWormId": 3,
+    "remainingWormSelections": 4,
+    "previousCommand": "nothing",
     "worms": [
       {
         "id": 1,
-        "health": 100,
+        "health": 150,
         "position": {
           "x": 24,
           "y": 28
         },
         "weapon": {
-          "damage": 1,
-          "range": 3
+          "damage": 8,
+          "range": 4
         },
         "diggingRange": 1,
         "movementRange": 1,
+        "roundsUntilUnfrozen": 0,
         "profession": "Commando"
       },
       {
@@ -35,12 +38,19 @@
           "y": 16
         },
         "weapon": {
-          "damage": 1,
-          "range": 3
+          "damage": 8,
+          "range": 4
+        },
+        "bananaBombs": {
+          "damage": 20,
+          "range": 5,
+          "count": 2,
+          "damageRadius": 2
         },
         "diggingRange": 1,
         "movementRange": 1,
-        "profession": "Commando"
+        "roundsUntilUnfrozen": 0,
+        "profession": "Agent"
       },
       {
         "id": 3,
@@ -53,34 +63,37 @@
           "damage": 8,
           "range": 4
         },
-        "bananaBombs": {
-          "damage": 20,
+        "snowballs": {
+          "freezeDuration": 5,
           "range": 5,
           "count": 3,
-          "damageRadius": 2
+          "freezeRadius": 1
         },
         "diggingRange": 1,
         "movementRange": 1,
-        "profession": "Agent"
+        "roundsUntilUnfrozen": 0,
+        "profession": "Technologist"
       }
     ]
   },
   "opponents": [
     {
       "id": 2,
-      "score": 100,
-      "currentWormId": 1,
-      "remainingWormSelections": 1,
+      "score": 121,
+      "currentWormId": 2,
+      "remainingWormSelections": 5,
+      "previousCommand": "nothing",
       "worms": [
         {
           "id": 1,
-          "health": 100,
+          "health": 150,
           "position": {
             "x": 31,
-            "y": 16
+            "y": 15
           },
           "diggingRange": 1,
           "movementRange": 1,
+          "roundsUntilUnfrozen": 0,
           "profession": "Commando"
         },
         {
@@ -92,7 +105,8 @@
           },
           "diggingRange": 1,
           "movementRange": 1,
-          "profession": "Commando"
+          "roundsUntilUnfrozen": 0,
+          "profession": "Agent"
         },
         {
           "id": 3,
@@ -103,7 +117,8 @@
           },
           "diggingRange": 1,
           "movementRange": 1,
-          "profession": "Agent"
+          "roundsUntilUnfrozen": 0,
+          "profession": "Technologist"
         }
       ]
     }
@@ -168,17 +183,17 @@
       {
         "x": 11,
         "y": 0,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 12,
         "y": 0,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 13,
         "y": 0,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 14,
@@ -208,17 +223,17 @@
       {
         "x": 19,
         "y": 0,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 20,
         "y": 0,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 21,
         "y": 0,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 22,
@@ -320,7 +335,7 @@
       {
         "x": 8,
         "y": 1,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 9,
@@ -400,7 +415,7 @@
       {
         "x": 24,
         "y": 1,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 25,
@@ -806,7 +821,7 @@
       {
         "x": 5,
         "y": 4,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 6,
@@ -832,7 +847,8 @@
           },
           "diggingRange": 1,
           "movementRange": 1,
-          "profession": "Agent"
+          "roundsUntilUnfrozen": 0,
+          "profession": "Technologist"
         }
       },
       {
@@ -926,15 +942,16 @@
             "damage": 8,
             "range": 4
           },
-          "bananaBombs": {
-            "damage": 20,
+          "snowballs": {
+            "freezeDuration": 5,
             "range": 5,
             "count": 3,
-            "damageRadius": 2
+            "freezeRadius": 1
           },
           "diggingRange": 1,
           "movementRange": 1,
-          "profession": "Agent"
+          "roundsUntilUnfrozen": 0,
+          "profession": "Technologist"
         }
       },
       {
@@ -950,7 +967,7 @@
       {
         "x": 27,
         "y": 4,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 28,
@@ -1488,7 +1505,7 @@
       {
         "x": 1,
         "y": 8,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 2,
@@ -1638,7 +1655,7 @@
       {
         "x": 31,
         "y": 8,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 32,
@@ -1655,7 +1672,7 @@
       {
         "x": 1,
         "y": 9,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 2,
@@ -1805,7 +1822,7 @@
       {
         "x": 31,
         "y": 9,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 32,
@@ -1822,7 +1839,7 @@
       {
         "x": 1,
         "y": 10,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 2,
@@ -1984,17 +2001,17 @@
       {
         "x": 0,
         "y": 11,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 1,
         "y": 11,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 2,
         "y": 11,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 3,
@@ -2151,7 +2168,7 @@
       {
         "x": 0,
         "y": 12,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 1,
@@ -2161,12 +2178,12 @@
       {
         "x": 2,
         "y": 12,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 3,
         "y": 12,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 4,
@@ -2318,7 +2335,7 @@
       {
         "x": 0,
         "y": 13,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 1,
@@ -2328,7 +2345,7 @@
       {
         "x": 2,
         "y": 13,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 3,
@@ -2478,7 +2495,7 @@
       {
         "x": 32,
         "y": 13,
-        "type": "AIR"
+        "type": "LAVA"
       }
     ],
     [
@@ -2490,7 +2507,7 @@
       {
         "x": 1,
         "y": 14,
-        "type": "DIRT"
+        "type": "AIR"
       },
       {
         "x": 2,
@@ -2725,7 +2742,7 @@
         "type": "AIR",
         "powerup": {
           "type": "HEALTH_PACK",
-          "value": 5
+          "value": 10
         }
       },
       {
@@ -2811,7 +2828,20 @@
       {
         "x": 31,
         "y": 15,
-        "type": "AIR"
+        "type": "AIR",
+        "occupier": {
+          "id": 1,
+          "playerId": 2,
+          "health": 150,
+          "position": {
+            "x": 31,
+            "y": 15
+          },
+          "diggingRange": 1,
+          "movementRange": 1,
+          "roundsUntilUnfrozen": 0,
+          "profession": "Commando"
+        }
       },
       {
         "x": 32,
@@ -2838,12 +2868,19 @@
             "y": 16
           },
           "weapon": {
-            "damage": 1,
-            "range": 3
+            "damage": 8,
+            "range": 4
+          },
+          "bananaBombs": {
+            "damage": 20,
+            "range": 5,
+            "count": 2,
+            "damageRadius": 2
           },
           "diggingRange": 1,
           "movementRange": 1,
-          "profession": "Commando"
+          "roundsUntilUnfrozen": 0,
+          "profession": "Agent"
         }
       },
       {
@@ -2994,19 +3031,7 @@
       {
         "x": 31,
         "y": 16,
-        "type": "AIR",
-        "occupier": {
-          "id": 1,
-          "playerId": 2,
-          "health": 100,
-          "position": {
-            "x": 31,
-            "y": 16
-          },
-          "diggingRange": 1,
-          "movementRange": 1,
-          "profession": "Commando"
-        }
+        "type": "AIR"
       },
       {
         "x": 32,
@@ -3111,7 +3136,7 @@
         "type": "AIR",
         "powerup": {
           "type": "HEALTH_PACK",
-          "value": 5
+          "value": 10
         }
       },
       {
@@ -3356,7 +3381,7 @@
       {
         "x": 0,
         "y": 19,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 1,
@@ -3516,7 +3541,7 @@
       {
         "x": 32,
         "y": 19,
-        "type": "AIR"
+        "type": "LAVA"
       }
     ],
     [
@@ -3862,7 +3887,7 @@
       {
         "x": 1,
         "y": 22,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 2,
@@ -4012,7 +4037,7 @@
       {
         "x": 31,
         "y": 22,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 32,
@@ -4029,7 +4054,7 @@
       {
         "x": 1,
         "y": 23,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 2,
@@ -4179,7 +4204,7 @@
       {
         "x": 31,
         "y": 23,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 32,
@@ -4196,12 +4221,12 @@
       {
         "x": 1,
         "y": 24,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 2,
         "y": 24,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 3,
@@ -4341,12 +4366,12 @@
       {
         "x": 30,
         "y": 24,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 31,
         "y": 24,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 32,
@@ -4368,7 +4393,7 @@
       {
         "x": 2,
         "y": 25,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 3,
@@ -4508,7 +4533,7 @@
       {
         "x": 30,
         "y": 25,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 31,
@@ -4712,7 +4737,7 @@
       {
         "x": 4,
         "y": 27,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 5,
@@ -4832,7 +4857,7 @@
       {
         "x": 28,
         "y": 27,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 29,
@@ -4879,7 +4904,7 @@
       {
         "x": 4,
         "y": 28,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 5,
@@ -4910,7 +4935,8 @@
           },
           "diggingRange": 1,
           "movementRange": 1,
-          "profession": "Commando"
+          "roundsUntilUnfrozen": 0,
+          "profession": "Agent"
         }
       },
       {
@@ -4995,17 +5021,18 @@
         "occupier": {
           "id": 1,
           "playerId": 1,
-          "health": 100,
+          "health": 150,
           "position": {
             "x": 24,
             "y": 28
           },
           "weapon": {
-            "damage": 1,
-            "range": 3
+            "damage": 8,
+            "range": 4
           },
           "diggingRange": 1,
           "movementRange": 1,
+          "roundsUntilUnfrozen": 0,
           "profession": "Commando"
         }
       },
@@ -5027,7 +5054,7 @@
       {
         "x": 28,
         "y": 28,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 29,
@@ -5428,7 +5455,7 @@
       {
         "x": 8,
         "y": 31,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 9,
@@ -5438,7 +5465,7 @@
       {
         "x": 10,
         "y": 31,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 11,
@@ -5498,7 +5525,7 @@
       {
         "x": 22,
         "y": 31,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 23,
@@ -5508,7 +5535,7 @@
       {
         "x": 24,
         "y": 31,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 25,
@@ -5620,12 +5647,12 @@
       {
         "x": 13,
         "y": 32,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 14,
         "y": 32,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 15,
@@ -5645,12 +5672,12 @@
       {
         "x": 18,
         "y": 32,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 19,
         "y": 32,
-        "type": "AIR"
+        "type": "LAVA"
       },
       {
         "x": 20,
@@ -5718,5 +5745,93 @@
         "type": "DEEP_SPACE"
       }
     ]
+  ],
+  "visualizerEvents": [
+    {
+      "type": "select",
+      "wormCommanded": {
+        "id": 2,
+        "playerId": 1
+      }
+    },
+    {
+      "type": "move",
+      "result": "MOVED",
+      "positionStart": {
+        "x": 31,
+        "y": 16
+      },
+      "positionEnd": {
+        "x": 31,
+        "y": 15
+      },
+      "wormCommanded": {
+        "id": 1,
+        "playerId": 2
+      }
+    },
+    {
+      "type": "banana",
+      "result": "TERRAIN",
+      "positionStart": {
+        "x": 1,
+        "y": 16
+      },
+      "positionEnd": {
+        "x": 1,
+        "y": 12
+      },
+      "wormCommanded": {
+        "id": 2,
+        "playerId": 1
+      },
+      "affectedCells": [
+        {
+          "x": 0,
+          "y": 11,
+          "type": "AIR"
+        },
+        {
+          "x": 0,
+          "y": 12,
+          "type": "AIR"
+        },
+        {
+          "x": 1,
+          "y": 10,
+          "type": "AIR"
+        },
+        {
+          "x": 1,
+          "y": 11,
+          "type": "AIR"
+        },
+        {
+          "x": 1,
+          "y": 14,
+          "type": "AIR"
+        },
+        {
+          "x": 2,
+          "y": 11,
+          "type": "AIR"
+        },
+        {
+          "x": 2,
+          "y": 12,
+          "type": "AIR"
+        },
+        {
+          "x": 2,
+          "y": 13,
+          "type": "AIR"
+        },
+        {
+          "x": 3,
+          "y": 12,
+          "type": "AIR"
+        }
+      ]
+    }
   ]
 }

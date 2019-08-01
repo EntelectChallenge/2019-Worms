@@ -7,7 +7,7 @@ interface WormsRenderer {
 
     fun commandPrompt(wormsPlayer: WormsPlayer): String
 
-    fun render(wormsMap: WormsMap, player: WormsPlayer): String
+    fun render(wormsMap: WormsMap, player: WormsPlayer?): String
 
     companion object {
         const val EOL: String = "\n"

@@ -4,13 +4,12 @@ import org.junit.Assert
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.command.WormsCommand
 import za.co.entelect.challenge.game.engine.command.implementation.*
-import za.co.entelect.challenge.game.engine.factory.TestMapFactory
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
-import za.co.entelect.challenge.game.engine.player.AgentWorm
-import za.co.entelect.challenge.game.engine.player.CommandoWorm
-import za.co.entelect.challenge.game.engine.player.WormsPlayer
+import za.co.entelect.challenge.game.engine.map.WormsMap
+import za.co.entelect.challenge.game.engine.map.WormsMapGenerator
+import za.co.entelect.challenge.game.engine.player.*
 import za.co.entelect.challenge.game.engine.powerups.HealthPack
 import za.co.entelect.challenge.game.engine.renderer.WormsRendererText
 import kotlin.random.Random
@@ -353,7 +352,7 @@ class WormsRoundProcessorTest {
         val attackerWorm = CommandoWorm.build(0, config, Point(2, 2))
         val attackingPlayer = WormsPlayer.build(1, listOf(attackerWorm), config)
 
-        val testMap = TestMapFactory.buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 3, CellType.AIR)
+        val testMap = buildMapWithCellType(listOf(attackingPlayer, targetPlayer), 3, CellType.AIR)
 
         val traitorCommand = ShootCommand(Direction.DOWN_RIGHT, config)
         val otherCommand = ShootCommand(Direction.UP_LEFT, config)
@@ -364,9 +363,9 @@ class WormsRoundProcessorTest {
         roundProcessor.processRound(testMap, commandMap)
 
         assertTrue(victimWorm.dead)
-        assertEquals(0, victimWorm.health)
-        assertEquals(41, attackingPlayer.commandScore)
-        assertEquals(-41, targetPlayer.commandScore)
+        assertEquals(-14, victimWorm.health)
+        assertEquals(56, attackingPlayer.commandScore)
+        assertEquals(-56, targetPlayer.commandScore)
 
     }
 
@@ -420,9 +419,107 @@ class WormsRoundProcessorTest {
         assertEquals(expected, count.toInt())
     }
 
-    private fun commandMap(player1: WormsPlayer, player2: WormsPlayer, command1: WormsCommand, command2: WormsCommand = command1) =
+    @Test
+    fun test_banana_score_destroyed_dirt() {
+        val aliceWorm = AgentWorm.build(0, config, Point(3, 2))
+        val alice = WormsPlayer.build(0, listOf(aliceWorm), config)
+
+        val bobWorm = AgentWorm.build(0, config, Point(2, 2))
+        val bob = WormsPlayer.build(1, listOf(bobWorm), config)
+
+        val map = buildMapWithCellType(listOf(bob, alice), 10, CellType.DIRT)
+        roundProcessor.processRound(map, commandMap(bob, alice,
+                BananaCommand(Point(6, 3), config),
+                DoNothingCommand(config)))
+
+        assertEquals(91, bob.commandScore, "Expected to gain 91 score from banana destroyed dirt cells")
+
+        roundProcessor.processRound(map, commandMap(bob, alice,
+                BananaCommand(Point(2, 6), config),
+                BananaCommand(Point(2, 6), config)))
+
+        assertEquals(182, bob.commandScore, "Expected to gain 182 score from banana destroyed dirt cells")
+        assertEquals(91, alice.commandScore, "Expected to gain 91 score from banana destroyed dirt cells")
+    }
+
+    private fun commandMap(player1: WormsPlayer,
+                           player2: WormsPlayer,
+                           command1: WormsCommand,
+                           command2: WormsCommand = command1) =
             mapOf(Pair(player1, listOf(command1)), Pair(player2, listOf(command2)))
 
     private fun commandMap(player: WormsPlayer, vararg command: WormsCommand) =
             mapOf(Pair(player, command.asList()))
+
+    @Test
+    fun test_battle_royale_shrinking_map() {
+        val aliceWorm = AgentWorm.build(0, config, Point(3, 2))
+        val alice = WormsPlayer.build(0, listOf(aliceWorm), config)
+
+        val bobWorm = AgentWorm.build(0, config, Point(2, 2))
+        val bob = WormsPlayer.build(1, listOf(bobWorm), config)
+
+        val processor = WormsRoundProcessor(config)
+        val mapGenerator = WormsMapGenerator(config, 0)
+        val map = mapGenerator.getMap(listOf(alice, bob))
+        val aliceCell = map[aliceWorm.position]
+
+        map.currentRound = 99
+        processor.processRound(map, commandMap(bob, alice,
+                ShootCommand(Direction.UP, config),
+                ShootCommand(Direction.UP, config)))
+        assertTrue(aliceWorm.health > 0, "Worm $aliceWorm died unexpectedly")
+        assertNotEquals(aliceCell.type, CellType.LAVA, "Worm $aliceWorm should not yet be covered in Lava")
+
+        map.currentRound = 135
+        processor.processRound(map, commandMap(bob, alice,
+                ShootCommand(Direction.UP, config),
+                ShootCommand(Direction.UP, config)))
+        assertTrue(aliceWorm.health in 1..99, "Worm $aliceWorm should be injured by Lava")
+        assertEquals(aliceCell.type, CellType.LAVA, "Worm $aliceWorm should now be covered in Lava")
+    }
+
+    @Test
+    fun test_snowball_freeze_lifecycle() {
+        val aliceWorm = TechnologistWorm.build(0, config, Point(0, 0))
+        val alice = WormsPlayer.build(0, listOf(aliceWorm), config)
+
+        val bobWorm = CommandoWorm.build(0, config, Point(2, 2))
+        val bob = WormsPlayer.build(1, listOf(bobWorm), config)
+
+        val processor = WormsRoundProcessor(config)
+        val map = buildMapWithCellType(listOf(alice, bob), 10, CellType.AIR)
+
+        assertEquals(0, aliceWorm.roundsUntilUnfrozen, "Worm $aliceWorm was frozen unexpectedly")
+        assertEquals(0, bobWorm.roundsUntilUnfrozen, "Worm $bobWorm was frozen unexpectedly")
+
+        runOneRound(map, processor, alice, bob, SnowballCommand(bobWorm.position, config))
+        assertEquals(0, aliceWorm.roundsUntilUnfrozen, "Worm $aliceWorm was frozen unexpectedly")
+        assertEquals(5, bobWorm.roundsUntilUnfrozen, "Worm $bobWorm was not frozen for 5 rounds")
+
+        runOneRound(map, processor, alice, bob)
+        assertTrue(aliceWorm.position.x > 0, "Worm $aliceWorm should still be able to move")
+        assertFalse(bobWorm.position.x > 3, "Worm $bobWorm should be frozen and cannot move")
+
+        repeat(3) {
+            runOneRound(map, processor, alice, bob)
+            assertTrue(aliceWorm.position.x > it + 1, "Worm $aliceWorm should still be able to move")
+            assertFalse(bobWorm.position.x > 3, "Worm $bobWorm should be frozen and cannot move")
+        }
+
+        runOneRound(map, processor, alice, bob)
+        assertTrue(aliceWorm.position.x > 4, "Worm $aliceWorm should still be able to move")
+        assertTrue(bobWorm.position.x > 3, "Worm $bobWorm should be unfrozen and can move")
+    }
+
+    private fun runOneRound(map: WormsMap,
+                            processor: WormsRoundProcessor,
+                            alice: WormsPlayer,
+                            bob: WormsPlayer,
+                            otherCommand: SnowballCommand? = null) {
+        val aliceCommand = otherCommand ?: TeleportCommand(alice.worms[0].position + Point(1, 0), random, config)
+        map.currentRound++
+        processor.processRound(map, commandMap(alice, bob, aliceCommand,
+                TeleportCommand(bob.worms[0].position + Point(1, 0), random, config)))
+    }
 }

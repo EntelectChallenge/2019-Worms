@@ -1,8 +1,9 @@
 package za.co.entelect.challenge.game.engine.command.implementation
 
+import za.co.entelect.challenge.game.engine.command.CommandStrings
 import za.co.entelect.challenge.game.engine.command.WormsCommand
-import za.co.entelect.challenge.game.engine.command.feedback.StandardCommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
+import za.co.entelect.challenge.game.engine.command.feedback.DigCommandFeedback
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
@@ -24,30 +25,23 @@ class DigCommand(val target: Point, val config: GameConfig) : WormsCommand {
      * * The target cell must be diggable (see CellType})
      */
     override fun validate(gameMap: WormsMap, worm: Worm): CommandValidation {
-        if (target !in gameMap) {
-            return CommandValidation.invalidMove("$target out of map bounds")
-        }
+        if (target !in gameMap) return CommandValidation.invalidMove("$target out of map bounds")
 
         val targetCell = gameMap[target]
-
-        if (!targetCell.type.diggable) {
-            return CommandValidation.invalidMove("Cell type ${targetCell.type} not diggable")
+        return when {
+            !targetCell.type.diggable -> CommandValidation.invalidMove("Cell type ${targetCell.type} not diggable")
+            (target.movementDistance(worm.position) > worm.diggingRange) -> CommandValidation.invalidMove("Cell $target too far away")
+            else -> CommandValidation.validMove()
         }
-
-        if (target.movementDistance(worm.position) > worm.diggingRange) {
-            return CommandValidation.invalidMove("Cell $target too far away")
-        }
-
-        return CommandValidation.validMove()
     }
 
-    override fun execute(gameMap: WormsMap, worm: Worm): StandardCommandFeedback {
+    override fun execute(gameMap: WormsMap, worm: Worm): DigCommandFeedback {
         val targetCell = gameMap[target]
         targetCell.type = CellType.AIR
 
-        return StandardCommandFeedback(this.toString(), score = config.scores.dig, playerId = worm.player.id)
+        return DigCommandFeedback(toString(), worm, config.scores.dig, target)
     }
 
-    override fun toString(): String = "dig $target"
+    override fun toString(): String = "${CommandStrings.DIG.string} $target"
 
 }
