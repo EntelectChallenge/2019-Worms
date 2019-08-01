@@ -13,8 +13,8 @@ class PrintablePlayer(player: WormsPlayer) {
     var health: Int? = null
     val currentWormId = player.currentWorm.id
     val remainingWormSelections = player.wormSelectionTokens
-    var worms: List<PrintableWorm> = emptyList()
     var previousCommand: String = CommandStrings.NOTHING.string
+    var worms: List<PrintableWorm> = emptyList()
 
     @Transient
     val consoleHealth: Int = player.health
