@@ -6,7 +6,8 @@ import za.co.entelect.challenge.game.engine.player.Worm
 import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.processor.GameError
 import za.co.entelect.challenge.game.engine.renderer.printables.VisualizerEvent
-import kotlin.js.JsName
+import kotlin.math.PI
+import kotlin.math.sin
 
 interface GameMap {
     val players: List<WormsPlayer>
@@ -37,12 +38,13 @@ interface GameMap {
     fun getRefereeIssues(): List<String>
     fun setScoresForKilledWorms(config: GameConfig)
     fun getVisualizerEvents(): List<VisualizerEvent>
+    fun progressBattleRoyale(config: GameConfig)
+    fun tickFrozenTimers()
 }
 
 class WormsMap(override val players: List<WormsPlayer>,
                val size: Int,
                cells: List<MapCell>) : GameMap {
-
     private val allFeedback = mutableMapOf<Int, MutableList<CommandFeedback>>()
 
     override var currentRound: Int = 0
@@ -188,6 +190,32 @@ class WormsMap(override val players: List<WormsPlayer>,
 
     override fun getVisualizerEvents(): List<VisualizerEvent> {
         return allFeedback[currentRound]?.mapNotNull { it.visualizerEvent } ?: emptyList()
+    }
+
+    override fun progressBattleRoyale(config: GameConfig) {
+        val center = (config.mapSize - 1) / 2.0
+        val mapCenter = Pair(center, center)
+
+        val brStartRound = config.maxRounds * config.battleRoyaleStart
+        if (currentRound < brStartRound) {
+            return
+        }
+        val brEndRound = config.maxRounds * config.battleRoyaleEnd
+        val fullPercentageRange = (currentRound - brStartRound) / (brEndRound - brStartRound)
+        val currentProgress = fullPercentageRange.coerceIn(0.0, 1.0)
+
+        val safeAreaRadius = (config.mapSize / 2) * (1 - currentProgress)
+
+        cells.filter { it.type == CellType.AIR && it.position.euclideanDistance(mapCenter) > safeAreaRadius + 1 }
+                .forEach { it.type = CellType.LAVA }
+
+        livingPlayers.flatMap { it.livingWorms }
+                .filter { cells.any { cell -> cell.type == CellType.LAVA && cell.position == it.position } }
+                .forEach { worm -> worm.takeDamage(config.lavaDamage, currentRound) }
+    }
+
+    override fun tickFrozenTimers() {
+        this.livingPlayers.flatMap { it.livingWorms }.forEach { it.tickFrozenTimer() }
     }
 
 }

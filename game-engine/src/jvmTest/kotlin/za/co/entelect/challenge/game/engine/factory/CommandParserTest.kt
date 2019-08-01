@@ -136,6 +136,28 @@ class CommandParserTest {
     }
 
     @Test
+    fun snowball_valid() {
+        val command = parser.parseCommand("${CommandStrings.SNOWBALL.string} 15 13")
+        assertTrue(command is SnowballCommand)
+        assertEquals(Point(15, 13), command.target)
+    }
+
+    @Test
+    fun snowball_invalid() {
+        val command = parser.parseCommand("${CommandStrings.SNOWBALL.string} A 5")
+        assertTrue(command is InvalidCommand)
+    }
+
+    @Test
+    fun snowball_tooShort() {
+        val commandOnly = parser.parseCommand("${CommandStrings.SNOWBALL.string}")
+        assertTrue(commandOnly is InvalidCommand)
+
+        val commandOneParameter = parser.parseCommand("${CommandStrings.SNOWBALL.string} 15")
+        assertTrue(commandOneParameter is InvalidCommand)
+    }
+
+    @Test
     fun nothing() {
         val command = parser.parseCommand("${CommandStrings.NOTHING.string}")
         assertTrue(command is DoNothingCommand)

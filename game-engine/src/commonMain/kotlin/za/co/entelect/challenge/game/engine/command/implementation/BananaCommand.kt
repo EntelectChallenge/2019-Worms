@@ -46,9 +46,6 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
         }
     }
 
-    private fun getAllPointsOfSquare(start: Int, end: Int) =
-            (start..end).flatMap { x -> (start..end).map { y -> Point(x, y) } }
-
     override fun execute(gameMap: WormsMap, worm: Worm): BananaCommandFeedback {
         val wormBananas = worm.bananas!!
         wormBananas.count = wormBananas.count - 1
@@ -68,7 +65,7 @@ class BananaCommand(val target: Point, val config: GameConfig) : WormsCommand {
         val jOffset = target.y - damageRadius
         val affectedCells = mutableListOf<MapCell>()
 
-        getAllPointsOfSquare(0, damageRadius * 2)
+        Point.getAllPointsOfASquare(0, damageRadius * 2)
                 .map { it + Point(iOffset, jOffset) }
                 .forEach loop@{
                     if (it !in gameMap) {

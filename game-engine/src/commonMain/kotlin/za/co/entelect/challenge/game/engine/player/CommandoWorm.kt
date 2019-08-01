@@ -2,12 +2,10 @@ package za.co.entelect.challenge.game.engine.player
 
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.map.Point
-import kotlin.js.JsName
 
-object CommandoWorm {
+object CommandoWorm : WormBuilder {
 
-    @JsName("buildWithPositions")
-    fun build(id: Int, config: GameConfig, position: Point): Worm {
+    override fun build(id: Int, config: GameConfig, position: Point): Worm {
         return Worm(id = id,
                 health = config.commandoWorms.initialHp,
                 position = position,
@@ -17,8 +15,7 @@ object CommandoWorm {
                 profession = config.commandoWorms.professionName)
     }
 
-    @JsName("build")
-    fun build(id: Int, config: GameConfig): Worm {
+    override fun build(id: Int, config: GameConfig): Worm {
         return Worm(id = id,
                 health = config.commandoWorms.initialHp,
                 weapon = Weapon.fromWeapon(config.commandoWorms.weapon),

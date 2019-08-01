@@ -21,6 +21,7 @@ The game is played on a grid of **33x33** cells. Every cell is one of the follow
 * Air - worms can move into and shoot through air cells
 * Dirt - worms cannot move into or shoot through dirt cells, it has be dug out first
 * Deep Space - worms cannot interact with deep space cells
+* Lava - worms can move and shoot into lava cells, worms will sustain damage every round that they are in a lava cell
 
 Cells can contain powerups. Powerups are picked up when a worm moves onto a cell. 
 * A Healthpack will immediately restore **10** health to the worm who picks it up. 
@@ -58,6 +59,32 @@ The format of the dig command is `dig x y`
 * Digging a dirt cells will change its type to air
 * Two worms digging the same cell in the same turn is a valid move 
 
+### Shoot
+The format of the shoot command is `shoot {direction}`
+
+* `{direction}` can be any of the eight principal directions: N (North), NE (North-East), E (East), SE (South-East), S (South), SW (South-West), W (West), NW (North-West)
+
+![Compass](https://github.com/EntelectChallenge/2019-Worms/blob/master/game-engine/assets/images/compass-rose.png "The 8 principal wind directions https://en.wikipedia.org/wiki/File:Compass_rose_en_08p.svg")
+
+* Shooting distance is measured in [euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance). To determine if a cell is in range, calculate its euclidean distance from the worm's position, round it downwards to the nearest integer (floor), and check if it is less than or equal to the max range
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=distance&space;=&space;\left&space;\lfloor&space;\sqrt{(x_{a}-x_{b})^{2}&space;+&space;(y_{a}-y_{2})^{2}}&space;\right&space;\rfloor" target="_blank"><img src="https://latex.codecogs.com/gif.latex?distance&space;=&space;\left&space;\lfloor&space;\sqrt{(x_{a}-x_{b})^{2}&space;+&space;(y_{a}-y_{2})^{2}}&space;\right&space;\rfloor" title="Euclidean Distance" /></a>
+
+* Shots are blocked by dirt and deep space cells
+* The first worm in range in the shooting direction will lose health equal to the weapon's damage
+* When a worm's health is 0 or lower, it will fall unconscious and be removed from the map 
+* Be careful! Friendly fire could hit your own worms
+
+The two diagrams below illustrates how a worm can shoot with a maximum range of 3 and 4 respectively:
+
+![Shooting Range 3](https://github.com/EntelectChallenge/2019-Worms/blob/master/game-engine/assets/images/shooting-range-3.PNG "Maximum Shooting Range 3")
+![Shooting Range 4](https://github.com/EntelectChallenge/2019-Worms/blob/master/game-engine/assets/images/shooting-range-4.PNG "Maximum Shooting Range 4")
+
+### Do Nothing
+The `nothing` command can be used when a Player does not want to do anything. Any invalid commands will also be considered as doing nothing. 
+
+If a player does nothing for **12** consecutive turns, their bot will be considered invalid and they will be disqualified from the match.
+
 ### Banana Bomb
 The format of the Banana Bomb command is `banana x y`
 
@@ -92,31 +119,31 @@ The format of the Banana Bomb command is `banana x y`
 * Be careful! Friendly fire will damage your own worms
   *  You will be penalised with negative score based on the damage dealt
 
-### Shoot
-The format of the shoot command is `shoot {direction}`
+### Snowball
+The format of the Snowball command is `snowball x y`
 
-* `{direction}` can be any of the eight principal directions: N (North), NE (North-East), E (East), SE (South-East), S (South), SW (South-West), W (West), NW (North-West)
-
-![Compass](https://github.com/EntelectChallenge/2019-Worms/blob/master/game-engine/assets/images/compass-rose.png "The 8 principal wind directions https://en.wikipedia.org/wiki/File:Compass_rose_en_08p.svg")
-
-* Shooting distance is measured in [euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance). To determine if a cell is in range, calculate its euclidean distance from the worm's position, round it downwards to the nearest integer (floor), and check if it is less than or equal to the max range
+* `x y` is the target coordinate where the Snowball will be thrown
+* Throwing distance is measured in [euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance). To determine if a cell is in range, calculate its euclidean distance from the worm's position, round it downwards to the nearest integer (floor), and check if it is less than or equal to the max range
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=distance&space;=&space;\left&space;\lfloor&space;\sqrt{(x_{a}-x_{b})^{2}&space;+&space;(y_{a}-y_{2})^{2}}&space;\right&space;\rfloor" target="_blank"><img src="https://latex.codecogs.com/gif.latex?distance&space;=&space;\left&space;\lfloor&space;\sqrt{(x_{a}-x_{b})^{2}&space;+&space;(y_{a}-y_{2})^{2}}&space;\right&space;\rfloor" title="Euclidean Distance" /></a>
 
-* Shots are blocked by dirt and deep space cells
-* The first worm in range in the shooting direction will lose health equal to the weapon's damage
-* When a worm's health is 0 or lower, it will fall unconscious and be removed from the map 
-* Be careful! Friendly fire could hit your own worms
-
-The two diagrams below illustrates how a worm can shoot with a maximum range of 3 and 4 respectively:
-
-![Shooting Range 3](https://github.com/EntelectChallenge/2019-Worms/blob/master/game-engine/assets/images/shooting-range-3.PNG "Maximum Shooting Range 3")
-![Shooting Range 4](https://github.com/EntelectChallenge/2019-Worms/blob/master/game-engine/assets/images/shooting-range-4.PNG "Maximum Shooting Range 4")
-
-### Do Nothing
-The `nothing` command can be used when a Player does not want to do anything. Any invalid commands will also be considered as doing nothing. 
-
-If a player does nothing for **12** consecutive turns, their bot will be considered invalid and they will be disqualified from the match.
+* The Snowball has a maximum throw range of **5**
+* Snowballs can be thrown over dirt
+* If a Snowball is thrown into deep space, the Snowball will be lost
+* The Snowball has an effect radius of **1**
+  * The effect radius can be represented like this:
+    * ░░░░░░░░░░
+    * ░░██████░░
+    * ░░██▓▓██░░
+    * ░░██████░░
+    * ░░░░░░░░░░
+  * Any worm caught within this radius during the impact, will be frozen for **5** rounds
+  * The Snowball hit at the "▓▓" cell.
+    * Worms in the impact cell "▓▓", as well as those in the radius cells "██", are all frozen
+    * You will be awarded **17** points for each worm you froze
+  * The Snowball will not destroy powerups
+* Be careful! Friendly fire will freeze your own worms
+  *  You will be penalised with negative points based on the amount of worms frozen
 
 ### Select
 The format of the select command is `select {worm id};{command}`
@@ -128,8 +155,9 @@ The format of the select command is `select {worm id};{command}`
   * The following are examples for valid commands, hypothetically for round 5, selecting worm 1
     * ` C;5;select 1;move 1 1`
     * ` C;5;select 1;dig 1 1`
-    * ` C;5;select 1;banana 1 1`
     * ` C;5;select 1;shoot N`
+    * ` C;5;select 1;banana 1 1`
+    * ` C;5;select 1;snowball 1 1`
 * This will override the selected worm for your player, meaning that in the next round your 
 selected worm index will start cycling from this selected worm 
 
@@ -140,6 +168,7 @@ All commands submitted in a round will be evaluated in the following order:
 1. Movement
 2. Digging
 3. Banana
+3. Snowball
 4. Shooting
 
 This implies the following regarding command interaction:
@@ -161,6 +190,10 @@ Worms can have only one of the following professions:
   * Health → **100**
   * Can use the basic weapon to shoot
   * Trained to use **Banana Bombs**
+* `Technologist`
+  * Health → **100**
+  * Can use the basic weapon to shoot
+  * Trained to use **Snowballs**
 
 ## Scores
 
@@ -176,5 +209,20 @@ The total score value is determined by adding together the player's average worm
   * A missed attack gives **2** points  
 * Moving gives **5** point
 * Digging gives **7** points
+* Freezing gives **17** points
 * Doing nothing gives **0** points
 * An invalid command will **reduce** your points by **4**
+
+## Endgame
+
+The worms' disagreements here have initiated geological activity. A slow flood of lava will engulf the entire map if they cannot sort out their differences
+* From round **100** lava will slowly creep onto the edges of the map
+* At round **350** lava will have filled the entire map except for a small circular region in the center of the map
+* Lava will replace most cells as it floods over the map
+  * Air cells are replaced by lava cells
+  * Dirt cells are not replaced
+  * Deep space cells are not replaced
+  * When a digging worm forms new air cell in the flooded region, it is replaced by lava at the start of the next round
+    * The same happens for destroyed dirt cells via a Banana Bomb
+* Any worm standing on top of a lava cell, will sustain **3** damage every round
+

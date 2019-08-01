@@ -77,7 +77,7 @@ class SelectCommandTest {
         command.execute(map, worms[0])
 
         assertEquals(worms[1], player.currentWorm)
-        assertEquals(0, player.wormSelectionTokens)
+        assertEquals(4, player.wormSelectionTokens)
     }
 
 

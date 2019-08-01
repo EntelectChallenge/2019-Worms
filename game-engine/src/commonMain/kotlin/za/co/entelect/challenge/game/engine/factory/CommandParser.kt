@@ -20,6 +20,8 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
      *  - `move x y` (Move to a cell)
      *  - `dig x y` (Dig a cell)
      *  - `shoot direction` (Shoot in a direction)
+     *  - `banana x y` (Throw banana bomb onto a cell)
+     *  - `snowball x y` (Throw snowball onto a cell)
      *  - `nothing` (Do nothing)
      *
      * @return The parsed command or an [InvalidCommand] if the command could not be parsed properly
@@ -30,13 +32,28 @@ class CommandParser(private val commandRandom: Random, private val config: GameC
         val splitCommand = rawCommand.split(" ", limit = 4)
 
         return when (splitCommand[0].toLowerCase()) {
-            CommandStrings.MOVE.string    -> teleportCommand(splitCommand)
-            CommandStrings.DIG.string     -> digCommand(splitCommand)
-            CommandStrings.SHOOT.string   -> shootCommand(splitCommand)
-            CommandStrings.BANANA.string  -> bananaCommand(splitCommand)
-            CommandStrings.SELECT.string  -> selectCommand(splitCommand)
+            CommandStrings.MOVE.string -> teleportCommand(splitCommand)
+            CommandStrings.DIG.string -> digCommand(splitCommand)
+            CommandStrings.SHOOT.string -> shootCommand(splitCommand)
+            CommandStrings.BANANA.string -> bananaCommand(splitCommand)
+            CommandStrings.SNOWBALL.string -> snowballCommand(splitCommand)
+            CommandStrings.SELECT.string -> selectCommand(splitCommand)
             CommandStrings.NOTHING.string -> DoNothingCommand(config)
             else                          -> InvalidCommand("Unknown command: $rawCommand")
+        }
+    }
+
+    private fun snowballCommand(splitCommand: List<String>): WormsCommand {
+        if (splitCommand.size != 3) {
+            return InvalidCommand("Cannot parse snowball command: Invalid length ${splitCommand.size}, expected 3")
+        }
+
+        val x = splitCommand[1].toIntOrNull()
+        val y = splitCommand[2].toIntOrNull()
+
+        return when {
+            x == null || y == null -> InvalidCommand("Cannot parse coordinates: Invalid coordinate x:$x y:$y")
+            else -> SnowballCommand(Point(x, y), config)
         }
     }
 

@@ -1,14 +1,14 @@
 {
-  "maxRounds": 200,
-  "maxDoNothings": 10,
+  "maxRounds": 400,
+  "maxDoNothings": 12,
   "commandoWorms": {
-    "count": 2,
-    "initialHp": 100,
+    "count": 1,
+    "initialHp": 150,
     "movementRage": 1,
     "diggingRange": 1,
     "weapon": {
-      "damage": 1,
-      "range": 3
+      "damage": 8,
+      "range": 4
     },
     "professionName": "Commando"
   },
@@ -29,22 +29,43 @@
     },
     "professionName": "Agent"
   },
-  "pushbackDamage": 4,
+  "technologistWorms": {
+    "count": 1,
+    "initialHp": 100,
+    "movementRage": 1,
+    "diggingRange": 1,
+    "weapon": {
+      "damage": 8,
+      "range": 4
+    },
+    "snowballs": {
+      "freezeDuration": 5,
+      "range": 5,
+      "count": 3,
+      "freezeRadius": 1
+    },
+    "professionName": "Technologist"
+  },
+  "pushbackDamage": 20,
+  "lavaDamage": 3,
   "mapSize": 33,
-  "healthPackHp": 5,
+  "healthPackHp": 10,
   "totalHealthPacks": 2,
   "scores": {
-    "attack": 1,
-    "killShot": 40,
     "missedAttack": 2,
-    "powerup": 6,
-    "dig": 4,
-    "move": 1,
-    "invalidCommand": -1,
-    "doNothing": 0
+    "attack": 2,
+    "killShot": 40,
+    "dig": 7,
+    "move": 5,
+    "powerup": 20,
+    "freeze": 17,
+    "doNothing": 0,
+    "invalidCommand": -4
   },
   "wormSelectTokens": {
-    "count": 1
+    "count": 5
   },
-  "csvSeparator": ","
+  "csvSeparator": ",",
+  "battleRoyaleStart": 0.25,
+  "battleRoyaleEnd": 0.875
 }
