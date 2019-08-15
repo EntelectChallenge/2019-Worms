@@ -6,10 +6,8 @@ import za.co.entelect.challenge.game.engine.command.feedback.StandardCommandFeed
 import za.co.entelect.challenge.game.engine.config.GameConfig
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
 import za.co.entelect.challenge.game.engine.factory.TestWormsPlayerFactory.buildWormsPlayerDefault
-import za.co.entelect.challenge.game.engine.factory.TestWormsPlayerFactory.buildWormsPlayers
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
-import za.co.entelect.challenge.game.engine.player.WormsPlayer
 import za.co.entelect.challenge.game.engine.renderer.WormsGameDetails
 import kotlin.test.Test
 import kotlin.test.assertEquals

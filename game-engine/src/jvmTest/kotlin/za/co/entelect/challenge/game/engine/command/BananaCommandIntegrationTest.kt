@@ -10,6 +10,7 @@ import za.co.entelect.challenge.game.contracts.renderer.RendererType
 import za.co.entelect.challenge.game.delegate.bootstrapper.WormsGameBoostrapper
 import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG_PATH
 import za.co.entelect.challenge.game.delegate.player.DelegatePlayer
+import za.co.entelect.challenge.game.engine.map.Point
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -51,10 +52,14 @@ class BananaCommandIntegrationTest {
         val mapGenerator = bootstrapper.mapGenerator
         val gameMap = mapGenerator.generateGameMap(players)
 
+        val player1 = players[0].gamePlayer;
+        assertTrue(player1 is DelegatePlayer)
+        val bananaCoordinates = player1.wormsPlayer.worms.first { it.bananas != null }.position + Point(-4, -1)
+
         val roundProcessor = bootstrapper.roundProcessor
         roundProcessor.processRound(gameMap, mapOf(
                 players[0].gamePlayer to listOf(RawCommand("${CommandStrings.SELECT.string} 2"),
-                        RawCommand("${CommandStrings.BANANA.string} 1 16")),
+                        RawCommand("${CommandStrings.BANANA.string} $bananaCoordinates")),
                 players[1].gamePlayer to listOf(RawCommand("${CommandStrings.MOVE.string} 30 17"))
         ))
 
