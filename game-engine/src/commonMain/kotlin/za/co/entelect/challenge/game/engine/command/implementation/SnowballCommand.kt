@@ -12,7 +12,7 @@ import za.co.entelect.challenge.game.engine.player.Worm
 
 class SnowballCommand(val target: Point, val config: GameConfig) : WormsCommand {
 
-    override val order: Int = 3
+    override val order: Int = 5
 
     /**
      * For a snowball command to be valid:

@@ -142,9 +142,15 @@ class WormsMapGenerator(private val config: GameConfig, private val seed: Int) {
                                            wormsPlayers: List<WormsPlayer>) {
         val allWorms = wormsPlayers
                 .flatMap { it.worms }
+                .sortedBy { it.profession }
         val unplacedWorms = allWorms
                 .groupBy { it.player.id }
-                .mapValues { (_, value) -> value.toMutableList() }
+                .mapValues { (key, value) ->
+                    value.map { Pair(it, if (it.id > key) (it.id - key - wormsPlayers.size) else it.id) }
+                            .sortedBy { it.second }
+                            .map { it.first }
+                            .toMutableList()
+                }
 
         // Put worms in seats, a different player for the next seat
         val radius = mapRadiusFit - wormSpawnDistanceFromEdge

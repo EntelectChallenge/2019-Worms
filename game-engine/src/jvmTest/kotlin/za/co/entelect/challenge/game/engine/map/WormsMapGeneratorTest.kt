@@ -137,8 +137,8 @@ class WormsMapGeneratorTest {
             Pair(primaryWorm,
                     when {
                         checkWormById(primaryWorm, 1, 2) -> allWorms.find { checkWormById(it, 2, 1) }
-                        checkWormById(primaryWorm, 2, 2) -> allWorms.find { checkWormById(it, 2, 3) }
-                        checkWormById(primaryWorm, 1, 1) -> allWorms.find { checkWormById(it, 1, 3) }
+                        checkWormById(primaryWorm, 2, 2) -> allWorms.find { checkWormById(it, 1, 1) }
+                        checkWormById(primaryWorm, 2, 3) -> allWorms.find { checkWormById(it, 1, 3) }
                         else -> null
                     }
             )
