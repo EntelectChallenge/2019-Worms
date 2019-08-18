@@ -167,9 +167,9 @@ class WormsRendererTest {
         val wormsMap = wormsMapGenerator.getMap(wormsPlayers)
 
         val roundProcessor = WormsRoundProcessor(config)
-        wormsMap.currentRound=115
+        wormsMap.currentRound=100
         roundProcessor.processRound(wormsMap, mapOf(
-                Pair(player1, listOf(SelectCommand(2), BananaCommand(Point(1, 12), config))),
+                Pair(player1, listOf(SelectCommand(2), BananaCommand(Point(23, 23), config))),
                 Pair(player2, listOf(TeleportCommand(31, 15, Random(0), config)))))
 
         val rendererText = WormsRendererText(config)

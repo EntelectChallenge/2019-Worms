@@ -96,8 +96,24 @@ class SnowballCommandTest {
         assertFalse(testCommand.validate(testMap, attacker).isValid)
     }
 
+    @Test
+    fun test_being_frozen_does_not_let_go_of_commands() {
+        val (alice, bob, testMap) = getBasicPlayersSetup(3)
+        bob.moveTo(testMap, Point(2, 0))
+
+        val aliceCommand = SnowballCommand(bob.position, config)
+        val bobCommand = SnowballCommand(alice.position, config)
+
+        aliceCommand.execute(testMap, alice)
+        bobCommand.execute(testMap, bob)
+
+        val freezeDuration = config.technologistWorms.snowballs!!.freezeDuration
+        assertEquals(freezeDuration, alice.roundsUntilUnfrozen)
+        assertEquals(freezeDuration, bob.roundsUntilUnfrozen)
+    }
+
     private fun getBasicPlayersSetup(mapSize: Int): Triple<Worm, Worm, WormsMap> {
-        val target = CommandoWorm.build(0, config, Point(1, 1))
+        val target = TechnologistWorm.build(0, config, Point(1, 1))
         val targetPlayer = WormsPlayer.build(0, listOf(target), config)
 
         val attacker = TechnologistWorm.build(0, config, Point(0, 0))

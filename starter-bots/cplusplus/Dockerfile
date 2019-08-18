@@ -1,9 +1,13 @@
 FROM entelectchallenge/base:2019
 
+# Needed for building non Windows host using Windows Docker
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+# Update everything
 RUN apt-get update -y
 
-RUN apt-get install gcc -y
-
+# Install all build tools, including g++
+RUN apt-get install build-essential -y
 
 # Set the working directory to /app
 WORKDIR /cppbot

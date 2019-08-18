@@ -40,6 +40,7 @@ interface GameMap {
     fun getVisualizerEvents(): List<VisualizerEvent>
     fun progressBattleRoyale(config: GameConfig)
     fun tickFrozenTimers()
+    fun getAllFeedback(): MutableMap<Int, MutableList<CommandFeedback>>
 }
 
 class WormsMap(override val players: List<WormsPlayer>,
@@ -120,6 +121,8 @@ class WormsMap(override val players: List<WormsPlayer>,
     override fun getFeedback(round: Int): List<CommandFeedback> {
         return allFeedback[round] ?: emptyList()
     }
+
+    override fun getAllFeedback() = allFeedback
 
     override fun removeDeadWorms() {
         players.flatMap { it.worms }
@@ -204,9 +207,10 @@ class WormsMap(override val players: List<WormsPlayer>,
         val fullPercentageRange = (currentRound - brStartRound) / (brEndRound - brStartRound)
         val currentProgress = fullPercentageRange.coerceIn(0.0, 1.0)
 
-        val safeAreaRadius = (config.mapSize / 2) * (1 - currentProgress)
+        val nonFloodedRadius = ((config.mapSize / 2) * (1 - currentProgress))
+        val safeAreaRadius = nonFloodedRadius.coerceAtLeast(3.0)
 
-        cells.filter { it.type == CellType.AIR && it.position.euclideanDistance(mapCenter) > safeAreaRadius + 1 }
+        cells.filter { it.type == CellType.AIR && it.position.euclideanDistance(mapCenter) > safeAreaRadius }
                 .forEach { it.type = CellType.LAVA }
 
         livingPlayers.flatMap { it.livingWorms }

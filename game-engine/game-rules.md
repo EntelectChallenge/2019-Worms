@@ -138,6 +138,9 @@ The format of the Snowball command is `snowball x y`
     * ░░██████░░
     * ░░░░░░░░░░
   * Any worm caught within this radius during the impact, will be frozen for **5** rounds
+    * A frozen worm will not respond to any commands
+      * These commands will not be considered invalid, and will not penalise your score
+      * You can still successfully issue a **Select** command to use a different worm     
   * The Snowball hit at the "▓▓" cell.
     * Worms in the impact cell "▓▓", as well as those in the radius cells "██", are all frozen
     * You will be awarded **17** points for each worm you froze
@@ -168,8 +171,8 @@ All commands submitted in a round will be evaluated in the following order:
 1. Movement
 2. Digging
 3. Banana
-3. Snowball
 4. Shooting
+5. Snowball
 
 This implies the following regarding command interaction:
 * A worm cannot move into a cell that another worm is digging open in this round
@@ -178,6 +181,9 @@ This implies the following regarding command interaction:
 * A worm can move out of range of another worm's shot 
 * Two worms can dig open the same dirt cell in a single round
 * A worm can dig a block right before a banana bomb destroys that block
+* Any issued command that is valid at the start of the round, will be executed
+  * If the enemy Agent worm knocks out your Technologist worm, your worm can still throw a 
+ snowball if the command was issued in the same round
 
 ## Worm Profession
 
@@ -215,9 +221,11 @@ The total score value is determined by adding together the player's average worm
 
 ## Endgame
 
-The worms' disagreements here have initiated geological activity. A slow flood of lava will engulf the entire map if they cannot sort out their differences
+The worms' disagreements here have initiated geological activity. A slow flood of lava will
+ engulf the entire map if they cannot sort out their differences
 * From round **100** lava will slowly creep onto the edges of the map
-* At round **350** lava will have filled the entire map except for a small circular region in the center of the map
+* At round **350** lava will have filled the entire map except for a small circular region 
+in the center of the map, with a radius of **4** cells
 * Lava will replace most cells as it floods over the map
   * Air cells are replaced by lava cells
   * Dirt cells are not replaced
@@ -225,4 +233,3 @@ The worms' disagreements here have initiated geological activity. A slow flood o
   * When a digging worm forms new air cell in the flooded region, it is replaced by lava at the start of the next round
     * The same happens for destroyed dirt cells via a Banana Bomb
 * Any worm standing on top of a lava cell, will sustain **3** damage every round
-
