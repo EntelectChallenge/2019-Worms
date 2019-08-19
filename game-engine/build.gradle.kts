@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "za.co.entelect.challenge"
-version = "2019.3.0"
+version = "2019.3.1"
 
 repositories {
     mavenLocal()
