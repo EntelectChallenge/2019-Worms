@@ -6,6 +6,7 @@ import za.co.entelect.challenge.game.delegate.factory.TEST_CONFIG
 import za.co.entelect.challenge.game.engine.command.feedback.StandardCommandFeedback
 import za.co.entelect.challenge.game.engine.command.feedback.CommandValidation
 import za.co.entelect.challenge.game.engine.factory.TestMapFactory.buildMapWithCellType
+import za.co.entelect.challenge.game.engine.command.implementation.SelectCommand
 import za.co.entelect.challenge.game.engine.map.CellType
 import za.co.entelect.challenge.game.engine.map.Point
 import za.co.entelect.challenge.game.engine.player.CommandoWorm
@@ -37,6 +38,19 @@ class CommandExecutorTest {
         assertEquals(config.scores.invalidCommand * 2, player.commandScore)
 
         verify(command, times(0)).execute(any(), any())
+    }
+
+    @Test
+    fun test_selectFrozenWorm() {
+        val worms = listOf(CommandoWorm.build(0, config, Point(1, 1)),
+                CommandoWorm.build(1, config, Point(1, 2)))
+        worms[0].setAsFrozen(3)
+        val player = WormsPlayer.build(1, worms, config)
+        val command = SelectCommand(1)
+        val executor = CommandExecutor(player, mockMap, command, config)
+
+        executor.execute()
+        assertEquals(worms[1], player.currentWorm)
     }
 
     @Test
