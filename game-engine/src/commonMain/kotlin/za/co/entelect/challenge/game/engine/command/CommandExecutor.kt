@@ -27,7 +27,7 @@ class CommandExecutor(private val player: WormsPlayer,
             else -> player.consecutiveDoNothingsCount = 0
         }
 
-        if (worm.roundsUntilUnfrozen != freezeDuration && worm.roundsUntilUnfrozen > 0) {
+        if (!command.ignoresBeingFrozen() && worm.roundsUntilUnfrozen != freezeDuration && worm.roundsUntilUnfrozen > 0) {
             logger.info { "Tried to execute command $command, but $worm is still frozen for ${worm.roundsUntilUnfrozen} round" }
             map.addFeedback(StandardCommandFeedback(command.toString(), 0, player.id, false, "Frozen worms cannot follow your commands",
                     VisualizerEvent(CommandStrings.NOTHING.string, "frozen", worm, null, null, null)))

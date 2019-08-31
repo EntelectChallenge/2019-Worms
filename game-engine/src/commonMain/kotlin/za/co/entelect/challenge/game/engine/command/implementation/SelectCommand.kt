@@ -41,6 +41,10 @@ class SelectCommand(val wormId: Int) : WormsCommand {
         }
     }
 
+    override fun ignoresBeingFrozen(): Boolean {
+        return true
+    }
+
     override fun toString(): String = "${CommandStrings.SELECT.string} $wormId"
 
 }

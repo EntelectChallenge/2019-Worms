@@ -22,5 +22,13 @@ interface WormsCommand {
      */
     fun execute(gameMap: WormsMap, worm: Worm): CommandFeedback
 
+    /**
+     * Produce true if the command should be executed regardless
+     * of whether the current worm is frozen.
+     */
+    fun ignoresBeingFrozen(): Boolean {
+        return false
+    }
+
     override fun toString(): String
 }
