@@ -46,8 +46,8 @@ class WormsPlayer private constructor(val id: Int,
         //Assign living worms to a local variable since it is a computed property
         val livingWorms = this.livingWorms
         if (livingWorms.isNotEmpty()) {
-            val nextIndex = (livingWorms.indexOf(currentWorm) + 1) % livingWorms.size
-            updateCurrentWorm(livingWorms[nextIndex])
+            val nextWorm = livingWorms.firstOrNull { it.id > currentWorm.id } ?: livingWorms.first()
+            updateCurrentWorm(nextWorm)
         }
     }
 

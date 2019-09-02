@@ -50,6 +50,46 @@ class WormsPlayerTest {
     }
 
     @Test
+    fun test_player_wormSelection_All() {
+        val player = WormsPlayer.build(2, config)
+        assertEquals(1, player.currentWorm.id)
+
+        player.selectNextWorm()
+        assertEquals(player.worms[1], player.currentWorm)
+        assertEquals(2, player.currentWorm.id)
+
+        player.selectNextWorm()
+        assertEquals(player.worms[2], player.currentWorm)
+        assertEquals(3, player.currentWorm.id)
+
+        player.selectNextWorm()
+        assertEquals(player.worms[0], player.currentWorm)
+        assertEquals(1, player.currentWorm.id)
+
+        player.selectNextWorm()
+        assertEquals(player.worms[1], player.currentWorm)
+        assertEquals(2, player.currentWorm.id)
+
+        player.selectNextWorm()
+        assertEquals(player.worms[2], player.currentWorm)
+        assertEquals(3, player.currentWorm.id)
+    }
+
+    @Test
+    fun test_player_wormSelection_currentWormDead() {
+        val player = WormsPlayer.build(2, config)
+
+        player.updateCurrentWorm(player.worms[1])
+        player.worms[1].health = 0;
+
+        assertEquals(2, player.currentWorm.id);
+
+        player.selectNextWorm();
+
+        assertEquals(3, player.currentWorm.id)
+    }
+
+    @Test
     fun test_player_dead() {
         val player = WormsPlayer.build(0, config)
         player.worms.forEachIndexed { i, worm -> worm.health = -i }
